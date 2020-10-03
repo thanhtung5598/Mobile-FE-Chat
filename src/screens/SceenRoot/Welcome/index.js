@@ -33,7 +33,12 @@ const Welcome = ({ navigation }) => {
               <Text style={styles.register}>Register</Text>
             </LinearGradient>
           </TouchableOpacity>
-          <Text style={styles.forgotPassword}>Forgot password</Text>
+          <Text
+            style={styles.forgotPassword}
+            onPress={() => navigation.navigate('ForgotPassword')}
+          >
+            Forgot password
+          </Text>
         </View>
       </Content>
     </Container>

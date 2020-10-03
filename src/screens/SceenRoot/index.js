@@ -1,6 +1,7 @@
 import React from 'react';
 import Login from './Login';
 import Register from './Register';
+import ForgotPassword from './ForgotPassword';
 import Welcome from './Welcome';
 
 import { createStackNavigator } from '@react-navigation/stack';
@@ -13,6 +14,10 @@ const ScreenRoot = () => {
       <RootStack.Screen name="Welcome" component={Welcome}></RootStack.Screen>
       <RootStack.Screen name="Login" component={Login}></RootStack.Screen>
       <RootStack.Screen name="Register" component={Register}></RootStack.Screen>
+      <RootStack.Screen
+        name="ForgotPassword"
+        component={ForgotPassword}
+      ></RootStack.Screen>
     </RootStack.Navigator>
   );
 };

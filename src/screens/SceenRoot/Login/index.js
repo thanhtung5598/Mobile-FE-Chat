@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { REX } from '../../../utils';
+import { StyledInput } from '../../../components/common/ComponentsCommon/StyledInput';
 import ErrorInput from '../../../components/common/ComponentsCommon/ErrorInput';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet } from 'react-native';
-import { Container, Content, Text, Input, Icon, View } from 'native-base';
+import { Container, Content, Text, Icon, View } from 'native-base';
 import { AuthenContext } from '../../../components/common/context/AuthenContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -41,25 +42,16 @@ const Login = ({ navigation }) => {
                 .required('Phone is required'),
               password: Yup.string().required('Password is required')
             })}
-            onSubmit={values => signIn(values)}
+            onSubmit={values => console.log(signIn(values))}
           >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              touched,
-              errors
-            }) => (
+            {({ touched, errors, ...formikProps }) => (
               <>
                 <View style={styles.rect5}>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    onChangeText={handleChange('phone')}
-                    onBlur={handleBlur('phone')}
-                    value={values.phone}
+                  <StyledInput
+                    formikProps={formikProps}
+                    formikKey="phone"
                     placeholder="Phone number..."
+                    value={formikProps.values.phone}
                     keyboardType="numeric"
                   />
                 </View>
@@ -67,12 +59,9 @@ const Login = ({ navigation }) => {
                   <ErrorInput text={errors.phone} />
                 ) : null}
                 <View style={styles.rect6}>
-                  <Input
-                    id="password"
-                    name="password"
-                    onChangeText={handleChange('password')}
-                    onBlur={handleBlur('password')}
-                    value={values.password}
+                  <StyledInput
+                    formikProps={formikProps}
+                    formikKey="password"
                     placeholder="Password..."
                     secureTextEntry={true}
                   />
@@ -80,7 +69,7 @@ const Login = ({ navigation }) => {
                 {touched.password && errors.password ? (
                   <ErrorInput text={errors.password} />
                 ) : null}
-                <TouchableOpacity onPress={handleSubmit}>
+                <TouchableOpacity onPress={formikProps.handleSubmit}>
                   <LinearGradient
                     style={styles.rect7}
                     colors={['#0cb3ff', '#0068ff']}
