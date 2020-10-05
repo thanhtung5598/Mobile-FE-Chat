@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { REX } from '../../../../utils';
+import { REX } from 'utils';
 import { Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { StyledInput } from '../../../../components/common/ComponentsCommon/StyledInput';
-import ErrorInput from '../../../../components/common/ComponentsCommon/ErrorInput';
+import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
+import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { AntDesign } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 

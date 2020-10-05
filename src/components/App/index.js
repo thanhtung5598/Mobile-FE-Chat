@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { ActivityIndicator, View } from 'react-native';
-import SceenRoot from '../../screens/SceenRoot';
-import ScreenMain from '../../screens/ScreenMain/MainTab';
-
-import { AuthenContext } from '../common/context/AuthenContext';
-
+import SceenRoot from 'screens/SceenRoot';
+import ScreenMain from 'screens/ScreenMain/Drawer';
+import { isTokenExpired } from 'actions/authenActions';
 import { NavigationContainer } from '@react-navigation/native';
 
 const App = () => {
-  const { userToken } = useContext(AuthenContext);
-
+  const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector(state => state.authen);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!isAuthenticated) dispatch(isTokenExpired());
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
-  });
+  }, [dispatch, isAuthenticated]);
 
   if (isLoading) {
     return (
@@ -28,7 +28,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {userToken !== null ? <ScreenMain /> : <SceenRoot />}
+      {isAuthenticated !== false ? <ScreenMain /> : <SceenRoot />}
     </NavigationContainer>
   );
 };

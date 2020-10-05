@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet } from 'react-native';
 import { Container, Content, Text, Icon, View } from 'native-base';
-import { AuthenContext } from '../../../components/common/context/AuthenContext';
+import { AuthenContext } from 'components/common/context/AuthenContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormRegister from './FormRegister';
-import FormVerify from '../../../components/common/ComponentsCommon/FormVerify';
+import FormVerify from 'components/common/ComponentsCommon/FormVerify';
 
 const Register = ({ navigation }) => {
   const [step, setStep] = useState(0);

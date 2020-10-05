@@ -1,18 +1,24 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { REX } from '../../../utils';
-import { StyledInput } from '../../../components/common/ComponentsCommon/StyledInput';
-import ErrorInput from '../../../components/common/ComponentsCommon/ErrorInput';
+import { REX } from 'utils';
+import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
+import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet } from 'react-native';
 import { Container, Content, Text, Icon, View } from 'native-base';
-import { AuthenContext } from '../../../components/common/context/AuthenContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { accountLogin } from 'actions/authenActions';
 
 const Login = ({ navigation }) => {
-  const { signIn } = useContext(AuthenContext);
+  const dispatch = useDispatch();
+
+  const onHandleLogin = values => {
+    dispatch(accountLogin(values));
+  };
+
   return (
     <Container>
       <Content>
@@ -42,7 +48,7 @@ const Login = ({ navigation }) => {
                 .required('Phone is required'),
               password: Yup.string().required('Password is required')
             })}
-            onSubmit={values => console.log(signIn(values))}
+            onSubmit={onHandleLogin}
           >
             {({ touched, errors, ...formikProps }) => (
               <>
