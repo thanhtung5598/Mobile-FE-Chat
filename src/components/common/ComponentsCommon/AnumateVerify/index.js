@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Image, SafeAreaView, Text, Animated } from 'react-native';
+import { useSelector } from 'react-redux';
+import { Image, SafeAreaView, Text, View, Animated } from 'react-native';
 import PropTypes from 'prop-types';
 
 import {
@@ -19,7 +20,8 @@ const source = {
     'https://user-images.githubusercontent.com/4661784/56352614-4631a680-61d8-11e9-880d-86ecb053413d.png'
 };
 
-const AnimatedVerify = ({ onHandleVerifyCode }) => {
+const AnimatedVerify = ({ onHandleVerifyCode, userPhone }) => {
+  const { error } = useSelector(state => state.authen);
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -28,7 +30,7 @@ const AnimatedVerify = ({ onHandleVerifyCode }) => {
   });
 
   useEffect(() => {
-    value.split('').length === 4 && onHandleVerifyCode();
+    value.split('').length === 4 && onHandleVerifyCode(value);
   }, [onHandleVerifyCode, value]);
 
   const renderCell = ({ index, symbol, isFocused }) => {
@@ -47,7 +49,9 @@ const AnimatedVerify = ({ onHandleVerifyCode }) => {
     <SafeAreaView style={styles.root}>
       <Text style={styles.title}>Verification</Text>
       <Image style={styles.icon} source={source} />
-      <Text style={styles.subTitle1}>we sent to (+84) 0336365110</Text>
+      <Text style={styles.subTitle1}>
+        we sent to (+84) {userPhone && userPhone}
+      </Text>
       <Text style={styles.subTitle2}>
         Please check SMS {'\n'} and fill in the confirmation code below
       </Text>
@@ -62,6 +66,13 @@ const AnimatedVerify = ({ onHandleVerifyCode }) => {
         textContentType="oneTimeCode"
         renderCell={renderCell}
       />
+      {error && (
+        <View style={styles.errorCode}>
+          <Text style={styles.errorCodeText}>
+            Your code is invalid.{'\n'} Please get your new code
+          </Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -69,8 +80,10 @@ const AnimatedVerify = ({ onHandleVerifyCode }) => {
 export default AnimatedVerify;
 
 AnimatedVerify.propTypes = {
+  userPhone: PropTypes.string,
   onHandleVerifyCode: PropTypes.func
 };
 AnimatedVerify.defaultProps = {
+  userPhone: '',
   onHandleVerifyCode: () => {}
 };

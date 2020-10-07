@@ -57,7 +57,9 @@ const styles = StyleSheet.create({
 
     // Android
     elevation: 3
-  }
+  },
+  errorCode: { alignItems: 'center', marginTop: 10 },
+  errorCodeText: { textAlign: 'center', color: 'red' }
 });
 
 export default styles;

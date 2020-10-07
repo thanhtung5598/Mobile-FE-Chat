@@ -14,7 +14,9 @@ const createSingleRequested = (base, act) =>
 const AUTHENTICATION_TYPE = {
   ...createRequestTypes('AUTHENTICATION', 'LOGIN'),
   ...createRequestTypes('AUTHENTICATION', 'LOGOUT'),
+  ...createRequestTypes('AUTHENTICATION', 'REFRESH'),
   ...createRequestTypes('AUTHENTICATION', 'REGISTER'),
+  ...createRequestTypes('AUTHENTICATION', 'ACTIVE'),
   ...createRequestTypes('AUTHENTICATION', 'FORGOT_PASSWORD'),
   ...createSingleRequested('AUTHENTICATION', 'IS_LOGIN')
 };

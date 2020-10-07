@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { Text, View } from 'native-base';
+import { Text, View, Spinner } from 'native-base';
 import { REX } from '../../../../utils';
 import * as Yup from 'yup';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -10,8 +11,12 @@ import { StyledInput } from '../../../../components/common/ComponentsCommon/Styl
 import ErrorInput from '../../../../components/common/ComponentsCommon/ErrorInput';
 import { SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { MaterialIcons } from '@expo/vector-icons';
+import { refreshError } from 'actions/authenActions';
 
 const FormRegister = props => {
+  const dispatch = useDispatch();
+  const { isLoading, error, message } = useSelector(state => state.authen);
   const { onHandleSubmitted, styles, navigation } = props;
 
   const [isEyeOpen, setIsEyeOpen] = useState([false, false]);
@@ -61,6 +66,17 @@ const FormRegister = props => {
       >
         {({ touched, errors, ...formikProps }) => (
           <React.Fragment>
+            {error && (
+              <View style={styles.errorBE}>
+                <MaterialIcons
+                  style={styles.errorBEIcon}
+                  name="error"
+                  size={20}
+                  color="red"
+                />
+                <Text style={styles.errorBEText}>{message.msg}</Text>
+              </View>
+            )}
             <View style={styles.rect5}>
               <StyledInput
                 formikProps={formikProps}
@@ -101,6 +117,7 @@ const FormRegister = props => {
               <StyledInput
                 formikProps={formikProps}
                 formikKey="phone"
+                onFocus={() => dispatch(refreshError())}
                 placeholder="Phone number..."
                 value={formikProps.values.phone}
                 keyboardType="numeric"
@@ -122,12 +139,16 @@ const FormRegister = props => {
               <ErrorInput text={errors.name} />
             ) : null}
 
-            <TouchableOpacity onPress={formikProps.handleSubmit}>
+            <TouchableOpacity
+              disabled={isLoading}
+              onPress={formikProps.handleSubmit}
+            >
               <LinearGradient
                 style={styles.rect7}
                 colors={['#0cb3ff', '#0068ff']}
               >
-                <Text style={styles.loginButton}>Sign Up</Text>
+                {isLoading && <Spinner size="small" color="#ff9800" />}
+                {!isLoading && <Text style={styles.loginButton}>Sign In</Text>}
               </LinearGradient>
             </TouchableOpacity>
             <View style={styles.bottomHint}>

@@ -1,23 +1,53 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet } from 'react-native';
 import { Container, Content, Text, Icon, View } from 'native-base';
-import { AuthenContext } from 'components/common/context/AuthenContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormRegister from './FormRegister';
+import { AuthenContext } from 'components/common/context/AuthenContext';
 import FormVerify from 'components/common/ComponentsCommon/FormVerify';
+import {
+  accountRegister,
+  accountActive,
+  accountActiveAgainByPhone,
+  refreshError
+} from 'actions/authenActions';
 
 const Register = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const { userPhone, setUserPhone } = useContext(AuthenContext);
   const [step, setStep] = useState(0);
-  const { signUp } = useContext(AuthenContext);
 
-  const onHandleSubmitted = () => {
-    setStep(1);
+  useEffect(() => {
+    dispatch(refreshError());
+  }, [dispatch]);
+
+  const onHandleSubmitted = values => {
+    dispatch(accountRegister(values)).then(res => {
+      if (!res) {
+        setStep(1);
+        setUserPhone(values.phone);
+      }
+    });
   };
 
-  const onHandleVerifyCode = () => {
-    signUp();
+  const onHandleResendCode = () => {
+    accountActiveAgainByPhone(userPhone);
+  };
+
+  const onHandleVerifyCode = code => {
+    const values = {
+      phone: userPhone,
+      code
+    };
+    dispatch(accountActive(values));
+  };
+
+  const onHandleTurnBack = () => {
+    navigation.navigate('Welcome');
+    dispatch(refreshError());
   };
 
   return (
@@ -25,10 +55,7 @@ const Register = ({ navigation }) => {
       <Content>
         <View style={styles.container}>
           <LinearGradient colors={['#2962ff', '#0cb3ff']}>
-            <TouchableOpacity
-              style={styles.rect}
-              onPress={() => navigation.navigate('Welcome')}
-            >
+            <TouchableOpacity style={styles.rect} onPress={onHandleTurnBack}>
               <Icon name="arrow-back" style={styles.icon}></Icon>
               <Text style={styles.login}>Register</Text>
             </TouchableOpacity>
@@ -40,7 +67,13 @@ const Register = ({ navigation }) => {
               styles={styles}
             />
           )}
-          {step === 1 && <FormVerify onHandleVerifyCode={onHandleVerifyCode} />}
+          {step === 1 && (
+            <FormVerify
+              userPhone={userPhone}
+              onHandleVerifyCode={onHandleVerifyCode}
+              onHandleResendCode={onHandleResendCode}
+            />
+          )}
         </View>
       </Content>
     </Container>
@@ -130,15 +163,15 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: 'rgba(33,150,243,1)',
     borderRadius: 25,
-    marginTop: 18,
-    alignSelf: 'center'
+    marginTop: 23,
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
   loginButton: {
     color: 'rgba(255,255,255,1)',
     fontSize: 22,
     textAlign: 'center',
-    height: 27,
-    marginTop: 12
+    height: 27
   },
   loremIpsum2: {
     color: 'rgba(113,111,111,1)',
@@ -163,5 +196,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '50%',
     alignSelf: 'center'
+  },
+  errorBE: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 10
+  },
+  errorBEIcon: {
+    marginRight: 3
+  },
+  errorBEText: {
+    color: 'red'
   }
 });

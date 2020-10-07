@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import AnimateVerify from './../AnumateVerify';
 import { Container, Content, Text, View } from 'native-base';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const FormVerify = ({ onHandleVerifyCode }) => {
+const FormVerify = ({ onHandleVerifyCode, onHandleResendCode, userPhone }) => {
+  const [countDown, setCountDown] = useState(null);
+
+  useEffect(() => {
+    if (countDown > 0) {
+      setTimeout(() => {
+        setCountDown(countDown - 1);
+      }, 1000);
+    }
+    if (countDown === 0) setCountDown(null);
+  }, [countDown, setCountDown]);
+
+  const onHandleResendAndCountDown = useCallback(() => {
+    setCountDown(10);
+    onHandleResendCode();
+  }, [onHandleResendCode]);
+
   return (
     <Container>
       <Content>
@@ -14,10 +31,25 @@ const FormVerify = ({ onHandleVerifyCode }) => {
             account
           </Text>
         </View>
-        <AnimateVerify onHandleVerifyCode={onHandleVerifyCode} />
-        <View>
-          <Text style={styles.ResendCode}>Resend code</Text>
-        </View>
+        <AnimateVerify
+          userPhone={userPhone}
+          onHandleVerifyCode={onHandleVerifyCode}
+        />
+        <TouchableOpacity
+          disabled={countDown > 0 && true}
+          onPress={onHandleResendAndCountDown}
+        >
+          <View style={styles.viewResend}>
+            <Text
+              style={
+                countDown === null ? styles.ResendCode : styles.ResendCodeDiff
+              }
+            >
+              Resend code
+            </Text>
+            <Text style={styles.countColor}>{countDown}</Text>
+          </View>
+        </TouchableOpacity>
       </Content>
     </Container>
   );
@@ -40,19 +72,43 @@ const styles = StyleSheet.create({
   ResendCode: {
     fontWeight: '700',
     textAlign: 'center',
-    marginTop: 15,
     color: '#ffcc80',
     textDecorationLine: 'underline'
+  },
+  ResendCodeDiff: {
+    fontWeight: '700',
+    textAlign: 'center',
+    color: '#A2A2A2',
+    textDecorationLine: 'underline'
+  },
+  viewResend: {
+    marginTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  countColor: {
+    color: 'red',
+    fontWeight: '700',
+    marginLeft: 5
   }
 });
 
 FormVerify.propTypes = {
+  userPhone: PropTypes.string,
+  countDown: PropTypes.number,
   onHandleVerifyCode: PropTypes.func,
+  setCountDown: PropTypes.func,
+  onHandleResendCode: PropTypes.func,
   styles: PropTypes.objectOf(PropTypes.any),
   navigation: PropTypes.objectOf(PropTypes.any)
 };
 FormVerify.defaultProps = {
+  userPhone: '',
+  countDown: 0,
   onHandleVerifyCode: () => {},
+  setCountDown: () => {},
+  onHandleResendCode: () => {},
   styles: {},
   navigation: {}
 };

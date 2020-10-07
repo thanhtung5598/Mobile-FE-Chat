@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -8,15 +8,22 @@ import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
 import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet } from 'react-native';
-import { Container, Content, Text, Icon, View } from 'native-base';
+import { Container, Content, Text, Icon, View, Spinner } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { accountLogin } from 'actions/authenActions';
+import { accountLogin, refreshError } from 'actions/authenActions';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const Login = ({ navigation }) => {
+  const { isLoading, error, message } = useSelector(state => state.authen);
   const dispatch = useDispatch();
 
   const onHandleLogin = values => {
     dispatch(accountLogin(values));
+  };
+
+  const onHandleTurnBack = () => {
+    navigation.navigate('Welcome');
+    dispatch(refreshError());
   };
 
   return (
@@ -24,10 +31,7 @@ const Login = ({ navigation }) => {
       <Content>
         <View style={styles.container}>
           <LinearGradient colors={['#2962ff', '#0cb3ff']}>
-            <TouchableOpacity
-              style={styles.rect}
-              onPress={() => navigation.navigate('Welcome')}
-            >
+            <TouchableOpacity style={styles.rect} onPress={onHandleTurnBack}>
               <Icon name="arrow-back" style={styles.icon}></Icon>
               <Text style={styles.login}>Login</Text>
             </TouchableOpacity>
@@ -37,6 +41,17 @@ const Login = ({ navigation }) => {
               Please enter your phone and password tologin
             </Text>
           </View>
+          {error && (
+            <View style={styles.errorBE}>
+              <MaterialIcons
+                style={styles.errorBEIcon}
+                name="error"
+                size={20}
+                color="red"
+              />
+              <Text style={styles.errorBEText}>{message.msg}</Text>
+            </View>
+          )}
           <Formik
             initialValues={{ phone: '', password: '' }}
             validationSchema={Yup.object({
@@ -54,6 +69,7 @@ const Login = ({ navigation }) => {
               <>
                 <View style={styles.rect5}>
                   <StyledInput
+                    onFocus={() => dispatch(refreshError())}
                     formikProps={formikProps}
                     formikKey="phone"
                     placeholder="Phone number..."
@@ -66,6 +82,7 @@ const Login = ({ navigation }) => {
                 ) : null}
                 <View style={styles.rect6}>
                   <StyledInput
+                    onFocus={() => dispatch(refreshError())}
                     formikProps={formikProps}
                     formikKey="password"
                     placeholder="Password..."
@@ -75,12 +92,18 @@ const Login = ({ navigation }) => {
                 {touched.password && errors.password ? (
                   <ErrorInput text={errors.password} />
                 ) : null}
-                <TouchableOpacity onPress={formikProps.handleSubmit}>
+                <TouchableOpacity
+                  disabled={isLoading}
+                  onPress={formikProps.handleSubmit}
+                >
                   <LinearGradient
                     style={styles.rect7}
                     colors={['#0cb3ff', '#0068ff']}
                   >
-                    <Text style={styles.loginButton}>Sign In</Text>
+                    {isLoading && <Spinner size="small" color="#ff9800" />}
+                    {!isLoading && (
+                      <Text style={styles.loginButton}>Sign In</Text>
+                    )}
                   </LinearGradient>
                 </TouchableOpacity>
                 <View style={styles.bottomHint}>
@@ -184,14 +207,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(33,150,243,1)',
     borderRadius: 25,
     marginTop: 23,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    justifyContent: 'center'
   },
   loginButton: {
     color: 'rgba(255,255,255,1)',
     fontSize: 22,
     textAlign: 'center',
-    height: 27,
-    marginTop: 12
+    height: 27
   },
   loremIpsum2: {
     color: 'rgba(113,111,111,1)',
@@ -205,5 +228,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 16
   },
-  bottomHintSig: { color: '#ff9800', fontWeight: 'bold', marginLeft: 3 }
+  bottomHintSig: { color: '#ff9800', fontWeight: 'bold', marginLeft: 3 },
+  errorBE: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 10
+  },
+  errorBEIcon: {
+    marginRight: 3
+  },
+  errorBEText: {
+    color: 'red'
+  }
 });

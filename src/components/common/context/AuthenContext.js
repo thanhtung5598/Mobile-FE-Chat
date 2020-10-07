@@ -5,20 +5,10 @@ const AuthenContext = React.createContext();
 const AuthenConsumer = AuthenContext.Consumer;
 
 const AuthenProvider = props => {
-  const [userToken, setUserToken] = useState(null);
-
-  const signIn = () => {
-    setUserToken('ABC');
-  };
-  const signOut = () => {
-    setUserToken(null);
-  };
-  const signUp = () => {
-    setUserToken('ABC');
-  };
+  const [userPhone, setUserPhone] = useState('0336365110');
 
   return (
-    <AuthenContext.Provider value={{ userToken, signIn, signOut, signUp }}>
+    <AuthenContext.Provider value={{ userPhone, setUserPhone }}>
       {props.children}
     </AuthenContext.Provider>
   );
