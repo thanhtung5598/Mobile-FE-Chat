@@ -1,144 +1,106 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { Text, View, Spinner } from 'native-base';
-import { REX } from '../../../../utils';
+import { Text, View, Spinner, Badge, Tab, Tabs } from 'native-base';
 import * as Yup from 'yup';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Entypo } from '@expo/vector-icons';
-import { StyledInput } from '../../../../components/common/ComponentsCommon/StyledInput';
-import ErrorInput from '../../../../components/common/ComponentsCommon/ErrorInput';
 import { SafeAreaView } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialIcons } from '@expo/vector-icons';
-import { refreshError } from 'actions/authenActions';
+
+// Component
+import FormPhone from '../FormPhone';
+import FormMail from '../FormMail';
+import FormName from '../FormName';
+import FormPassword from '../FormPassword';
 
 const FormRegister = props => {
-  const dispatch = useDispatch();
-  const { isLoading, error, message } = useSelector(state => state.authen);
-  const { onHandleSubmitted, styles, navigation } = props;
+  const { isLoading } = useSelector(state => state.authen);
+  const {
+    initialValues,
+    setTypeRegister,
+    defaultSchema,
+    onHandleSubmitted,
+    styles,
+    navigation,
+    step
+  } = props;
 
-  const [isEyeOpen, setIsEyeOpen] = useState([false, false]);
-
-  const handleOpenEyes = eye => {
-    const tempEye = [...isEyeOpen];
-    tempEye[eye] = !tempEye[eye];
-    setIsEyeOpen(tempEye);
+  const handleChangeType = (e, formikProps) => {
+    const type = e.ref.props.heading;
+    formikProps.setErrors({});
+    setTypeRegister(type);
   };
-
-  const validatedSchema = Yup.object({
-    name: Yup.string()
-      .min(6, 'Name must be more than 6 characters')
-      .max(32, 'Name must be less than 32 characters')
-      .required('Name is required'),
-    phone: Yup.string()
-      .trim()
-      .matches(REX.PHONE_REX, {
-        message: 'Your phone invalid'
-      })
-      .required('Phone is required'),
-    password: Yup.string()
-      .min(6, 'Password must be more than 6 characters')
-      .max(32, 'Password must be less than 32 characters')
-      .required('Password is required'),
-    passwordConfirm: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
-      .required('Confirm is required')
-  });
 
   return (
     <SafeAreaView>
       <View style={styles.rect3}>
         <Text style={styles.loremIpsum}>
-          Please compleated this form to sign up
+          {step === 0 && 'Please input your required field'}
+          {step === 2 && 'Please input your name'}
+          {step === 3 && 'Please input your password to completed'}
         </Text>
+        <Badge
+          style={{
+            backgroundColor: 'white',
+            alignSelf: 'center',
+            position: 'absolute',
+            right: 15,
+            marginTop: 15
+          }}
+        >
+          <Text style={{ color: '#2962ff', fontWeight: 'bold', fontSize: 16 }}>
+            {step + 1} / 4
+          </Text>
+        </Badge>
       </View>
       <Formik
-        initialValues={{
-          name: '',
-          phone: '',
-          password: '',
-          passwordConfirm: ''
-        }}
-        validationSchema={validatedSchema}
+        initialValues={initialValues}
+        validationSchema={Yup.object(defaultSchema)}
         onSubmit={onHandleSubmitted}
       >
         {({ touched, errors, ...formikProps }) => (
           <React.Fragment>
-            {error && (
-              <View style={styles.errorBE}>
-                <MaterialIcons
-                  style={styles.errorBEIcon}
-                  name="error"
-                  size={20}
-                  color="red"
-                />
-                <Text style={styles.errorBEText}>{message.msg}</Text>
-              </View>
+            {step === 0 && (
+              <Tabs
+                onChangeTab={e => handleChangeType(e, formikProps)}
+                tabBarUnderlineStyle={{ backgroundColor: '#2196f3', height: 1 }}
+              >
+                <Tab heading="Phone" activeTextStyle={{ color: '#2196f3' }}>
+                  <FormPhone
+                    styles={styles}
+                    touched={touched}
+                    errors={errors}
+                    formikProps={formikProps}
+                  />
+                </Tab>
+                <Tab heading="Email" activeTextStyle={{ color: '#2196f3' }}>
+                  <FormMail
+                    styles={styles}
+                    touched={touched}
+                    errors={errors}
+                    formikProps={formikProps}
+                  />
+                </Tab>
+              </Tabs>
             )}
-            <View style={styles.rect5}>
-              <StyledInput
+            {step === 2 && (
+              <FormName
+                styles={styles}
+                touched={touched}
+                errors={errors}
                 formikProps={formikProps}
-                formikKey="password"
-                placeholder="Password"
-                secureTextEntry={isEyeOpen[0] ? false : true}
               />
-              <Entypo
-                onPress={() => handleOpenEyes(0)}
-                style={styles.eyeSlash}
-                name={`${isEyeOpen[0] ? 'eye' : 'eye-with-line'}`}
-                size={24}
-                color="black"
-              />
-            </View>
-            {touched.password && errors.password ? (
-              <ErrorInput text={errors.password} />
-            ) : null}
-            <View style={styles.rect5}>
-              <StyledInput
+            )}
+            {step === 3 && (
+              <FormPassword
+                styles={styles}
+                touched={touched}
+                errors={errors}
                 formikProps={formikProps}
-                formikKey="passwordConfirm"
-                placeholder="Confirm password"
-                secureTextEntry={isEyeOpen[1] ? false : true}
               />
-              <Entypo
-                onPress={() => handleOpenEyes(1)}
-                style={styles.eyeSlash}
-                name={`${isEyeOpen[1] ? 'eye' : 'eye-with-line'}`}
-                size={24}
-                color="black"
-              />
-            </View>
-            {touched.passwordConfirm && errors.passwordConfirm ? (
-              <ErrorInput text={errors.passwordConfirm} />
-            ) : null}
-            <View style={styles.rect5}>
-              <StyledInput
-                formikProps={formikProps}
-                formikKey="phone"
-                onFocus={() => dispatch(refreshError())}
-                placeholder="Phone number..."
-                value={formikProps.values.phone}
-                keyboardType="numeric"
-              />
-            </View>
-            {touched.phone && errors.phone ? (
-              <ErrorInput text={errors.phone} />
-            ) : null}
-
-            <View style={styles.rect5}>
-              <StyledInput
-                formikProps={formikProps}
-                formikKey="name"
-                placeholder="Your name..."
-                value={formikProps.values.name}
-              />
-            </View>
-            {touched.name && errors.name ? (
-              <ErrorInput text={errors.name} />
-            ) : null}
-
+            )}
             <TouchableOpacity
               disabled={isLoading}
               onPress={formikProps.handleSubmit}
@@ -147,8 +109,24 @@ const FormRegister = props => {
                 style={styles.rect7}
                 colors={['#0cb3ff', '#0068ff']}
               >
-                {isLoading && <Spinner size="small" color="#ff9800" />}
-                {!isLoading && <Text style={styles.loginButton}>Sign In</Text>}
+                <Text style={styles.loginButton}>
+                  {step !== 3 ? 'Next' : 'Completed'}
+                </Text>
+                {isLoading && step !== 2 && (
+                  <Spinner
+                    style={{ position: 'absolute' }}
+                    size="large"
+                    color="white"
+                  />
+                )}
+                {step !== 3 && (
+                  <MaterialIcons
+                    style={styles.iconNext}
+                    name="navigate-next"
+                    size={28}
+                    color="white"
+                  />
+                )}
               </LinearGradient>
             </TouchableOpacity>
             <View style={styles.bottomHint}>
@@ -169,11 +147,19 @@ const FormRegister = props => {
 
 export default FormRegister;
 FormRegister.propTypes = {
+  step: PropTypes.number,
+  setTypeRegister: PropTypes.func,
+  initialValues: PropTypes.objectOf(PropTypes.any),
+  defaultSchema: PropTypes.objectOf(PropTypes.any),
   navigation: PropTypes.objectOf(PropTypes.any),
   styles: PropTypes.objectOf(PropTypes.any),
   onHandleSubmitted: PropTypes.func
 };
 FormRegister.defaultProps = {
+  step: 0,
+  setTypeRegister: () => {},
+  initialValues: {},
+  defaultSchema: {},
   navigation: {},
   styles: {},
   onHandleSubmitted: () => {}

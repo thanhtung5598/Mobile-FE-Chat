@@ -7,8 +7,8 @@ const axiosApiInstance = axios.create({
 // ABC
 // Request interceptor for API calls
 axiosApiInstance.interceptors.request.use(
-  config => {
-    const token = asyncStorage.getAccessToken();
+  async config => {
+    const token = await asyncStorage.getAccessToken();
     if (token) {
       config.headers['x-access-token'] = token;
     }

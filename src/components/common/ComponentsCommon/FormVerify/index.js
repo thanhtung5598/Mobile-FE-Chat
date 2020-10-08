@@ -1,26 +1,23 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import AnimateVerify from './../AnumateVerify';
 import { Container, Content, Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import useCountDown from 'components/common/hook/useCountDown';
 
-const FormVerify = ({ onHandleVerifyCode, onHandleResendCode, userPhone }) => {
-  const [countDown, setCountDown] = useState(null);
-
-  useEffect(() => {
-    if (countDown > 0) {
-      setTimeout(() => {
-        setCountDown(countDown - 1);
-      }, 1000);
-    }
-    if (countDown === 0) setCountDown(null);
-  }, [countDown, setCountDown]);
+const FormVerify = ({
+  typeRegister,
+  onHandleVerifyCode,
+  onHandleResendCode,
+  userData
+}) => {
+  const { countDown, setCountDown } = useCountDown();
 
   const onHandleResendAndCountDown = useCallback(() => {
     setCountDown(10);
     onHandleResendCode();
-  }, [onHandleResendCode]);
+  }, [onHandleResendCode, setCountDown]);
 
   return (
     <Container>
@@ -32,7 +29,8 @@ const FormVerify = ({ onHandleVerifyCode, onHandleResendCode, userPhone }) => {
           </Text>
         </View>
         <AnimateVerify
-          userPhone={userPhone}
+          typeRegister={typeRegister}
+          userData={userData}
           onHandleVerifyCode={onHandleVerifyCode}
         />
         <TouchableOpacity
@@ -95,7 +93,8 @@ const styles = StyleSheet.create({
 });
 
 FormVerify.propTypes = {
-  userPhone: PropTypes.string,
+  typeRegister: PropTypes.string,
+  userData: PropTypes.objectOf(PropTypes.any),
   countDown: PropTypes.number,
   onHandleVerifyCode: PropTypes.func,
   setCountDown: PropTypes.func,
@@ -104,7 +103,8 @@ FormVerify.propTypes = {
   navigation: PropTypes.objectOf(PropTypes.any)
 };
 FormVerify.defaultProps = {
-  userPhone: '',
+  typeRegister: '',
+  userData: {},
   countDown: 0,
   onHandleVerifyCode: () => {},
   setCountDown: () => {},

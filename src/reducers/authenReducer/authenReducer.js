@@ -46,7 +46,11 @@ const AuthenReducer = (state = initialState, action) => {
     case AUTHENTICATION_TYPE.REGISTER_SUCCESS:
       return {
         ...state,
-        isLoading: false
+        isLoading: false,
+        error: null,
+        message: null,
+        isAuthenticated: true,
+        auth_token: action.payload.accessToken
       };
     case AUTHENTICATION_TYPE.REGISTER_FAILURE:
       return {
@@ -63,11 +67,7 @@ const AuthenReducer = (state = initialState, action) => {
     case AUTHENTICATION_TYPE.ACTIVE_SUCCESS:
       return {
         ...state,
-        isLoading: false,
-        isAuthenticated: true,
-        error: null,
-        message: null,
-        auth_token: action.payload
+        isLoading: false
       };
     case AUTHENTICATION_TYPE.ACTIVE_FAILURE:
       return {
