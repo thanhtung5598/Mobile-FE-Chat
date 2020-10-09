@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -7,18 +8,111 @@ import { Container, Content, Text, Icon, View } from 'native-base';
 import { AuthenContext } from 'components/common/context/AuthenContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import FormVerify from 'components/common/ComponentsCommon/FormVerify';
+import * as Yup from 'yup';
+import { REX } from 'utils';
+import ForgotForm from './FormForgot';
+import {
+  accountSendForgotPassword,
+  accountVerifyCode
+} from 'actions/authenActions';
 
-import ForgotForm from './ForgotForm';
+const initialValues = {
+  email: '',
+  phone: ''
+};
 
-const Login = ({ navigation }) => {
+const defaultSchemaValid = {
+  phone: Yup.string()
+    .trim()
+    .matches(REX.PHONE_REX, {
+      message: 'Your phone invalid'
+    })
+    .required('Phone is required')
+};
+
+const Forgot = ({ navigation }) => {
+  const [typeForgot, setTypeForgot] = useState('Phone');
+  const { userData, setUserData } = useContext(AuthenContext);
+  const [defaultSchema, setDefaultSchema] = useState(defaultSchemaValid);
   const [step, setStep] = useState(0);
-  const { signUp } = useContext(AuthenContext);
 
-  const onHandleSubmited = () => {
-    setStep(1);
+  useEffect(() => {
+    step === 0 &&
+      typeForgot === 'Phone' &&
+      setDefaultSchema({ ...defaultSchemaValid });
+    step === 0 &&
+      typeForgot === 'Email' &&
+      setDefaultSchema({
+        email: Yup.string()
+          .trim()
+          .matches(REX.EMAIL_RGX, {
+            message: 'Email invalid'
+          })
+          .required('Email is required')
+      });
+  }, [step, typeForgot]);
+
+  const onHandleSubmited = values => {
+    console.log(values);
+    if (step === 0) {
+      const { phone, email } = values;
+      setUserData({
+        ...userData,
+        phone: phone.trim(),
+        email: email.trim()
+      });
+      if (typeForgot === 'Phone') {
+        // accountSendForgotPassword('phone', phone.trim());
+      }
+      if (typeForgot === 'Email') {
+        // accountSendForgotPassword('email', phone.trim());
+      }
+      setStep(step + 1);
+      return;
+    }
+    if (step === 2) {
+      const { newPassword, confirmNewPassword } = values;
+    }
   };
-  const onHandleVerifyCode = () => {
-    signUp();
+  const onHandleVerifyCode = code => {
+    let values = null;
+    if (typeForgot === 'Phone') {
+      values = {
+        phone: userData.phone,
+        code
+      };
+    }
+    if (typeForgot === 'Email') {
+      values = {
+        email: userData.email,
+        code
+      };
+    }
+    setStep(step + 1);
+    // dispatch(accountVerifyCode(values)).then(res => {
+    //   const { error } = res;
+    //   if (!error) {
+    //     setUserData({
+    //       ...userData,
+    //       userToken: res.data
+    //     });
+    //     setStep(step + 1);
+    //   }
+    // });
+  };
+
+  const onHandleResendCode = () => {
+    if (typeForgot === 'Phone') {
+      // accountSendForgotPassword('phone', phone.trim());
+    }
+    if (typeForgot === 'Email') {
+      // accountSendForgotPassword('email', phone.trim());
+    }
+  };
+
+  const onHandleTurnBack = () => {
+    navigation.navigate('Welcome');
+    dispatch(refreshError());
   };
 
   return (
@@ -34,22 +128,37 @@ const Login = ({ navigation }) => {
               <Text style={styles.login}>Forgot Password</Text>
             </TouchableOpacity>
           </LinearGradient>
-          {step === 0 && (
-            <ForgotForm onHandleSubmited={onHandleSubmited} styles={styles} />
+          {step !== 1 && (
+            <ForgotForm
+              initialValues={initialValues}
+              defaultSchema={defaultSchema}
+              setTypeForgot={setTypeForgot}
+              onHandleSubmited={onHandleSubmited}
+              styles={styles}
+              step={step}
+            />
           )}
-          {step === 1 && <FormVerify onHandleVerifyCode={onHandleVerifyCode} />}
+          {step === 1 && (
+            <FormVerify
+              typeRegister={typeForgot}
+              userData={userData}
+              onHandleVerifyCode={onHandleVerifyCode}
+              onHandleResendCode={onHandleResendCode}
+              onHandleTurnBack={onHandleTurnBack}
+            />
+          )}
         </View>
       </Content>
     </Container>
   );
 };
 
-export default Login;
+export default Forgot;
 
-Login.propTypes = {
+Forgot.propTypes = {
   navigation: PropTypes.objectOf(PropTypes.any)
 };
-Login.defaultProps = {
+Forgot.defaultProps = {
   navigation: {}
 };
 
@@ -94,9 +203,16 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#2196f3',
-    marginTop: 20,
+    marginTop: 18,
     paddingLeft: 15,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    flexDirection: 'row'
+  },
+  eyeSlash: {
+    alignSelf: 'center',
+    marginRight: 15,
+    fontSize: 20,
+    color: '#616161'
   },
   rect7: {
     width: '85%',
@@ -104,14 +220,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(33,150,243,1)',
     borderRadius: 25,
     marginTop: 23,
-    alignSelf: 'center'
+    alignSelf: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   loginButton: {
     color: 'rgba(255,255,255,1)',
     fontSize: 22,
-    textAlign: 'center',
-    height: 27,
-    marginTop: 12
+    textAlign: 'center'
   },
   SendMessageSMS: {
     fontSize: 15,

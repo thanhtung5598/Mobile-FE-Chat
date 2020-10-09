@@ -63,13 +63,46 @@ export const accountRegister = (data, token) => dispatch => {
   });
 };
 
+export const accountChangePassword = (data, token) => dispatch => {
+  dispatch({
+    type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_REQUEST
+  });
+  axiosServices.defaults.headers.post['x-access-token'] = token.accessToken;
+  return axiosServices.post(`${prefix}passwords/change`, data).then(res => {
+    const { error, data } = res.data;
+    if (!error) {
+      dispatch({
+        type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS,
+        payload: {
+          error,
+          data
+        }
+      });
+    }
+    if (error) {
+      dispatch({
+        type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE,
+        payload: {
+          error,
+          data
+        }
+      });
+    }
+    return { error, data };
+  });
+};
+
 export const accountSendOTPSignUp = (type = 'phone', value) => {
   return axiosServices.get(`${prefix}active/send?${type}=${value}`);
 };
 
-export const accountVerifyCodeSignUp = data => dispatch => {
+export const accountSendForgotPassword = (type = 'phone', value) => {
+  return axiosServices.get(`${prefix}passwords/forgot?${type}=${value}`);
+};
+
+export const accountVerifyCode = data => dispatch => {
   dispatch({
-    type: AUTHENTICATION_TYPE.ACTIVE_REQUEST
+    type: AUTHENTICATION_TYPE.VERIFY_REQUEST
   });
   return axiosServices
     .post(`${prefix}code/verify`, data)
@@ -77,7 +110,7 @@ export const accountVerifyCodeSignUp = data => dispatch => {
       const { error, data } = res.data;
       if (!error) {
         dispatch({
-          type: AUTHENTICATION_TYPE.ACTIVE_SUCCESS
+          type: AUTHENTICATION_TYPE.VERIFY_SUCCESS
         });
       }
       return { error, data };
@@ -85,7 +118,7 @@ export const accountVerifyCodeSignUp = data => dispatch => {
     .catch(err => {
       const { error, data } = err.response?.data;
       dispatch({
-        type: AUTHENTICATION_TYPE.ACTIVE_FAILURE,
+        type: AUTHENTICATION_TYPE.VERIFY_FAILURE,
         payload: {
           error
         }

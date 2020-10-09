@@ -12,7 +12,7 @@ import FormVerify from 'components/common/ComponentsCommon/FormVerify';
 import * as Yup from 'yup';
 import { REX } from 'utils';
 import {
-  accountVerifyCodeSignUp,
+  accountVerifyCode,
   accountSendOTPSignUp,
   refreshError,
   accountRegister
@@ -152,7 +152,7 @@ const Register = ({ navigation }) => {
         code
       };
     }
-    dispatch(accountVerifyCodeSignUp(values)).then(res => {
+    dispatch(accountVerifyCode(values)).then(res => {
       const { error } = res;
       if (!error) {
         setUserData({
