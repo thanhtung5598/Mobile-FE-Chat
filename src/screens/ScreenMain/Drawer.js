@@ -10,9 +10,8 @@ const Drawer = createDrawerNavigator();
 const Main = props => {
   return (
     <Drawer.Navigator
-      drawerStyle={{
-        width: 200
-      }}
+      drawerStyle={{ width: 200 }}
+      drawerPosition="left"
       drawerContent={() => <Menu {...props} />}
       initialRouteName="Messages"
     >

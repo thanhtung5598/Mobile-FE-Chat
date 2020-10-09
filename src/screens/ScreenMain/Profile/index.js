@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
 import { AuthenContext } from 'components/common/context/AuthenContext';
+import PropTypes from 'prop-types';
 import {
   Container,
   Content,
@@ -19,7 +20,7 @@ const source = {
     'https://scontent-sin6-2.xx.fbcdn.net/v/t1.0-1/p480x480/104483297_1777530932386533_1453571394136712521_o.jpg?_nc_cat=108&_nc_sid=7206a8&_nc_ohc=tm0JgudmkPQAX9OQO6h&_nc_ht=scontent-sin6-2.xx&tp=6&oh=43e71af7e3ded3fd585438e4e946550c&oe=5F9D1CCA'
 };
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const { signOut } = useContext(AuthenContext);
   return (
     <Container>
@@ -36,7 +37,9 @@ const Profile = () => {
             <Text style={styles.leThanhTung}>Le Thanh Tung</Text>
           </View>
           <View style={styles.SettingStyle}>
-            <AntDesign name="setting" size={30} color="white" />
+            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+              <AntDesign name="setting" size={30} color="white" />
+            </TouchableOpacity>
           </View>
         </ImageBackground>
         <List style={styles.ContainList}>
@@ -78,6 +81,13 @@ const Profile = () => {
 };
 
 export default Profile;
+
+Profile.propTypes = {
+  navigation: PropTypes.objectOf(PropTypes.any)
+};
+Profile.defaultProps = {
+  navigation: {}
+};
 
 const styles = StyleSheet.create({
   container: {
