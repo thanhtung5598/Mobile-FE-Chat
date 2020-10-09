@@ -4,7 +4,7 @@ const initialState = {
   error: null,
   isLoading: false,
   isLoadingChangePass: false,
-  isAuthenticated: true,
+  isAuthenticated: false,
   auth_token: null,
   message: null
 };

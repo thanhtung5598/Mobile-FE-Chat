@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { ActivityIndicator, View } from 'react-native';
+import { View } from 'react-native';
 import SceenRoot from 'screens/SceenRoot';
 import ScreenMain from 'screens/ScreenMain/Drawer';
 import { isTokenExpired } from 'actions/authenActions';
 import { NavigationContainer } from '@react-navigation/native';
+import LottieView from 'lottie-react-native';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -15,13 +16,18 @@ const App = () => {
     if (!isAuthenticated) dispatch(isTokenExpired());
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 3000);
   }, [dispatch, isAuthenticated]);
 
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+        <LottieView
+          ref={animation => {
+            animation?.play();
+          }}
+          source={require('assets/splash.json')}
+        />
       </View>
     );
   }
