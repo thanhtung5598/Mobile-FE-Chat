@@ -1,29 +1,86 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { REX } from 'utils';
-import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
-import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet } from 'react-native';
-import { Container, Content, Text, Icon, View, Spinner } from 'native-base';
+import {
+  Container,
+  Content,
+  Text,
+  Icon,
+  View,
+  Spinner,
+  Tabs,
+  Tab
+} from 'native-base';
+import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
+import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { accountLogin, refreshError } from 'actions/authenActions';
 import { MaterialIcons } from '@expo/vector-icons';
 
+// Component
+import FormPhone from './FormPhone';
+import FormEmail from './FormEmail';
+
+const defaultSchemaValid = {
+  phone: Yup.string()
+    .trim()
+    .matches(REX.PHONE_REX, {
+      message: 'Your phone invalid'
+    })
+    .required('Phone is required')
+};
+
 const Login = ({ navigation }) => {
+  const [typeRegister, setTypeRegister] = useState('Phone');
   const { isLoading, error, message } = useSelector(state => state.authen);
+  const [defaultSchema, setDefaultSchema] = useState(defaultSchemaValid);
+
+  useEffect(() => {
+    typeRegister === 'Phone' && setDefaultSchema({ ...defaultSchemaValid });
+    typeRegister === 'Email' &&
+      setDefaultSchema({
+        email: Yup.string()
+          .trim()
+          .matches(REX.EMAIL_RGX, {
+            message: 'Email invalid'
+          })
+          .required('Email is required')
+      });
+  }, [typeRegister]);
+
   const dispatch = useDispatch();
 
   const onHandleLogin = values => {
-    dispatch(accountLogin(values));
+    let dataLogin = {};
+    if (typeRegister === 'Phone') {
+      dataLogin = {
+        phone: values.phone,
+        password: values.password
+      };
+    }
+    if (typeRegister === 'Email') {
+      dataLogin = {
+        email: values.email,
+        password: values.password
+      };
+    }
+    dispatch(accountLogin(dataLogin));
   };
 
   const onHandleTurnBack = () => {
     navigation.navigate('Welcome');
     dispatch(refreshError());
+  };
+
+  const handleChangeType = (e, formikProps) => {
+    const type = e.ref.props.heading;
+    formikProps.setErrors({});
+    setTypeRegister(type);
   };
 
   return (
@@ -41,45 +98,59 @@ const Login = ({ navigation }) => {
               Please enter your phone and password tologin
             </Text>
           </View>
-          {error && (
-            <View style={styles.errorBE}>
-              <MaterialIcons
-                style={styles.errorBEIcon}
-                name="error"
-                size={20}
-                color="red"
-              />
-              <Text style={styles.errorBEText}>{message.msg}</Text>
-            </View>
-          )}
           <Formik
             initialValues={{ phone: '', password: '' }}
-            validationSchema={Yup.object({
-              phone: Yup.string()
-                .trim()
-                .matches(REX.PHONE_REX, {
-                  message: 'Your phone invalid'
-                })
-                .required('Phone is required'),
-              password: Yup.string().required('Password is required')
-            })}
+            validationSchema={Yup.object(defaultSchema)}
             onSubmit={onHandleLogin}
           >
             {({ touched, errors, ...formikProps }) => (
               <>
-                <View style={styles.rect5}>
-                  <StyledInput
-                    onFocus={() => dispatch(refreshError())}
-                    formikProps={formikProps}
-                    formikKey="phone"
-                    placeholder="Phone number..."
-                    value={formikProps.values.phone}
-                    keyboardType="numeric"
-                  />
-                </View>
-                {touched.phone && errors.phone ? (
-                  <ErrorInput text={errors.phone} />
-                ) : null}
+                <Tabs
+                  onChangeTab={e => handleChangeType(e, formikProps)}
+                  tabBarUnderlineStyle={{
+                    backgroundColor: '#2196f3',
+                    height: 1
+                  }}
+                >
+                  <Tab heading="Phone" activeTextStyle={{ color: '#2196f3' }}>
+                    {error && (
+                      <View style={styles.errorBE}>
+                        <MaterialIcons
+                          style={styles.errorBEIcon}
+                          name="error"
+                          size={20}
+                          color="red"
+                        />
+                        <Text style={styles.errorBEText}>{message.msg}</Text>
+                      </View>
+                    )}
+                    <FormPhone
+                      styles={styles}
+                      touched={touched}
+                      errors={errors}
+                      formikProps={formikProps}
+                    />
+                  </Tab>
+                  <Tab heading="Email" activeTextStyle={{ color: '#2196f3' }}>
+                    {error && (
+                      <View style={styles.errorBE}>
+                        <MaterialIcons
+                          style={styles.errorBEIcon}
+                          name="error"
+                          size={20}
+                          color="red"
+                        />
+                        <Text style={styles.errorBEText}>{message.msg}</Text>
+                      </View>
+                    )}
+                    <FormEmail
+                      styles={styles}
+                      touched={touched}
+                      errors={errors}
+                      formikProps={formikProps}
+                    />
+                  </Tab>
+                </Tabs>
                 <View style={styles.rect6}>
                   <StyledInput
                     onFocus={() => dispatch(refreshError())}

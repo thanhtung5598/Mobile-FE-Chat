@@ -1,42 +1,43 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import PropTypes from 'prop-types';
-import { View } from 'native-base';
 import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
 import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
+import PropTypes from 'prop-types';
+import { View } from 'native-base';
 import { refreshError } from 'actions/authenActions';
 
-const FormEmail = props => {
+const FormPhone = props => {
   const dispatch = useDispatch();
   const { formikProps, touched, errors, styles } = props;
 
   return (
     <>
-      <View style={{ ...styles.rect5 }}>
+      <View style={styles.rect5}>
         <StyledInput
-          formikProps={formikProps}
-          formikKey="email"
           onFocus={() => dispatch(refreshError())}
-          placeholder="Your email..."
-          value={formikProps.values.email}
+          formikProps={formikProps}
+          formikKey="phone"
+          placeholder="Your phone..."
+          value={formikProps.values.phone}
+          keyboardType="numeric"
         />
       </View>
-      {touched.email && errors.email ? (
-        <ErrorInput text={errors.email} />
+      {touched.phone && errors.phone ? (
+        <ErrorInput text={errors.phone} />
       ) : null}
     </>
   );
 };
 
-export default FormEmail;
+export default FormPhone;
 
-FormEmail.propTypes = {
+FormPhone.propTypes = {
   formikProps: PropTypes.objectOf(PropTypes.any),
   styles: PropTypes.objectOf(PropTypes.any),
   touched: PropTypes.objectOf(PropTypes.any),
   errors: PropTypes.objectOf(PropTypes.any)
 };
-FormEmail.defaultProps = {
+FormPhone.defaultProps = {
   formikProps: {},
   styles: {},
   touched: {},
