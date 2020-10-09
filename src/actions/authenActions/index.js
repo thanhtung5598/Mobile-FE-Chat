@@ -42,6 +42,7 @@ export const accountRegister = (data, token) => dispatch => {
   return axiosServices.post(`${prefix}signup`, data).then(res => {
     const { error, data } = res.data;
     if (!error) {
+      asyncStorage.setToken(token);
       dispatch({
         type: AUTHENTICATION_TYPE.REGISTER_SUCCESS,
         payload: {
@@ -67,29 +68,35 @@ export const accountChangePassword = (data, token) => dispatch => {
   dispatch({
     type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_REQUEST
   });
+  console.log(token);
   axiosServices.defaults.headers.post['x-access-token'] = token.accessToken;
-  return axiosServices.post(`${prefix}passwords/change`, data).then(res => {
-    const { error, data } = res.data;
-    if (!error) {
-      dispatch({
-        type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS,
-        payload: {
-          error,
-          data
-        }
-      });
-    }
-    if (error) {
-      dispatch({
-        type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE,
-        payload: {
-          error,
-          data
-        }
-      });
-    }
-    return { error, data };
-  });
+  return axiosServices
+    .post(`${prefix}passwords/change`, data)
+    .then(res => {
+      const { error } = res.data;
+      if (!error) {
+        asyncStorage.setToken(token);
+        dispatch({
+          type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS,
+          payload: {
+            token
+          }
+        });
+      }
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      console.log(err);
+      if (error) {
+        dispatch({
+          type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE,
+          payload: {
+            error
+          }
+        });
+      }
+      return { error, data };
+    });
 };
 
 export const accountSendOTPSignUp = (type = 'phone', value) => {
@@ -100,7 +107,34 @@ export const accountSendForgotPassword = (type = 'phone', value) => {
   return axiosServices.get(`${prefix}passwords/forgot?${type}=${value}`);
 };
 
-export const accountVerifyCode = data => dispatch => {
+export const accountVerifyCodeForgot = data => dispatch => {
+  dispatch({
+    type: AUTHENTICATION_TYPE.VERIFY_REQUEST
+  });
+  return axiosServices
+    .post(`${prefix}code/password/verify`, data)
+    .then(res => {
+      const { error, data } = res.data;
+      if (!error) {
+        dispatch({
+          type: AUTHENTICATION_TYPE.VERIFY_SUCCESS
+        });
+      }
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: AUTHENTICATION_TYPE.VERIFY_FAILURE,
+        payload: {
+          error
+        }
+      });
+      return { error, data };
+    });
+};
+
+export const accountVerifyCodeSignUp = data => dispatch => {
   dispatch({
     type: AUTHENTICATION_TYPE.VERIFY_REQUEST
   });

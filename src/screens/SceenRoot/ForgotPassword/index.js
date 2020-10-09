@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-
+import { useDispatch } from 'react-redux';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet } from 'react-native';
 import { Container, Content, Text, Icon, View } from 'native-base';
@@ -13,7 +13,9 @@ import { REX } from 'utils';
 import ForgotForm from './FormForgot';
 import {
   accountSendForgotPassword,
-  accountVerifyCode
+  accountVerifyCodeForgot,
+  accountChangePassword,
+  refreshError
 } from 'actions/authenActions';
 
 const initialValues = {
@@ -31,6 +33,7 @@ const defaultSchemaValid = {
 };
 
 const Forgot = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [typeForgot, setTypeForgot] = useState('Phone');
   const { userData, setUserData } = useContext(AuthenContext);
   const [defaultSchema, setDefaultSchema] = useState(defaultSchemaValid);
@@ -50,10 +53,19 @@ const Forgot = ({ navigation }) => {
           })
           .required('Email is required')
       });
+    step === 2 &&
+      setDefaultSchema({
+        newPassword: Yup.string()
+          .min(6, 'Password must be more than 6 characters')
+          .max(32, 'Password must be less than 32 characters')
+          .required('Password is required'),
+        confirmNewPassword: Yup.string()
+          .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+          .required('Confirm is required')
+      });
   }, [step, typeForgot]);
 
   const onHandleSubmited = values => {
-    console.log(values);
     if (step === 0) {
       const { phone, email } = values;
       setUserData({
@@ -62,16 +74,21 @@ const Forgot = ({ navigation }) => {
         email: email.trim()
       });
       if (typeForgot === 'Phone') {
-        // accountSendForgotPassword('phone', phone.trim());
+        accountSendForgotPassword('phone', phone.trim());
       }
       if (typeForgot === 'Email') {
-        // accountSendForgotPassword('email', phone.trim());
+        accountSendForgotPassword('email', email.trim());
       }
       setStep(step + 1);
       return;
     }
     if (step === 2) {
       const { newPassword, confirmNewPassword } = values;
+      const passwordChange = {
+        newPassword,
+        confirmNewPassword
+      };
+      dispatch(accountChangePassword(passwordChange, userData.userToken));
     }
   };
   const onHandleVerifyCode = code => {
@@ -88,26 +105,26 @@ const Forgot = ({ navigation }) => {
         code
       };
     }
-    setStep(step + 1);
-    // dispatch(accountVerifyCode(values)).then(res => {
-    //   const { error } = res;
-    //   if (!error) {
-    //     setUserData({
-    //       ...userData,
-    //       userToken: res.data
-    //     });
-    //     setStep(step + 1);
-    //   }
-    // });
+    dispatch(accountVerifyCodeForgot(values)).then(res => {
+      const { error } = res;
+      if (!error) {
+        setUserData({
+          ...userData,
+          userToken: res.data
+        });
+        setStep(step + 1);
+      }
+    });
   };
 
   const onHandleResendCode = () => {
     if (typeForgot === 'Phone') {
-      // accountSendForgotPassword('phone', phone.trim());
+      accountSendForgotPassword('phone', userData.phone);
     }
     if (typeForgot === 'Email') {
-      // accountSendForgotPassword('email', phone.trim());
+      accountSendForgotPassword('email', userData.email);
     }
+    dispatch(refreshError());
   };
 
   const onHandleTurnBack = () => {

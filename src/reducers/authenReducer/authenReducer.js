@@ -3,6 +3,7 @@ import { AUTHENTICATION_TYPE } from 'constTypes';
 const initialState = {
   error: null,
   isLoading: false,
+  isLoadingChangePass: false,
   isAuthenticated: false,
   auth_token: null,
   message: null
@@ -73,6 +74,26 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
+        error: action.payload.error
+      };
+    case AUTHENTICATION_TYPE.CHANGE_PASSWORD_REQUEST:
+      return {
+        ...state,
+        isLoadingChangePass: true
+      };
+    case AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        isLoadingChangePass: false,
+        isAuthenticated: true,
+        error: null,
+        message: null,
+        auth_token: action.payload.token
+      };
+    case AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE:
+      return {
+        ...state,
+        isLoadingChangePass: false,
         error: action.payload.error
       };
     case AUTHENTICATION_TYPE.LOGOUT_REQUEST:

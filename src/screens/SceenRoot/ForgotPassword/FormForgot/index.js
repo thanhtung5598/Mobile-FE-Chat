@@ -14,7 +14,9 @@ import FormEmail from '../FormEmail';
 import FormPassword from '../FormPassword';
 
 const ForgotForm = props => {
-  const { isLoading, error, message } = useSelector(state => state.authen);
+  const { isLoadingChangePass, error, message } = useSelector(
+    state => state.authen
+  );
   const {
     initialValues,
     defaultSchema,
@@ -122,7 +124,7 @@ const ForgotForm = props => {
                 <Text style={styles.loginButton}>
                   {step !== 2 ? 'Next' : 'Completed'}
                 </Text>
-                {isLoading && step === 2 && (
+                {isLoadingChangePass && step !== 2 && (
                   <Spinner
                     style={{ position: 'absolute' }}
                     size="large"

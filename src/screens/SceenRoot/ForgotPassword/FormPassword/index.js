@@ -32,8 +32,8 @@ const FormPassword = props => {
           color="black"
         />
       </View>
-      {touched.password && errors.password ? (
-        <ErrorInput text={errors.password} />
+      {touched.newPassword && errors.newPassword ? (
+        <ErrorInput text={errors.newPassword} />
       ) : null}
       <View style={styles.rect5}>
         <StyledInput
@@ -50,8 +50,8 @@ const FormPassword = props => {
           color="black"
         />
       </View>
-      {touched.passwordConfirm && errors.passwordConfirm ? (
-        <ErrorInput text={errors.passwordConfirm} />
+      {touched.confirmNewPassword && errors.confirmNewPassword ? (
+        <ErrorInput text={errors.confirmNewPassword} />
       ) : null}
     </>
   );
