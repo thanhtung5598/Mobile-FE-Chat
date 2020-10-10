@@ -16,7 +16,7 @@ const App = () => {
     if (!isAuthenticated) dispatch(isTokenExpired());
     setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 500);
   }, [dispatch, isAuthenticated]);
 
   if (isLoading) {

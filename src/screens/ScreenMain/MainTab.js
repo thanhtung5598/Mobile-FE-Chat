@@ -11,14 +11,14 @@ const Tab = createMaterialBottomTabNavigator();
 
 const MainTab = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator barStyle={{ backgroundColor: 'white' }}>
       <Tab.Screen
         name="Messages"
         component={Messages}
         options={{
           tabBarLabel: 'Tin nhắn',
           tabBarIcon: () => (
-            <AntDesign name="message1" size={24} color="white" />
+            <AntDesign name="message1" size={24} color="black" />
           )
         }}
       />
@@ -31,7 +31,7 @@ const MainTab = () => {
             <MaterialCommunityIcons
               name="account-group"
               size={25}
-              color="white"
+              color="black"
             />
           )
         }}
@@ -42,7 +42,7 @@ const MainTab = () => {
         options={{
           tabBarLabel: 'Danh bạ',
           tabBarIcon: () => (
-            <AntDesign name="contacts" size={24} color="white" />
+            <AntDesign name="contacts" size={24} color="black" />
           )
         }}
       />
@@ -51,7 +51,7 @@ const MainTab = () => {
         component={Profile}
         options={{
           tabBarLabel: 'Hồ sơ',
-          tabBarIcon: () => <AntDesign name="profile" size={24} color="white" />
+          tabBarIcon: () => <AntDesign name="profile" size={24} color="black" />
         }}
       />
     </Tab.Navigator>
