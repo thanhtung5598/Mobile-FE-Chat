@@ -14,7 +14,8 @@ import {
   View,
   Spinner,
   Tabs,
-  Tab
+  Tab,
+  TabHeading
 } from 'native-base';
 import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
 import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
@@ -78,7 +79,8 @@ const Login = ({ navigation }) => {
   };
 
   const handleChangeType = (e, formikProps) => {
-    const type = e.ref.props.heading;
+    const type = e.ref.props.name;
+    console.log(type);
     formikProps.setErrors({});
     setTypeRegister(type);
   };
@@ -112,7 +114,14 @@ const Login = ({ navigation }) => {
                     height: 1
                   }}
                 >
-                  <Tab heading="Phone" activeTextStyle={{ color: '#2196f3' }}>
+                  <Tab
+                    heading={
+                      <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
+                        <Text>Phone</Text>
+                      </TabHeading>
+                    }
+                    name="Phone"
+                  >
                     {error && (
                       <View style={styles.errorBE}>
                         <MaterialIcons
@@ -131,7 +140,14 @@ const Login = ({ navigation }) => {
                       formikProps={formikProps}
                     />
                   </Tab>
-                  <Tab heading="Email" activeTextStyle={{ color: '#2196f3' }}>
+                  <Tab
+                    heading={
+                      <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
+                        <Text>Email</Text>
+                      </TabHeading>
+                    }
+                    name="Email"
+                  >
                     {error && (
                       <View style={styles.errorBE}>
                         <MaterialIcons

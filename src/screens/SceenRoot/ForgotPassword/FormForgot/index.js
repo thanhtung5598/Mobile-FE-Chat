@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Text, View, Badge, Tabs, Tab, Spinner } from 'native-base';
+import { Text, View, Badge, Tabs, Tab, Spinner, TabHeading } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -27,7 +27,7 @@ const ForgotForm = props => {
   } = props;
 
   const handleChangeType = (e, formikProps) => {
-    const type = e.ref.props.heading;
+    const type = e.ref.props.name;
     formikProps.setErrors({});
     setTypeForgot(type);
   };
@@ -68,7 +68,14 @@ const ForgotForm = props => {
                   height: 1
                 }}
               >
-                <Tab heading="Phone" activeTextStyle={{ color: '#2196f3' }}>
+                <Tab
+                  heading={
+                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
+                      <Text>Phone</Text>
+                    </TabHeading>
+                  }
+                  name="Phone"
+                >
                   {error && (
                     <View style={styles.errorBE}>
                       <MaterialIcons
@@ -87,7 +94,14 @@ const ForgotForm = props => {
                     formikProps={formikProps}
                   />
                 </Tab>
-                <Tab heading="Email" activeTextStyle={{ color: '#2196f3' }}>
+                <Tab
+                  heading={
+                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
+                      <Text>Email</Text>
+                    </TabHeading>
+                  }
+                  name="Email"
+                >
                   {error && (
                     <View style={styles.errorBE}>
                       <MaterialIcons
@@ -124,7 +138,7 @@ const ForgotForm = props => {
                 <Text style={styles.loginButton}>
                   {step !== 2 ? 'Next' : 'Completed'}
                 </Text>
-                {isLoadingChangePass && step !== 2 && (
+                {isLoadingChangePass && step === 2 && (
                   <Spinner
                     style={{ position: 'absolute' }}
                     size="large"

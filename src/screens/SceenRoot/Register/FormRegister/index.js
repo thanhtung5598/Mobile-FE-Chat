@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { Text, View, Spinner, Badge, Tab, Tabs } from 'native-base';
+import { Text, View, Spinner, Badge, Tab, Tabs, TabHeading } from 'native-base';
 import * as Yup from 'yup';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native';
@@ -28,7 +28,7 @@ const FormRegister = props => {
   } = props;
 
   const handleChangeType = (e, formikProps) => {
-    const type = e.ref.props.heading;
+    const type = e.ref.props.name;
     formikProps.setErrors({});
     setTypeRegister(type);
   };
@@ -67,7 +67,14 @@ const FormRegister = props => {
                 onChangeTab={e => handleChangeType(e, formikProps)}
                 tabBarUnderlineStyle={{ backgroundColor: '#2196f3', height: 1 }}
               >
-                <Tab heading="Phone" activeTextStyle={{ color: '#2196f3' }}>
+                <Tab
+                  heading={
+                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
+                      <Text>Phone</Text>
+                    </TabHeading>
+                  }
+                  name="Phone"
+                >
                   <FormPhone
                     styles={styles}
                     touched={touched}
@@ -75,7 +82,14 @@ const FormRegister = props => {
                     formikProps={formikProps}
                   />
                 </Tab>
-                <Tab heading="Email" activeTextStyle={{ color: '#2196f3' }}>
+                <Tab
+                  heading={
+                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
+                      <Text>Email</Text>
+                    </TabHeading>
+                  }
+                  name="Email"
+                >
                   <FormMail
                     styles={styles}
                     touched={touched}

@@ -68,25 +68,26 @@ export const accountChangePassword = (data, token) => dispatch => {
   dispatch({
     type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_REQUEST
   });
-  console.log(token);
-  axiosServices.defaults.headers.post['x-access-token'] = token.accessToken;
+  axiosServices.defaults.headers.put['x-access-token'] = token.accessToken;
   return axiosServices
-    .post(`${prefix}passwords/change`, data)
+    .put(`${prefix}passwords/change`, data)
     .then(res => {
       const { error } = res.data;
       if (!error) {
         asyncStorage.setToken(token);
-        dispatch({
-          type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS,
-          payload: {
-            token
-          }
-        });
+        setTimeout(() => {
+          dispatch({
+            type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS,
+            payload: {
+              token
+            }
+          });
+        }, 3000);
       }
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
       console.log(err);
+      const { error, data } = err.response?.data;
       if (error) {
         dispatch({
           type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE,
