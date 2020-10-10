@@ -65,6 +65,8 @@ const Profile = ({ navigation }) => {
           </ListItem>
         </List>
         <LinearGradient
+          start={{ x: -1, y: 0 }}
+          end={{ x: 1, y: 0 }}
           colors={['#2962ff', '#0cb3ff']}
           style={styles.LinearGradientProfile}
         >
