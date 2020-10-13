@@ -5,7 +5,7 @@ import SceenRoot from 'screens/SceenRoot';
 import ScreenMain from 'screens/ScreenMain/Drawer';
 import { isTokenExpired } from 'actions/authenActions';
 import { NavigationContainer } from '@react-navigation/native';
-import LottieView from 'lottie-react-native';
+// import LottieView from 'lottie-react-native';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -22,12 +22,12 @@ const App = () => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <LottieView
+        {/* <LottieView
           ref={animation => {
             animation?.play();
           }}
           source={require('assets/splash.json')}
-        />
+        /> */}
       </View>
     );
   }

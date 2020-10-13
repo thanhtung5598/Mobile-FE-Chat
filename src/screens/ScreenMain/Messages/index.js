@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Container,
-  Header,
   Content,
   List,
   ListItem,
@@ -11,15 +10,13 @@ import {
   Body,
   Right,
   View,
-  Item,
-  Badge,
-  Icon
+  Badge
 } from 'native-base';
-import { Formik } from 'formik';
-import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
-import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { AntDesign } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
+
+// Component
+import HeaderSearch from './../common/header';
 
 const source = {
   uri:
@@ -27,42 +24,9 @@ const source = {
 };
 
 const ListMessage = () => {
-  const handleSearchUser = () => {};
   return (
     <Container>
-      <Header
-        searchBar
-        rounded
-        style={{
-          paddingLeft: 10,
-          paddingRight: 10,
-          backgroundColor: 'white',
-          borderBottomColor: 'white'
-        }}
-      >
-        <Item style={{ backgroundColor: '#EEE', height: 35 }}>
-          <Formik
-            initialValues={{ textSearch: '' }}
-            onSubmit={handleSearchUser}
-          >
-            {({ touched, errors, ...formikProps }) => (
-              <>
-                <Icon name="ios-search" style={{ marginLeft: 8 }} />
-                <StyledInput
-                  formikProps={formikProps}
-                  formikKey="search"
-                  placeholder="Looking your friends..."
-                  style={{ fontSize: 15 }}
-                />
-                {touched.password && errors.password ? (
-                  <ErrorInput text={errors.password} />
-                ) : null}
-                <Icon name="ios-people" style={{ marginRight: 8 }} />
-              </>
-            )}
-          </Formik>
-        </Item>
-      </Header>
+      <HeaderSearch />
       <Content>
         <ScrollView
           horizontal={true}

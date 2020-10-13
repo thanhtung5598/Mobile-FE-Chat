@@ -80,7 +80,6 @@ const Login = ({ navigation }) => {
 
   const handleChangeType = (e, formikProps) => {
     const type = e.ref.props.name;
-    console.log(type);
     formikProps.setErrors({});
     setTypeRegister(type);
   };
