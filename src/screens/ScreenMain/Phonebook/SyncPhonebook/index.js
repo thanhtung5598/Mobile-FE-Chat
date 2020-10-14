@@ -10,11 +10,11 @@ import {
   Body,
   Right,
   Content,
-  Icon,
-  Button
+  View
 } from 'native-base';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 
 const source = {
   uri:
@@ -27,19 +27,12 @@ const SyncPhonebook = props => {
     <>
       <Container>
         <Content>
-          <LinearGradient
-            start={{ x: -1, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#2962ff', '#0cb3ff']}
-          >
-            <TouchableOpacity
-              style={styles.rect}
-              onPress={() => setPhonebook(false)}
-            >
-              <Icon name="arrow-back" style={styles.icon}></Icon>
-              <Text style={styles.login}>Friends from phonebook device</Text>
+          <View style={styles.rect}>
+            <TouchableOpacity onPress={() => setPhonebook(false)}>
+              <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
             </TouchableOpacity>
-          </LinearGradient>
+            <Text style={styles.login}>Friends from phonebook device</Text>
+          </View>
           <Content style={{ marginTop: 20 }}>
             <ListItem thumbnail style={{ paddingBottom: 12 }}>
               <Left>
@@ -49,11 +42,16 @@ const SyncPhonebook = props => {
                 <Text>Ánh sao</Text>
               </Body>
               <Right style={{ borderBottomWidth: 0 }}>
-                <TouchableOpacity>
-                  <Button success>
-                    <Text> Accepted </Text>
-                  </Button>
-                </TouchableOpacity>
+                <LinearGradient
+                  start={{ x: -1, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={['#2962ff', '#0cb3ff']}
+                  style={styles.LinearGradientProfile}
+                >
+                  <TouchableOpacity style={styles.UpdateProfile}>
+                    <Text style={styles.UpdatedProfileText}>Accepted</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
               </Right>
             </ListItem>
             <ListItem thumbnail style={{ paddingBottom: 12 }}>
@@ -64,11 +62,16 @@ const SyncPhonebook = props => {
                 <Text>Ánh sao</Text>
               </Body>
               <Right style={{ borderBottomWidth: 0 }}>
-                <TouchableOpacity>
-                  <Button success>
-                    <Text> Accepted </Text>
-                  </Button>
-                </TouchableOpacity>
+                <LinearGradient
+                  start={{ x: -1, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={['#2962ff', '#0cb3ff']}
+                  style={styles.LinearGradientProfile}
+                >
+                  <TouchableOpacity style={styles.UpdateProfile}>
+                    <Text style={styles.UpdatedProfileText}>Accepted</Text>
+                  </TouchableOpacity>
+                </LinearGradient>
               </Right>
             </ListItem>
           </Content>
@@ -91,21 +94,44 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  rect: {
+  LinearGradientProfile: {
+    borderRadius: 5,
+    alignSelf: 'center',
+    marginTop: 10,
+    paddingRight: 15,
+    paddingLeft: 15
+  },
+  UpdatedProfileText: {
+    color: 'white'
+  },
+  UpdateProfile: {
     flexDirection: 'row',
-    alignItems: 'center'
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 35
+  },
+  rect: {
+    paddingLeft: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
   },
   icon: {
-    color: 'rgba(255,255,255,1)',
-    fontSize: 25,
-    width: 34,
-    height: 37,
-    marginTop: 13,
-    marginLeft: 10
+    fontSize: 30,
+    marginRight: 20
   },
   login: {
-    color: 'rgba(255,255,255,1)',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '700'
   }
 });

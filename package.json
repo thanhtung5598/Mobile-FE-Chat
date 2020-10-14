@@ -21,6 +21,7 @@
     "babel-preset-expo": "^8.3.0",
     "expo": "~39.0.2",
     "expo-blur": "^8.2.0",
+    "expo-contacts": "~8.5.0",
     "expo-font": "~8.3.0",
     "expo-linear-gradient": "~8.3.0",
     "expo-status-bar": "~1.0.2",

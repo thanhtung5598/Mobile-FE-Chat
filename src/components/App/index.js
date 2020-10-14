@@ -16,9 +16,8 @@ const App = () => {
     if (!isAuthenticated) dispatch(isTokenExpired());
     setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 2000);
   }, [dispatch, isAuthenticated]);
-
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
