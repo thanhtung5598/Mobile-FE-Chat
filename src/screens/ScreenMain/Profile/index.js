@@ -1,6 +1,8 @@
 import React, { useContext } from 'react';
+import { useSelector } from 'react-redux';
 import { StyleSheet, ImageBackground } from 'react-native';
 import { AuthenContext } from 'components/common/context/AuthenContext';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import {
   Container,
@@ -15,12 +17,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 
-const source = {
-  uri:
-    'https://scontent-sin6-2.xx.fbcdn.net/v/t1.0-1/p480x480/104483297_1777530932386533_1453571394136712521_o.jpg?_nc_cat=108&_nc_sid=7206a8&_nc_ohc=tm0JgudmkPQAX9OQO6h&_nc_ht=scontent-sin6-2.xx&tp=6&oh=43e71af7e3ded3fd585438e4e946550c&oe=5F9D1CCA'
-};
-
 const Profile = ({ navigation }) => {
+  const { dataUser } = useSelector(state => state.dataUser);
+  console.log(dataUser);
   const { signOut } = useContext(AuthenContext);
   return (
     <Container>
@@ -33,8 +32,15 @@ const Profile = ({ navigation }) => {
           }}
         >
           <View style={styles.rect}>
-            <Thumbnail large source={source} />
-            <Text style={styles.leThanhTung}>Le Thanh Tung</Text>
+            <Thumbnail
+              large
+              source={{
+                uri:
+                  dataUser.avatar ||
+                  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png'
+              }}
+            />
+            <Text style={styles.leThanhTung}>{dataUser.name}</Text>
           </View>
           <View style={styles.SettingStyle}>
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
@@ -44,24 +50,30 @@ const Profile = ({ navigation }) => {
         </ImageBackground>
         <List style={styles.ContainList}>
           <ListItem>
-            <Text style={styles.titleInfo}>Tên Zola</Text>
-            <Text style={styles.valueInfo}>Lê Thanh Tùng</Text>
+            <Text style={styles.titleInfo}>Zola name</Text>
+            <Text style={styles.valueInfo}>{dataUser.name || '...'}</Text>
           </ListItem>
           <ListItem>
             <Text style={styles.titleInfo}>Username</Text>
-            <Text style={styles.valueInfo}>Tạo user name</Text>
+            <Text style={styles.valueInfo}>
+              {dataUser.phone || dataUser.email || 'Tạo user name'}
+            </Text>
           </ListItem>
           <ListItem>
-            <Text style={styles.titleInfo}>Giới tính</Text>
-            <Text style={styles.valueInfo}>Nam</Text>
+            <Text style={styles.titleInfo}>Create At</Text>
+            <Text style={styles.valueInfo}>
+              {moment(dataUser.createAt).format('YYYY/MM/DD')}
+            </Text>
           </ListItem>
           <ListItem>
-            <Text style={styles.titleInfo}>Ngày sinh</Text>
-            <Text style={styles.valueInfo}>05/05/1998</Text>
+            <Text style={styles.titleInfo}>Update At</Text>
+            <Text style={styles.valueInfo}>
+              {moment(dataUser.updateAt).format('YYYY/MM/DD')}
+            </Text>
           </ListItem>
           <ListItem>
-            <Text style={styles.titleInfo}>Điện thoại</Text>
-            <Text style={styles.valueInfo}>+84336365110</Text>
+            <Text style={styles.titleInfo}>Phone</Text>
+            <Text style={styles.valueInfo}>{dataUser.phone}</Text>
           </ListItem>
         </List>
         <LinearGradient

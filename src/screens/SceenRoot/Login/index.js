@@ -59,13 +59,13 @@ const Login = ({ navigation }) => {
     let dataLogin = {};
     if (typeRegister === 'Phone') {
       dataLogin = {
-        phone: values.phone,
+        phone: values.phone.trim(),
         password: values.password
       };
     }
     if (typeRegister === 'Email') {
       dataLogin = {
-        email: values.email,
+        email: values.email.trim(),
         password: values.password
       };
     }

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { StyleSheet, StatusBar, Platform } from 'react-native';
 import { Container, Text, Footer, FooterTab, Button } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
@@ -7,13 +8,19 @@ import Messages from './Messages';
 import Phonebook from './Phonebook';
 import Profile from './Profile';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { getProfileUser } from 'actions/userActions';
 
 Platform.OS === 'android' && StatusBar.setHidden(true);
 
 const MainTab = props => {
-  const [content, setContent] = useState(<Phonebook />);
+  const dispatch = useDispatch();
+  const [content, setContent] = useState(<Messages />);
   const [isActive, setActive] = useState('');
   const [footer, setFooter] = useState(true);
+
+  useEffect(() => {
+    dispatch(getProfileUser());
+  }, [dispatch]);
 
   const handleChangeTab = target => {
     setActive(target);
