@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Text, View, Badge, Tabs, Tab, Spinner, TabHeading } from 'native-base';
+import { Text, View, Badge, Tabs, Tab, Spinner } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -69,11 +69,11 @@ const ForgotForm = props => {
                 }}
               >
                 <Tab
-                  heading={
-                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
-                      <Text>Phone</Text>
-                    </TabHeading>
-                  }
+                  tabStyle={{ backgroundColor: '#F8F8F8' }}
+                  textStyle={{ color: '#AAA' }}
+                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                  heading="Phone"
                   name="Phone"
                 >
                   {error && (
@@ -95,11 +95,11 @@ const ForgotForm = props => {
                   />
                 </Tab>
                 <Tab
-                  heading={
-                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
-                      <Text>Email</Text>
-                    </TabHeading>
-                  }
+                  tabStyle={{ backgroundColor: '#F8F8F8' }}
+                  textStyle={{ color: '#AAA' }}
+                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                  heading="Email"
                   name="Email"
                 >
                   {error && (

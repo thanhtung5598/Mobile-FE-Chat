@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import {
@@ -15,6 +15,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import * as Contacts from 'expo-contacts';
 
 const source = {
   uri:
@@ -23,6 +24,23 @@ const source = {
 
 const SyncPhonebook = props => {
   const { setPhonebook } = props;
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      console.log(status);
+      if (status === 'granted') {
+        const { data } = await Contacts.getContactsAsync();
+        if (data.length > 0) {
+          console.log(data);
+        }
+      }
+      if (status === 'denied') {
+        //doing somthing
+      }
+    })();
+  }, []);
+
   return (
     <>
       <Container>
@@ -116,7 +134,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 5,
-    padding: 20,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -132,6 +150,6 @@ const styles = StyleSheet.create({
   },
   login: {
     fontSize: 18,
-    fontWeight: '700'
+    fontWeight: '500'
   }
 });

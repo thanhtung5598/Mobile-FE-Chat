@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white',
     borderRadius: 5,
-    padding: 20,
+    padding: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -132,6 +132,6 @@ const styles = StyleSheet.create({
   },
   login: {
     fontSize: 20,
-    fontWeight: '700'
+    fontWeight: '500'
   }
 });

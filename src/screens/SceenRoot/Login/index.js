@@ -14,8 +14,7 @@ import {
   View,
   Spinner,
   Tabs,
-  Tab,
-  TabHeading
+  Tab
 } from 'native-base';
 import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
 import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
@@ -118,11 +117,11 @@ const Login = ({ navigation }) => {
                   }}
                 >
                   <Tab
-                    heading={
-                      <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
-                        <Text>Phone</Text>
-                      </TabHeading>
-                    }
+                    tabStyle={{ backgroundColor: '#F8F8F8' }}
+                    textStyle={{ color: '#AAA' }}
+                    activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                    activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                    heading="Phone"
                     name="Phone"
                   >
                     {error && (
@@ -144,11 +143,11 @@ const Login = ({ navigation }) => {
                     />
                   </Tab>
                   <Tab
-                    heading={
-                      <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
-                        <Text>Email</Text>
-                      </TabHeading>
-                    }
+                    tabStyle={{ backgroundColor: '#F8F8F8' }}
+                    textStyle={{ color: '#AAA' }}
+                    activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                    activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                    heading="Email"
                     name="Email"
                   >
                     {error && (

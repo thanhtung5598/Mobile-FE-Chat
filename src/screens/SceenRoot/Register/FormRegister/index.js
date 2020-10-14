@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { Text, View, Spinner, Badge, Tab, Tabs, TabHeading } from 'native-base';
+import { Text, View, Spinner, Badge, Tab, Tabs } from 'native-base';
 import * as Yup from 'yup';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native';
@@ -68,11 +68,11 @@ const FormRegister = props => {
                 tabBarUnderlineStyle={{ backgroundColor: '#2196f3', height: 1 }}
               >
                 <Tab
-                  heading={
-                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
-                      <Text>Phone</Text>
-                    </TabHeading>
-                  }
+                  tabStyle={{ backgroundColor: '#F8F8F8' }}
+                  textStyle={{ color: '#AAA' }}
+                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                  heading="Phone"
                   name="Phone"
                 >
                   <FormPhone
@@ -83,11 +83,11 @@ const FormRegister = props => {
                   />
                 </Tab>
                 <Tab
-                  heading={
-                    <TabHeading style={{ backgroundColor: '#F8F8F8' }}>
-                      <Text>Email</Text>
-                    </TabHeading>
-                  }
+                  tabStyle={{ backgroundColor: '#F8F8F8' }}
+                  textStyle={{ color: '#AAA' }}
+                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                  heading="Email"
                   name="Email"
                 >
                   <FormMail
