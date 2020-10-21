@@ -9,6 +9,8 @@ const PROFILE_TYPE = {
   ...createRequestTypes('USER', 'FETCH_LIST_FRIENDS'),
   ...createRequestTypes('USER', 'FETCH_REQUEST_FRIENDS'),
   ...createRequestTypes('USER', 'SEARCH_USER'),
-  ...createRequestTypes('USER', 'ADD_FRIEND')
+  ...createRequestTypes('USER', 'ADD_FRIEND'),
+  ...createRequestTypes('USER', 'ACCEPT_FRIEND'),
+  ...createRequestTypes('USER', 'DECLINE_FRIEND')
 };
 export default PROFILE_TYPE;

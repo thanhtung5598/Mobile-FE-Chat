@@ -65,7 +65,7 @@ export const clearSearch = () => dispatch => {
   });
 };
 
-export default addFriend = dataAdd => dispatch => {
+export const addFriend = dataAdd => dispatch => {
   dispatch({
     type: PROFILE_TYPE.ADD_FRIEND_REQUEST
   });
@@ -83,6 +83,52 @@ export default addFriend = dataAdd => dispatch => {
       const { error, data } = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.ADD_FRIEND_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const acceptFriend = dataAccept => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.ACCEPT_FRIEND_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}accepFriend`, dataAccept)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.ACCEPT_FRIEND_SUCCESS,
+        payload: data
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.ACCEPT_FRIEND_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const declineFriend = dataDecline => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.DECLINE_FRIEND_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}declineFriend`, dataDecline)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.DECLINE_FRIEND_SUCCESS,
+        payload: data
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.DECLINE_FRIEND_FAILURE
       });
       return { error, data };
     });

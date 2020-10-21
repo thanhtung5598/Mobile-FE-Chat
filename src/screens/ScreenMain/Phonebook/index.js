@@ -33,7 +33,9 @@ import FindFriends from './FindFriends';
 import {
   searchUserByPhoneEmailName,
   clearSearch,
-  addFriend
+  addFriend,
+  acceptFriend,
+  declineFriend
 } from 'actions/userActions';
 
 const avatarDefault =
@@ -87,6 +89,21 @@ const PhoneBook = () => {
     };
     dispatch(addFriend(value));
   };
+  const handleAcceptFriend = id_friend_accept => {
+    const value = {
+      user_id: dataUser.id,
+      user_id_want_accept: id_friend_accept
+    };
+    dispatch(acceptFriend(value));
+  };
+
+  const handleDeclineFriend = id_friend_decline => {
+    const value = {
+      user_id: dataUser.id,
+      user_id_want_decline: id_friend_decline
+    };
+    dispatch(declineFriend(value));
+  };
 
   return (
     <>
@@ -104,7 +121,11 @@ const PhoneBook = () => {
           </Content>
         )}
         {!find && showFriendsReq && !phonebook && (
-          <FriendRequest setShowFriendsReq={setShowFriendsReq} />
+          <FriendRequest
+            setShowFriendsReq={setShowFriendsReq}
+            handleAcceptFriend={handleAcceptFriend}
+            handleDeclineFriend={handleDeclineFriend}
+          />
         )}
         {!find && phonebook && !showFriendsReq && (
           <SyncPhonebook setPhonebook={setPhonebook} />

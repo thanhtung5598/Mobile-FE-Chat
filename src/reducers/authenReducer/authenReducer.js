@@ -71,7 +71,6 @@ const AuthenReducer = (state = initialState, action) => {
         message: null
       };
     case AUTHENTICATION_TYPE.SEND_OTP_FORGOT_FAILURE:
-      console.log(action);
       return {
         ...state,
         isLoading: false,

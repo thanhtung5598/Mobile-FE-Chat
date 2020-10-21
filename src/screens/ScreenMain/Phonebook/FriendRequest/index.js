@@ -24,7 +24,7 @@ const source = {
 
 const FriendRequest = props => {
   const { listRequestFriends } = useSelector(state => state.friends);
-  const { setShowFriendsReq } = props;
+  const { setShowFriendsReq, handleAcceptFriend, handleDeclineFriend } = props;
   return (
     <>
       <Container>
@@ -37,6 +37,7 @@ const FriendRequest = props => {
           </View>
           <Content style={{ marginTop: 20 }}>
             {listRequestFriends?.map((friend, index) => {
+              console.log(friend);
               return (
                 <Fragment key={index}>
                   <ListItem thumbnail style={{ paddingBottom: 12 }}>
@@ -46,17 +47,33 @@ const FriendRequest = props => {
                     <Body style={{ borderBottomColor: 'white' }}>
                       <Text>Ánh sao</Text>
                     </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
+                    <Right
+                      style={{ borderBottomWidth: 0, flexDirection: 'row' }}
+                    >
+                      <LinearGradient
+                        start={{ x: -1, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        colors={['#e64a19', '#ff7043']}
+                        style={styles.LinearGradientLeft}
+                      >
+                        <TouchableOpacity
+                          style={styles.UpdateProfile}
+                          onPress={() => handleDeclineFriend(friend.id)}
+                        >
+                          <Text style={styles.UpdatedProfileText}>Decline</Text>
+                        </TouchableOpacity>
+                      </LinearGradient>
                       <LinearGradient
                         start={{ x: -1, y: 0 }}
                         end={{ x: 1, y: 0 }}
                         colors={['#2962ff', '#0cb3ff']}
-                        style={styles.LinearGradientProfile}
+                        style={styles.LinearGradientRight}
                       >
-                        <TouchableOpacity style={styles.UpdateProfile}>
-                          <Text style={styles.UpdatedProfileText}>
-                            Accepted
-                          </Text>
+                        <TouchableOpacity
+                          style={styles.UpdateProfile}
+                          onPress={() => handleAcceptFriend(friend.id)}
+                        >
+                          <Text style={styles.UpdatedProfileText}>Accept</Text>
                         </TouchableOpacity>
                       </LinearGradient>
                     </Right>
@@ -74,9 +91,13 @@ const FriendRequest = props => {
 export default FriendRequest;
 
 FriendRequest.propTypes = {
+  handleDeclineFriend: PropTypes.func,
+  handleAcceptFriend: PropTypes.func,
   setShowFriendsReq: PropTypes.func
 };
 FriendRequest.defaultProps = {
+  handleDeclineFriend: () => {},
+  handleAcceptFriend: () => {},
   setShowFriendsReq: () => {}
 };
 
@@ -84,12 +105,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  LinearGradientProfile: {
+  LinearGradientLeft: {
     borderRadius: 18,
     alignSelf: 'center',
     marginTop: 10,
-    paddingRight: 15,
-    paddingLeft: 15
+    paddingRight: 10,
+    paddingLeft: 10,
+    marginRight: 5
+  },
+  LinearGradientRight: {
+    borderRadius: 18,
+    alignSelf: 'center',
+    marginTop: 10,
+    paddingRight: 10,
+    paddingLeft: 10
   },
   UpdatedProfileText: {
     color: 'white'

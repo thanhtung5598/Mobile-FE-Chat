@@ -69,7 +69,7 @@ const FindFriends = props => {
                       style={styles.UpdateProfile}
                       onPress={() => handleAddFriend(item.id)}
                     >
-                      <Text style={styles.UpdatedProfileText}>Make friend</Text>
+                      <Text style={styles.UpdatedProfileText}>Add friend</Text>
                     </TouchableOpacity>
                   </LinearGradient>
                 </Right>
