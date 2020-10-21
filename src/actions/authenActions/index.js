@@ -86,7 +86,6 @@ export const accountChangePassword = (data, token) => dispatch => {
       }
     })
     .catch(err => {
-      console.log(err);
       const { error, data } = err.response?.data;
       if (error) {
         dispatch({
@@ -100,12 +99,60 @@ export const accountChangePassword = (data, token) => dispatch => {
     });
 };
 
-export const accountSendOTPSignUp = (type = 'phone', value) => {
-  return axiosServices.get(`${prefix}active/send?${type}=${value}`);
+export const accountSendOTPSignUp = (type = 'phone', value) => dispatch => {
+  dispatch({
+    type: AUTHENTICATION_TYPE.SEND_OTP_REGISTER_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}active/send?${type}=${value}`)
+    .then(res => {
+      const { error, data } = res.data;
+      if (!error) {
+        dispatch({
+          type: AUTHENTICATION_TYPE.SEND_OTP_REGISTER_SUCCESS
+        });
+      }
+      if (error) {
+        dispatch({
+          type: AUTHENTICATION_TYPE.SEND_OTP_REGISTER_FAILURE,
+          payload: {
+            error,
+            data
+          }
+        });
+      }
+      return { error, data };
+    });
 };
 
-export const accountSendForgotPassword = (type = 'phone', value) => {
-  return axiosServices.get(`${prefix}passwords/forgot?${type}=${value}`);
+export const accountSendForgotPassword = (
+  type = 'phone',
+  value
+) => dispatch => {
+  return axiosServices
+    .get(`${prefix}passwords/forgot?${type}=${value}`)
+    .then(res => {
+      const { error, data } = res.data;
+      if (!error) {
+        dispatch({
+          type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_SUCCESS
+        });
+      }
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      if (error) {
+        dispatch({
+          type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_FAILURE,
+          payload: {
+            error,
+            data
+          }
+        });
+      }
+      return { error, data };
+    });
 };
 
 export const accountVerifyCodeForgot = data => dispatch => {

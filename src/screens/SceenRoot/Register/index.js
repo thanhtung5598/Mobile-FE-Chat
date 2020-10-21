@@ -89,12 +89,21 @@ const Register = ({ navigation }) => {
         email: email.trim()
       });
       if (typeRegister === 'Phone') {
-        accountSendOTPSignUp('phone', phone.trim());
+        dispatch(accountSendOTPSignUp('phone', phone.trim())).then(res => {
+          const { error } = res;
+          if (!error) {
+            setStep(step + 1);
+          }
+        });
       }
       if (typeRegister === 'Email') {
-        accountSendOTPSignUp('email', email.trim());
+        dispatch(accountSendOTPSignUp('email', email.trim())).then(res => {
+          const { error } = res;
+          if (!error) {
+            setStep(step + 1);
+          }
+        });
       }
-      setStep(step + 1);
       return;
     }
     if (step === 2) {
@@ -159,7 +168,6 @@ const Register = ({ navigation }) => {
           ...userData,
           userToken: res.data
         });
-        console.log(res);
         setStep(step + 1);
       }
     });
@@ -167,10 +175,10 @@ const Register = ({ navigation }) => {
 
   const onHandleResendCode = () => {
     if (typeRegister === 'Phone') {
-      accountSendOTPSignUp('phone', userData.phone);
+      dispatch(accountSendOTPSignUp('phone', userData.phone));
     }
     if (typeRegister === 'Email') {
-      accountSendOTPSignUp('email', userData.email);
+      dispatch(accountSendOTPSignUp('email', userData.email));
     }
   };
 

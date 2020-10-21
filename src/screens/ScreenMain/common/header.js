@@ -1,39 +1,67 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Header, Item, Icon } from 'native-base';
-import { Formik } from 'formik';
-import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
-import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
+import { Header, Item, Icon, Input } from 'native-base';
+import PropTypes from 'prop-types';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
 
-const HeaderSearch = () => {
+const HeaderSearch = props => {
+  const {
+    find,
+    handleTurnBack,
+    handleFind,
+    handleChangeValue,
+    userQuery
+  } = props;
+
   return (
     <Header style={styles.headerStyle}>
       <Item style={styles.itemStyle}>
-        <Formik initialValues={{ textSearch: '' }}>
-          {({ touched, errors, ...formikProps }) => (
-            <>
-              <Icon name="ios-search" />
-              <StyledInput
-                formikProps={formikProps}
-                formikKey="search"
-                placeholder="Looking your friends..."
-              />
-              {touched.password && errors.password ? (
-                <ErrorInput text={errors.password} />
-              ) : null}
-              <TouchableOpacity>
-                <Icon name="ios-people" />
-              </TouchableOpacity>
-            </>
-          )}
-        </Formik>
+        {find ? (
+          <TouchableOpacity onPress={handleTurnBack}>
+            <Ionicons
+              name="md-arrow-back"
+              size={30}
+              style={{ marginRight: 10, marginTop: 3 }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <Icon name="ios-search" size={30} />
+        )}
+        <Input
+          onFocus={handleFind}
+          autoFocus={find}
+          value={userQuery}
+          onChangeText={handleChangeValue}
+          formikKey="search"
+          placeholder="Looking your friends..."
+        />
+        <TouchableOpacity>
+          <Icon name="ios-people" />
+        </TouchableOpacity>
       </Item>
     </Header>
   );
 };
 
 export default HeaderSearch;
+
+HeaderSearch.propTypes = {
+  find: PropTypes.bool,
+  userQuery: PropTypes.string,
+  setUserQuery: PropTypes.func,
+  handleTurnBack: PropTypes.func,
+  handleChangeValue: PropTypes.func,
+  handleFind: PropTypes.func
+};
+HeaderSearch.defaultProps = {
+  find: false,
+  userQuery: '',
+  setUserQuery: () => {},
+  handleTurnBack: () => {},
+  handleChangeValue: () => {},
+  handleFind: () => {}
+};
 
 const styles = StyleSheet.create({
   headerStyle: {

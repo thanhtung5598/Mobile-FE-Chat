@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   LinearGradientProfile: {
-    borderRadius: 5,
+    borderRadius: 18,
     alignSelf: 'center',
     marginTop: 10,
     paddingRight: 15,

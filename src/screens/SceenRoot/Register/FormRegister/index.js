@@ -16,7 +16,7 @@ import FormName from '../FormName';
 import FormPassword from '../FormPassword';
 
 const FormRegister = props => {
-  const { isLoading } = useSelector(state => state.authen);
+  const { isLoading, error, message } = useSelector(state => state.authen);
   const {
     initialValues,
     setTypeRegister,
@@ -75,6 +75,17 @@ const FormRegister = props => {
                   heading="Phone"
                   name="Phone"
                 >
+                  {error && (
+                    <View style={styles.errorBE}>
+                      <MaterialIcons
+                        style={styles.errorBEIcon}
+                        name="error"
+                        size={20}
+                        color="red"
+                      />
+                      <Text style={styles.errorBEText}>{message.msg}</Text>
+                    </View>
+                  )}
                   <FormPhone
                     styles={styles}
                     touched={touched}
@@ -90,6 +101,17 @@ const FormRegister = props => {
                   heading="Email"
                   name="Email"
                 >
+                  {error && (
+                    <View style={styles.errorBE}>
+                      <MaterialIcons
+                        style={styles.errorBEIcon}
+                        name="error"
+                        size={20}
+                        color="red"
+                      />
+                      <Text style={styles.errorBEText}>{message.msg}</Text>
+                    </View>
+                  )}
                   <FormMail
                     styles={styles}
                     touched={touched}
@@ -160,6 +182,7 @@ const FormRegister = props => {
 };
 
 export default FormRegister;
+
 FormRegister.propTypes = {
   step: PropTypes.number,
   setTypeRegister: PropTypes.func,

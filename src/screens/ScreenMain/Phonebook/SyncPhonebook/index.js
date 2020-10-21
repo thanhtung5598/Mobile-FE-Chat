@@ -28,7 +28,6 @@ const SyncPhonebook = props => {
   useEffect(() => {
     (async () => {
       const { status } = await Contacts.requestPermissionsAsync();
-      console.log(status);
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync();
         if (data.length > 0) {
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   LinearGradientProfile: {
-    borderRadius: 5,
+    borderRadius: 18,
     alignSelf: 'center',
     marginTop: 10,
     paddingRight: 15,

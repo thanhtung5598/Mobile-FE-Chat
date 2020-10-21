@@ -17,9 +17,11 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 
+const avatarDefault =
+  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
+
 const Profile = ({ navigation }) => {
   const { dataUser } = useSelector(state => state.dataUser);
-  console.log(dataUser);
   const { signOut } = useContext(AuthenContext);
   return (
     <Container>
@@ -35,9 +37,7 @@ const Profile = ({ navigation }) => {
             <Thumbnail
               large
               source={{
-                uri:
-                  dataUser.avatar ||
-                  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png'
+                uri: dataUser.avatar || avatarDefault
               }}
             />
             <Text style={styles.leThanhTung}>{dataUser.name}</Text>

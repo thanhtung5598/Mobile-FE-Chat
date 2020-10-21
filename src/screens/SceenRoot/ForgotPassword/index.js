@@ -74,12 +74,21 @@ const Forgot = ({ navigation }) => {
         email: email.trim()
       });
       if (typeForgot === 'Phone') {
-        accountSendForgotPassword('phone', phone.trim());
+        dispatch(accountSendForgotPassword('phone', phone.trim())).then(res => {
+          const { error } = res;
+          if (!error) {
+            setStep(step + 1);
+          }
+        });
       }
       if (typeForgot === 'Email') {
-        accountSendForgotPassword('email', email.trim());
+        dispatch(accountSendForgotPassword('email', email.trim())).then(res => {
+          const { error } = res;
+          if (!error) {
+            setStep(step + 1);
+          }
+        });
       }
-      setStep(step + 1);
       return;
     }
     if (step === 2) {
@@ -119,10 +128,10 @@ const Forgot = ({ navigation }) => {
 
   const onHandleResendCode = () => {
     if (typeForgot === 'Phone') {
-      accountSendForgotPassword('phone', userData.phone);
+      dispatch(accountSendForgotPassword('phone', userData.phone));
     }
     if (typeForgot === 'Email') {
-      accountSendForgotPassword('email', userData.email);
+      dispatch(accountSendForgotPassword('email', userData.email));
     }
     dispatch(refreshError());
   };
@@ -254,5 +263,17 @@ const styles = StyleSheet.create({
   SendMessageSMS: {
     fontSize: 15,
     textAlign: 'center'
+  },
+  errorBE: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginTop: 10
+  },
+  errorBEIcon: {
+    marginRight: 3
+  },
+  errorBEText: {
+    color: 'red'
   }
 });

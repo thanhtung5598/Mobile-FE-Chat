@@ -37,11 +37,7 @@ const MainTab = props => {
         <Footer style={{ backgroundColor: '#F6F6F6' }}>
           <FooterTab style={{ backgroundColor: '#F6F6F6' }}>
             <Button transparent onPress={() => handleChangeTab('message')}>
-              <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor="#e3f2fd"
-                onPress={() => console.log('press')}
-              >
+              <TouchableHighlight activeOpacity={0.6} underlayColor="#e3f2fd">
                 <AntDesign
                   style={
                     isActive === 'message'
@@ -62,11 +58,7 @@ const MainTab = props => {
               </Text>
             </Button>
             <Button transparent onPress={() => handleChangeTab('phonebook')}>
-              <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor="#e3f2fd"
-                onPress={() => console.log('press')}
-              >
+              <TouchableHighlight activeOpacity={0.6} underlayColor="#e3f2fd">
                 <AntDesign
                   style={
                     isActive === 'phonebook'

@@ -39,6 +39,45 @@ const AuthenReducer = (state = initialState, action) => {
         isAuthenticated: true,
         auth_token: action.payload.accessToken
       };
+    case AUTHENTICATION_TYPE.SEND_OTP_REGISTER_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case AUTHENTICATION_TYPE.SEND_OTP_REGISTER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+        message: null
+      };
+    case AUTHENTICATION_TYPE.SEND_OTP_REGISTER_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload.error,
+        message: action.payload.data[0]
+      };
+    case AUTHENTICATION_TYPE.SEND_OTP_FORGOT_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case AUTHENTICATION_TYPE.SEND_OTP_FORGOT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+        message: null
+      };
+    case AUTHENTICATION_TYPE.SEND_OTP_FORGOT_FAILURE:
+      console.log(action);
+      return {
+        ...state,
+        isLoading: false,
+        error: action.payload.error,
+        message: action.payload.data[0]
+      };
     case AUTHENTICATION_TYPE.REGISTER_REQUEST:
       return {
         ...state,

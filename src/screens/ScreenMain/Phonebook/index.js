@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Keyboard } from 'react-native';
 import {
   Container,
   Content,
@@ -16,6 +18,7 @@ import {
   Fontisto,
   FontAwesome
 } from '@expo/vector-icons';
+import _ from 'lodash';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import ModalCustom from 'components/common/ComponentsCommon/Modal';
@@ -24,6 +27,14 @@ import ModalCustom from 'components/common/ComponentsCommon/Modal';
 import HeaderSearch from './../common/header';
 import FriendRequest from './FriendRequest';
 import SyncPhonebook from './SyncPhonebook';
+import FindFriends from './FindFriends';
+
+// action
+import {
+  searchUserByPhoneEmailName,
+  clearSearch,
+  addFriend
+} from 'actions/userActions';
 
 const source = {
   uri:
@@ -31,9 +42,17 @@ const source = {
 };
 
 const PhoneBook = () => {
+  const dispatch = useDispatch();
+  const { dataUser } = useSelector(state => state.dataUser);
+  const [userQuery, setUserQuery] = useState('');
   const [showFriendsReq, setShowFriendsReq] = useState(false);
   const [phonebook, setPhonebook] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [find, setFind] = useState(false);
+
+  const delayedQuery = useRef(
+    _.debounce(q => dispatch(searchUserByPhoneEmailName(q)), 500)
+  ).current;
 
   const handleToggleModal = () => {
     setVisible(true);
@@ -47,19 +66,60 @@ const PhoneBook = () => {
     setPhonebook(true);
   };
 
+  const handleTurnBack = () => {
+    setUserQuery('');
+    setFind(false);
+    dispatch(clearSearch());
+    Keyboard.dismiss();
+  };
+
+  const handleFind = () => {
+    setFind(true);
+  };
+  const handleChangeValue = value => {
+    setUserQuery(value);
+    delayedQuery(value);
+  };
+
+  const handleAddFriend = id_friend_req => {
+    const value = {
+      user_id: dataUser.id,
+      user_request_id: id_friend_req
+    };
+    dispatch(addFriend(value));
+  };
+
   return (
     <>
       <Container>
-        {showFriendsReq && !phonebook && (
+        {find && (
+          <Content>
+            <HeaderSearch
+              find={find}
+              userQuery={userQuery}
+              handleFind={handleFind}
+              handleTurnBack={handleTurnBack}
+              handleChangeValue={handleChangeValue}
+            />
+            <FindFriends handleAddFriend={handleAddFriend} />
+          </Content>
+        )}
+        {!find && showFriendsReq && !phonebook && (
           <FriendRequest setShowFriendsReq={setShowFriendsReq} />
         )}
-        {phonebook && !showFriendsReq && (
+        {!find && phonebook && !showFriendsReq && (
           <SyncPhonebook setPhonebook={setPhonebook} />
         )}
-        {!showFriendsReq && !phonebook && (
+        {!find && !showFriendsReq && !phonebook && (
           <>
             <ModalCustom visible={visible} setIsShow={setVisible} />
-            <HeaderSearch />
+            <HeaderSearch
+              find={find}
+              userQuery={userQuery}
+              handleFind={handleFind}
+              handleTurnBack={handleTurnBack}
+              handleChangeValue={handleChangeValue}
+            />
             <Content>
               <List>
                 <TouchableOpacity onPress={handleOpenFriendReq}>

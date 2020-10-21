@@ -16,6 +16,8 @@ const AUTHENTICATION_TYPE = {
   ...createRequestTypes('AUTHENTICATION', 'LOGOUT'),
   ...createRequestTypes('AUTHENTICATION', 'REFRESH'),
   ...createRequestTypes('AUTHENTICATION', 'REGISTER'),
+  ...createRequestTypes('AUTHENTICATION', 'SEND_OTP_REGISTER'),
+  ...createRequestTypes('AUTHENTICATION', 'SEND_OTP_FORGOT'),
   ...createRequestTypes('AUTHENTICATION', 'VERIFY'),
   ...createRequestTypes('AUTHENTICATION', 'CHANGE_PASSWORD'),
   ...createSingleRequested('AUTHENTICATION', 'IS_LOGIN')

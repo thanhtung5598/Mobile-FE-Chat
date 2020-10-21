@@ -34,3 +34,56 @@ export const getProfileUser = () => async dispatch => {
       return { error, data };
     });
 };
+
+export const searchUserByPhoneEmailName = dataSearch => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.SEARCH_USER_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}textSearch?value=${dataSearch}`)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.SEARCH_USER_SUCCESS,
+        payload: data
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.SEARCH_USER_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const clearSearch = () => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.SEARCH_USER_SUCCESS,
+    payload: null
+  });
+};
+
+export default addFriend = dataAdd => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.ADD_FRIEND_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}addFriend`, dataAdd)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.ADD_FRIEND_SUCCESS,
+        payload: data
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.ADD_FRIEND_FAILURE
+      });
+      return { error, data };
+    });
+};
