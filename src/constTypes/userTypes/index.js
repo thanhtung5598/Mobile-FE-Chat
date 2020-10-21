@@ -6,6 +6,8 @@ const createRequestTypes = (base, act) =>
   }, {});
 const PROFILE_TYPE = {
   ...createRequestTypes('USER', 'FETCH_PROFILE'),
+  ...createRequestTypes('USER', 'FETCH_LIST_FRIENDS'),
+  ...createRequestTypes('USER', 'FETCH_REQUEST_FRIENDS'),
   ...createRequestTypes('USER', 'SEARCH_USER'),
   ...createRequestTypes('USER', 'ADD_FRIEND')
 };

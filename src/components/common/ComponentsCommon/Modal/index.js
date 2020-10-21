@@ -11,7 +11,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ModalCustom = props => {
-  const { visible, setIsShow } = props;
+  const { visible, setIsShow, info } = props;
 
   const handleCloseModal = () => {
     setIsShow(false);
@@ -29,7 +29,7 @@ const ModalCustom = props => {
         </TouchableWithoutFeedback>
         <View style={styles.modalView}>
           <View style={styles.headerModal}>
-            <Text style={styles.headerModalText}>Ngọc ánh</Text>
+            <Text style={styles.headerModalText}>{info.name}</Text>
           </View>
           <TouchableOpacity>
             <View>
@@ -51,13 +51,15 @@ ModalCustom.propTypes = {
   visible: PropTypes.bool,
   setIsShow: PropTypes.func,
   setFooter: PropTypes.func,
-  children: PropTypes.objectOf(PropTypes.any)
+  children: PropTypes.objectOf(PropTypes.any),
+  info: PropTypes.objectOf(PropTypes.any)
 };
 ModalCustom.defaultProps = {
   visible: false,
   setIsShow: () => {},
   setFooter: () => {},
-  children: {}
+  children: {},
+  info: {}
 };
 
 const styles = StyleSheet.create({

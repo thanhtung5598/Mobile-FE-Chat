@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { StyleSheet, StatusBar, Platform } from 'react-native';
@@ -8,18 +9,28 @@ import Messages from './Messages';
 import Phonebook from './Phonebook';
 import Profile from './Profile';
 import { TouchableHighlight } from 'react-native-gesture-handler';
-import { getProfileUser } from 'actions/userActions';
+import {
+  getProfileUser,
+  fetchListFriends,
+  fetchRequestFriends
+} from 'actions/userActions';
 
 Platform.OS === 'android' && StatusBar.setHidden(true);
 
 const MainTab = props => {
   const dispatch = useDispatch();
   const [content, setContent] = useState(<Messages />);
-  const [isActive, setActive] = useState('');
+  const [isActive, setActive] = useState('message');
   const [footer, setFooter] = useState(true);
 
   useEffect(() => {
-    dispatch(getProfileUser());
+    dispatch(getProfileUser()).then(res => {
+      const { error, data } = res;
+      if (!error) {
+        dispatch(fetchListFriends(data.id));
+        dispatch(fetchRequestFriends(data.id));
+      }
+    });
   }, [dispatch]);
 
   const handleChangeTab = target => {
@@ -84,7 +95,7 @@ const MainTab = props => {
               <TouchableHighlight
                 activeOpacity={0.6}
                 underlayColor="#e3f2fd"
-                onPress={() => console.log('press')}
+                onPress={() => console.log('')}
               >
                 <AntDesign
                   style={

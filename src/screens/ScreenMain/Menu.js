@@ -6,7 +6,6 @@ import { accountLogout } from 'actions/authenActions';
 
 const Menu = () => {
   const dispatch = useDispatch();
-
   return (
     <Container>
       <Header />

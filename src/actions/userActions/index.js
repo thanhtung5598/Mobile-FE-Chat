@@ -87,3 +87,49 @@ export default addFriend = dataAdd => dispatch => {
       return { error, data };
     });
 };
+
+export const fetchListFriends = id_user => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.FETCH_LIST_FRIENDS_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}getListContactId?userId=${id_user}`)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_LIST_FRIENDS_SUCCESS,
+        payload: data
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_LIST_FRIENDS_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const fetchRequestFriends = id_user => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}getListRequestId?userId=${id_user}`)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_SUCCESS,
+        payload: data
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_FAILURE
+      });
+      return { error, data };
+    });
+};

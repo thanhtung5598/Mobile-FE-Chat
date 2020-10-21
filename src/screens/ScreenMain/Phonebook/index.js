@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Keyboard } from 'react-native';
 import {
@@ -36,14 +36,13 @@ import {
   addFriend
 } from 'actions/userActions';
 
-const source = {
-  uri:
-    'https://image-us.eva.vn/upload/2-2019/images/2019-06-25/loat-hot-girl-xinh-dep-nuc-tieng-du-thi-thpt-quoc-gia-nam-2019-2-1561430194-418-width660height825.jpg'
-};
+const avatarDefault =
+  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const PhoneBook = () => {
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
+  const { listFriends } = useSelector(state => state.friends);
   const [userQuery, setUserQuery] = useState('');
   const [showFriendsReq, setShowFriendsReq] = useState(false);
   const [phonebook, setPhonebook] = useState(false);
@@ -112,7 +111,6 @@ const PhoneBook = () => {
         )}
         {!find && !showFriendsReq && !phonebook && (
           <>
-            <ModalCustom visible={visible} setIsShow={setVisible} />
             <HeaderSearch
               find={find}
               userQuery={userQuery}
@@ -189,183 +187,42 @@ const PhoneBook = () => {
                   </Left>
                 </ListItem>
                 <ListItem itemDivider style={{ backgroundColor: 'white' }}>
-                  <Text style={{ color: '#AAA' }}>A</Text>
+                  <Text style={{ color: '#AAA' }}></Text>
                 </ListItem>
-                <TouchableOpacity onLongPress={handleToggleModal}>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
+                {listFriends?.map((friend, index) => {
+                  return (
+                    <Fragment key={index}>
+                      <TouchableOpacity onLongPress={handleToggleModal}>
+                        <ListItem thumbnail style={{ paddingBottom: 12 }}>
+                          <Left>
+                            <Thumbnail
+                              rounded
+                              source={{
+                                uri: friend.avatar || avatarDefault
+                              }}
+                            />
+                          </Left>
+                          <Body style={{ borderBottomColor: 'white' }}>
+                            <Text>{friend.name}</Text>
+                          </Body>
+                          <Right style={{ borderBottomWidth: 0 }}>
+                            <MaterialCommunityIcons
+                              name="chat"
+                              size={24}
+                              color="#CCC"
+                            />
+                          </Right>
+                        </ListItem>
+                      </TouchableOpacity>
+                      <ModalCustom
+                        info={friend}
+                        visible={visible}
+                        setIsShow={setVisible}
                       />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    width: '90%',
-                    backgroundColor: '#CCC',
-                    height: 0.5,
-                    alignSelf: 'center'
-                  }}
-                ></Text>
-                <ListItem itemDivider style={{ backgroundColor: 'white' }}>
-                  <Text style={{ color: '#AAA' }}>B</Text>
-                </ListItem>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <Text
-                  style={{
-                    width: '90%',
-                    backgroundColor: '#CCC',
-                    height: 0.5,
-                    alignSelf: 'center'
-                  }}
-                ></Text>
-                <ListItem itemDivider style={{ backgroundColor: 'white' }}>
-                  <Text style={{ color: '#AAA' }}>C</Text>
-                </ListItem>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      <MaterialCommunityIcons
-                        name="chat"
-                        size={24}
-                        color="#CCC"
-                      />
-                    </Right>
-                  </ListItem>
-                </TouchableOpacity>
+                    </Fragment>
+                  );
+                })}
+
                 <Text
                   style={{
                     width: '90%',

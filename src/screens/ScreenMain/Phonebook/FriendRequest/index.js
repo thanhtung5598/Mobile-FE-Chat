@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { useSelector } from 'react-redux';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import {
@@ -22,6 +23,7 @@ const source = {
 };
 
 const FriendRequest = props => {
+  const { listRequestFriends } = useSelector(state => state.friends);
   const { setShowFriendsReq } = props;
   return (
     <>
@@ -34,46 +36,34 @@ const FriendRequest = props => {
             <Text style={styles.login}>Friends request</Text>
           </View>
           <Content style={{ marginTop: 20 }}>
-            <ListItem thumbnail style={{ paddingBottom: 12 }}>
-              <Left>
-                <Thumbnail rounded source={{ uri: source.uri }} />
-              </Left>
-              <Body style={{ borderBottomColor: 'white' }}>
-                <Text>Ánh sao</Text>
-              </Body>
-              <Right style={{ borderBottomWidth: 0 }}>
-                <LinearGradient
-                  start={{ x: -1, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  colors={['#2962ff', '#0cb3ff']}
-                  style={styles.LinearGradientProfile}
-                >
-                  <TouchableOpacity style={styles.UpdateProfile}>
-                    <Text style={styles.UpdatedProfileText}>Accepted</Text>
-                  </TouchableOpacity>
-                </LinearGradient>
-              </Right>
-            </ListItem>
-            <ListItem thumbnail style={{ paddingBottom: 12 }}>
-              <Left>
-                <Thumbnail rounded source={{ uri: source.uri }} />
-              </Left>
-              <Body style={{ borderBottomColor: 'white' }}>
-                <Text>Ánh sao</Text>
-              </Body>
-              <Right style={{ borderBottomWidth: 0 }}>
-                <LinearGradient
-                  start={{ x: -1, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  colors={['#2962ff', '#0cb3ff']}
-                  style={styles.LinearGradientProfile}
-                >
-                  <TouchableOpacity style={styles.UpdateProfile}>
-                    <Text style={styles.UpdatedProfileText}>Accepted</Text>
-                  </TouchableOpacity>
-                </LinearGradient>
-              </Right>
-            </ListItem>
+            {listRequestFriends?.map((friend, index) => {
+              return (
+                <Fragment key={index}>
+                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
+                    <Left>
+                      <Thumbnail rounded source={{ uri: source.uri }} />
+                    </Left>
+                    <Body style={{ borderBottomColor: 'white' }}>
+                      <Text>Ánh sao</Text>
+                    </Body>
+                    <Right style={{ borderBottomWidth: 0 }}>
+                      <LinearGradient
+                        start={{ x: -1, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        colors={['#2962ff', '#0cb3ff']}
+                        style={styles.LinearGradientProfile}
+                      >
+                        <TouchableOpacity style={styles.UpdateProfile}>
+                          <Text style={styles.UpdatedProfileText}>
+                            Accepted
+                          </Text>
+                        </TouchableOpacity>
+                      </LinearGradient>
+                    </Right>
+                  </ListItem>
+                </Fragment>
+              );
+            })}
           </Content>
         </Content>
       </Container>
