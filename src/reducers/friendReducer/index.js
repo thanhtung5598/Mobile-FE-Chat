@@ -3,6 +3,8 @@ import { PROFILE_TYPE } from 'constTypes';
 const initialState = {
   error: null,
   isLoading: false,
+  isLoadingAdd: false,
+  isLoadingRemove: false,
   listFriendsWait: null,
   listPhonebookSync: null,
   listRequestFriends: null,
@@ -79,6 +81,36 @@ const AuthenReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         listPhonebookSync: null
+      };
+    case PROFILE_TYPE.ADD_FRIEND_REQUEST:
+      return {
+        ...state,
+        isLoadingAdd: true
+      };
+    case PROFILE_TYPE.ADD_FRIEND_SUCCESS:
+      return {
+        ...state,
+        isLoadingAdd: false
+      };
+    case PROFILE_TYPE.ADD_FRIEND_FAILURE:
+      return {
+        ...state,
+        isLoadingAdd: false
+      };
+    case PROFILE_TYPE.DELETE_FRIEND_REQUEST:
+      return {
+        ...state,
+        isLoadingRemove: true
+      };
+    case PROFILE_TYPE.DELETE_FRIEND_SUCCESS:
+      return {
+        ...state,
+        isLoadingRemove: false
+      };
+    case PROFILE_TYPE.DELETE_FRIEND_FAILURE:
+      return {
+        ...state,
+        isLoadingRemove: false
       };
     default:
       return state;

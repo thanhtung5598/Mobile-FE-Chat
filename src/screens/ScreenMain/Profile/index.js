@@ -1,7 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { StyleSheet, ImageBackground, Platform } from 'react-native';
-import { AuthenContext } from 'components/common/context/AuthenContext';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import {
@@ -24,7 +23,6 @@ const avatarDefault =
 
 const Profile = ({ navigation }) => {
   const { dataUser } = useSelector(state => state.dataUser);
-  const { signOut } = useContext(AuthenContext);
 
   const handleUploadImage = async () => {
     if (Platform.OS !== 'web') {
@@ -112,10 +110,7 @@ const Profile = ({ navigation }) => {
           colors={['#2962ff', '#0cb3ff']}
           style={styles.LinearGradientProfile}
         >
-          <TouchableOpacity
-            style={styles.UpdateProfile}
-            onPress={() => signOut()}
-          >
+          <TouchableOpacity style={styles.UpdateProfile}>
             <Text style={styles.UpdatedProfileText}>Updated Profile</Text>
           </TouchableOpacity>
         </LinearGradient>

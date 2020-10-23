@@ -11,7 +11,7 @@ import {
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ModalCustom = props => {
-  const { visible, setIsShow, info } = props;
+  const { visible, setIsShow, info, handleDeletedFriend } = props;
 
   const handleCloseModal = () => {
     setIsShow(false);
@@ -36,7 +36,7 @@ const ModalCustom = props => {
               <Text style={styles.viewProfile}>View profile</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => handleDeletedFriend(info.id)}>
             <View>
               <Text style={styles.actionFriend}>Remove friend</Text>
             </View>
@@ -50,6 +50,7 @@ const ModalCustom = props => {
 ModalCustom.propTypes = {
   visible: PropTypes.bool,
   setIsShow: PropTypes.func,
+  handleDeletedFriend: PropTypes.func,
   setFooter: PropTypes.func,
   children: PropTypes.objectOf(PropTypes.any),
   info: PropTypes.objectOf(PropTypes.any)
@@ -57,6 +58,7 @@ ModalCustom.propTypes = {
 ModalCustom.defaultProps = {
   visible: false,
   setIsShow: () => {},
+  handleDeletedFriend: () => {},
   setFooter: () => {},
   children: {},
   info: {}

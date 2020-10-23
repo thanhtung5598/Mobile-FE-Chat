@@ -13,6 +13,7 @@ const PROFILE_TYPE = {
   ...createRequestTypes('USER', 'SYNC_DATA_PHONEBOOK'),
   ...createRequestTypes('USER', 'SEARCH_USER'),
   ...createRequestTypes('USER', 'ADD_FRIEND'),
+  ...createRequestTypes('USER', 'DELETE_FRIEND'),
   ...createRequestTypes('USER', 'ACCEPT_FRIEND'),
   ...createRequestTypes('USER', 'DECLINE_FRIEND')
 };

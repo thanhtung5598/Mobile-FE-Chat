@@ -10,7 +10,8 @@ import {
   Text,
   Left,
   Body,
-  Right
+  Right,
+  View
 } from 'native-base';
 import PropTypes from 'prop-types';
 import {
@@ -34,6 +35,7 @@ import {
   searchUserByPhoneEmailName,
   clearSearch,
   addFriend,
+  deleteFriend,
   acceptFriend,
   declineFriend,
   fetchRequestFriends,
@@ -46,7 +48,11 @@ const avatarDefault =
 const PhoneBook = () => {
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
-  const { listFriends } = useSelector(state => state.friends);
+  const { listFriends, listRequestFriends } = useSelector(
+    state => state.friends
+  );
+
+  const [position, setPosition] = useState(null);
   const [userQuery, setUserQuery] = useState('');
   const [showFriendsReq, setShowFriendsReq] = useState(false);
   const [phonebook, setPhonebook] = useState(false);
@@ -57,7 +63,8 @@ const PhoneBook = () => {
     _.debounce(q => dispatch(searchUserByPhoneEmailName(q)), 500)
   ).current;
 
-  const handleToggleModal = () => {
+  const handleToggleModal = _position => {
+    setPosition(_position);
     setVisible(true);
   };
 
@@ -96,6 +103,15 @@ const PhoneBook = () => {
     };
     dispatch(addFriend(value));
   };
+
+  const handleDeletedFriend = id_fri_del => {
+    const value = {
+      user_id: `${dataUser.id}`,
+      user_id_want_delete: `${id_fri_del}`
+    };
+    dispatch(deleteFriend(value));
+  };
+
   const handleAcceptFriend = id_friend_accept => {
     const value = {
       user_id: dataUser.id,
@@ -164,6 +180,24 @@ const PhoneBook = () => {
                       }}
                     >
                       <Fontisto name="heart" size={24} color="white" />
+                      {listRequestFriends?.length > 0 && (
+                        <View
+                          style={{
+                            position: 'absolute',
+                            right: -10,
+                            bottom: 0,
+                            backgroundColor: 'red',
+                            width: 20,
+                            height: 20,
+                            borderRadius: 20,
+                            alignItems: 'center'
+                          }}
+                        >
+                          <Text style={{ fontSize: 15, color: 'white' }}>
+                            {listRequestFriends?.length}
+                          </Text>
+                        </View>
+                      )}
                     </Left>
                     <Body style={{ borderBottomColor: 'white' }}>
                       <Text>Lời mời kết bạn</Text>
@@ -223,7 +257,9 @@ const PhoneBook = () => {
                 {listFriends?.map((friend, index) => {
                   return (
                     <Fragment key={index}>
-                      <TouchableOpacity onLongPress={handleToggleModal}>
+                      <TouchableOpacity
+                        onLongPress={() => handleToggleModal(index)}
+                      >
                         <ListItem thumbnail style={{ paddingBottom: 12 }}>
                           <Left>
                             <Thumbnail
@@ -245,15 +281,17 @@ const PhoneBook = () => {
                           </Right>
                         </ListItem>
                       </TouchableOpacity>
-                      <ModalCustom
-                        info={friend}
-                        visible={visible}
-                        setIsShow={setVisible}
-                      />
+                      {position === index && (
+                        <ModalCustom
+                          info={friend}
+                          visible={visible}
+                          setIsShow={setVisible}
+                          handleDeletedFriend={handleDeletedFriend}
+                        />
+                      )}
                     </Fragment>
                   );
                 })}
-
                 <Text
                   style={{
                     width: '90%',

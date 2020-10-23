@@ -187,7 +187,6 @@ export const addFriend = dataAdd => dispatch => {
     .post(`${prefix}addFriend`, dataAdd)
     .then(res => {
       const { error, data } = res.data;
-      console.log('succ', error);
       dispatch({
         type: PROFILE_TYPE.ADD_FRIEND_SUCCESS,
         payload: data
@@ -198,9 +197,33 @@ export const addFriend = dataAdd => dispatch => {
     })
     .catch(err => {
       const { error, data } = err.response?.data;
-      console.log('error', error);
       dispatch({
         type: PROFILE_TYPE.ADD_FRIEND_FAILURE
+      });
+      return { error, data };
+    });
+};
+export const deleteFriend = dataDelete => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.DELETE_FRIEND_REQUEST
+  });
+  return axiosServices
+    .post(`${prefix}deleteFriend`, dataDelete)
+    .then(res => {
+      const { error, data } = res.data;
+      console.log('succ', data);
+      dispatch({
+        type: PROFILE_TYPE.DELETE_FRIEND_SUCCESS,
+        payload: data
+      });
+      dispatch(fetchListFriends());
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      console.log('err', data);
+      dispatch({
+        type: PROFILE_TYPE.DELETE_FRIEND_FAILURE
       });
       return { error, data };
     });
