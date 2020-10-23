@@ -135,7 +135,10 @@ const PhoneBook = () => {
           />
         )}
         {!find && phonebook && !showFriendsReq && (
-          <SyncPhonebook setPhonebook={setPhonebook} />
+          <SyncPhonebook
+            setPhonebook={setPhonebook}
+            handleAddFriend={handleAddFriend}
+          />
         )}
         {!find && !showFriendsReq && !phonebook && (
           <>

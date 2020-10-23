@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 const useCheckFriends = ({
-  listUsers,
+  listUsers, // user tìm được
   listFriends,
   listFriendsWait,
   listRequestFriends

@@ -19,15 +19,26 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import * as Contacts from 'expo-contacts';
 import { fetchPhonebookSync, syncDataPhonebook } from 'actions/userActions';
+import useCheckFriend from 'components/common/hook/useCheckFriend';
 
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const SyncPhonebook = props => {
   const dispatch = useDispatch();
+  const { handleAddFriend } = props;
   const { dataUser } = useSelector(state => state.dataUser);
   const { listPhonebookSync, isLoading } = useSelector(state => state.friends);
   const { setPhonebook } = props;
+  const { listFriends, listFriendsWait, listRequestFriends } = useSelector(
+    state => state.friends
+  );
+  const { listFindFill } = useCheckFriend({
+    listUsers: listPhonebookSync,
+    listFriends,
+    listFriendsWait,
+    listRequestFriends
+  });
 
   useEffect(() => {
     (async () => {
@@ -66,15 +77,15 @@ const SyncPhonebook = props => {
             <Text style={styles.login}>Friends from phonebook device</Text>
           </View>
           {isLoading && <Spinner />}
-          {!isLoading && !listPhonebookSync && (
+          {!isLoading && !listFindFill && (
             <View style={{ alignItems: 'center', marginTop: 20 }}>
               <Text style={{ color: '#AAA', fontSize: 30 }}>
-                No friends requested
+                No friends sync
               </Text>
             </View>
           )}
           <Content style={{ marginTop: 20 }}>
-            {listPhonebookSync?.map((friend, index) => {
+            {listFindFill?.map((friend, index) => {
               return (
                 <Fragment key={index}>
                   <ListItem thumbnail style={{ paddingBottom: 12 }}>
@@ -88,18 +99,48 @@ const SyncPhonebook = props => {
                       <Text>{friend.name}</Text>
                     </Body>
                     <Right style={{ borderBottomWidth: 0 }}>
-                      <LinearGradient
-                        start={{ x: -1, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        colors={['#2962ff', '#0cb3ff']}
-                        style={styles.LinearGradientProfile}
-                      >
-                        <TouchableOpacity style={styles.UpdateProfile}>
-                          <Text style={styles.UpdatedProfileText}>
-                            Accepted
-                          </Text>
-                        </TouchableOpacity>
-                      </LinearGradient>
+                      {friend.status === undefined && (
+                        <LinearGradient
+                          start={{ x: -1, y: 0 }}
+                          end={{ x: 1, y: 0 }}
+                          colors={['#2962ff', '#0cb3ff']}
+                          style={styles.LinearGradientProfile}
+                        >
+                          <TouchableOpacity
+                            style={styles.UpdateProfile}
+                            onPress={() => handleAddFriend(friend.id)}
+                          >
+                            <Text style={styles.UpdatedProfileText}>
+                              Add friend
+                            </Text>
+                          </TouchableOpacity>
+                        </LinearGradient>
+                      )}
+                      {friend.status === true && (
+                        <LinearGradient
+                          start={{ x: -1, y: 0 }}
+                          end={{ x: 1, y: 0 }}
+                          colors={['#2962ff', '#0cb3ff']}
+                          style={styles.LinearGradientProfile}
+                        ></LinearGradient>
+                      )}
+                      {friend.status === false && (
+                        <LinearGradient
+                          start={{ x: -1, y: 0 }}
+                          end={{ x: 1, y: 0 }}
+                          colors={['#a5d6a7', '#4caf50']}
+                          style={styles.LinearGradientProfile}
+                        >
+                          <TouchableOpacity
+                            style={styles.UpdateProfile}
+                            disabled
+                          >
+                            <Text style={styles.UpdatedProfileText}>
+                              Waiting...
+                            </Text>
+                          </TouchableOpacity>
+                        </LinearGradient>
+                      )}
                     </Right>
                   </ListItem>
                 </Fragment>
@@ -115,10 +156,12 @@ const SyncPhonebook = props => {
 export default SyncPhonebook;
 
 SyncPhonebook.propTypes = {
-  setPhonebook: PropTypes.func
+  setPhonebook: PropTypes.func,
+  handleAddFriend: PropTypes.func
 };
 SyncPhonebook.defaultProps = {
-  setPhonebook: () => {}
+  setPhonebook: () => {},
+  handleAddFriend: () => {}
 };
 
 const styles = StyleSheet.create({

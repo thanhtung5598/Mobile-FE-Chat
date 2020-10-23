@@ -193,6 +193,7 @@ export const addFriend = dataAdd => dispatch => {
         payload: data
       });
       dispatch(fetchFriendsWait());
+      dispatch(fetchPhonebookSync());
       return { error, data };
     })
     .catch(err => {
@@ -219,6 +220,7 @@ export const acceptFriend = dataAccept => dispatch => {
       });
       dispatch(fetchRequestFriends());
       dispatch(fetchListFriends());
+      dispatch(fetchPhonebookSync());
       return { error, data };
     })
     .catch(err => {
@@ -244,6 +246,7 @@ export const declineFriend = dataDecline => dispatch => {
       });
       dispatch(fetchRequestFriends());
       dispatch(fetchListFriends());
+      dispatch(fetchPhonebookSync());
       return { error, data };
     })
     .catch(err => {
