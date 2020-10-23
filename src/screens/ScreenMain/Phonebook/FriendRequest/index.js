@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import { useSelector } from 'react-redux';
+import React, { Fragment, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
 import {
@@ -11,20 +11,26 @@ import {
   Body,
   Right,
   Content,
-  View
+  View,
+  Spinner
 } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import { fetchRequestFriends } from 'actions/userActions';
 
-const source = {
-  uri:
-    'https://image-us.eva.vn/upload/2-2019/images/2019-06-25/loat-hot-girl-xinh-dep-nuc-tieng-du-thi-thpt-quoc-gia-nam-2019-2-1561430194-418-width660height825.jpg'
-};
+const avatarDefault =
+  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const FriendRequest = props => {
-  const { listRequestFriends } = useSelector(state => state.friends);
+  const dispatch = useDispatch();
+  const { listRequestFriends, isLoading } = useSelector(state => state.friends);
   const { setShowFriendsReq, handleAcceptFriend, handleDeclineFriend } = props;
+
+  useEffect(() => {
+    dispatch(fetchRequestFriends());
+  }, [dispatch]);
+
   return (
     <>
       <Container>
@@ -35,17 +41,27 @@ const FriendRequest = props => {
             </TouchableOpacity>
             <Text style={styles.login}>Friends request</Text>
           </View>
+          {isLoading && <Spinner />}
+          {!isLoading && !listRequestFriends && (
+            <View style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={{ color: '#AAA', fontSize: 30 }}>
+                No friends requested
+              </Text>
+            </View>
+          )}
           <Content style={{ marginTop: 20 }}>
             {listRequestFriends?.map((friend, index) => {
-              console.log(friend);
               return (
                 <Fragment key={index}>
                   <ListItem thumbnail style={{ paddingBottom: 12 }}>
                     <Left>
-                      <Thumbnail rounded source={{ uri: source.uri }} />
+                      <Thumbnail
+                        rounded
+                        source={{ uri: friend.avatar || avatarDefault }}
+                      />
                     </Left>
                     <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>Ánh sao</Text>
+                      <Text>{friend.name}</Text>
                     </Body>
                     <Right
                       style={{ borderBottomWidth: 0, flexDirection: 'row' }}

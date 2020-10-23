@@ -39,8 +39,9 @@ export const searchUserByPhoneEmailName = dataSearch => dispatch => {
   dispatch({
     type: PROFILE_TYPE.SEARCH_USER_REQUEST
   });
+  const data = dataSearch.split('').length === 0 ? null : dataSearch;
   return axiosServices
-    .get(`${prefix}textSearch?value=${dataSearch}`)
+    .get(`${prefix}textSearch?value=${data}`)
     .then(res => {
       const { error, data } = res.data;
       dispatch({
@@ -64,17 +65,39 @@ export const clearSearch = () => dispatch => {
     payload: null
   });
 };
-
-export const addFriend = dataAdd => dispatch => {
+export const fetchFriendsWait = () => dispatch => {
   dispatch({
-    type: PROFILE_TYPE.ADD_FRIEND_REQUEST
+    type: PROFILE_TYPE.FETCH_FRIEND_WAIT_REQUEST
   });
   return axiosServices
-    .get(`${prefix}addFriend`, dataAdd)
+    .get(`${prefix}request/sent`)
     .then(res => {
       const { error, data } = res.data;
       dispatch({
-        type: PROFILE_TYPE.ADD_FRIEND_SUCCESS,
+        type: PROFILE_TYPE.FETCH_FRIEND_WAIT_SUCCESS,
+        payload: data.length === 0 ? null : data
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_FRIEND_WAIT_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const fetchPhonebookSync = () => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}getListPhoneBookById`)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_SUCCESS,
         payload: data
       });
       return { error, data };
@@ -82,22 +105,45 @@ export const addFriend = dataAdd => dispatch => {
     .catch(err => {
       const { error, data } = err.response?.data;
       dispatch({
-        type: PROFILE_TYPE.ADD_FRIEND_FAILURE
+        type: PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_FAILURE
       });
       return { error, data };
     });
 };
 
-export const acceptFriend = dataAccept => dispatch => {
+export const syncDataPhonebook = dataSync => dispatch => {
   dispatch({
-    type: PROFILE_TYPE.ACCEPT_FRIEND_REQUEST
+    type: PROFILE_TYPE.SYNC_DATA_PHONEBOOK_REQUEST
   });
   return axiosServices
-    .get(`${prefix}accepFriend`, dataAccept)
+    .post(`${prefix}syncPhoneBook`, dataSync)
     .then(res => {
       const { error, data } = res.data;
       dispatch({
-        type: PROFILE_TYPE.ACCEPT_FRIEND_SUCCESS,
+        type: PROFILE_TYPE.SYNC_DATA_PHONEBOOK_SUCCESS
+      });
+      dispatch(fetchPhonebookSync());
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.SYNC_DATA_PHONEBOOK_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const fetchRequestFriends = () => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_REQUEST
+  });
+  return axiosServices
+    .get(`${prefix}getListRequestId`)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_SUCCESS,
         payload: data
       });
       return { error, data };
@@ -105,41 +151,17 @@ export const acceptFriend = dataAccept => dispatch => {
     .catch(err => {
       const { error, data } = err.response?.data;
       dispatch({
-        type: PROFILE_TYPE.ACCEPT_FRIEND_FAILURE
+        type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_FAILURE
       });
       return { error, data };
     });
 };
-
-export const declineFriend = dataDecline => dispatch => {
-  dispatch({
-    type: PROFILE_TYPE.DECLINE_FRIEND_REQUEST
-  });
-  return axiosServices
-    .get(`${prefix}declineFriend`, dataDecline)
-    .then(res => {
-      const { error, data } = res.data;
-      dispatch({
-        type: PROFILE_TYPE.DECLINE_FRIEND_SUCCESS,
-        payload: data
-      });
-      return { error, data };
-    })
-    .catch(err => {
-      const { error, data } = err.response?.data;
-      dispatch({
-        type: PROFILE_TYPE.DECLINE_FRIEND_FAILURE
-      });
-      return { error, data };
-    });
-};
-
-export const fetchListFriends = id_user => dispatch => {
+export const fetchListFriends = () => dispatch => {
   dispatch({
     type: PROFILE_TYPE.FETCH_LIST_FRIENDS_REQUEST
   });
   return axiosServices
-    .get(`${prefix}getListContactId?userId=${id_user}`)
+    .get(`${prefix}getListContactId`)
     .then(res => {
       const { error, data } = res.data;
       dispatch({
@@ -157,24 +179,77 @@ export const fetchListFriends = id_user => dispatch => {
     });
 };
 
-export const fetchRequestFriends = id_user => dispatch => {
+export const addFriend = dataAdd => dispatch => {
   dispatch({
-    type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_REQUEST
+    type: PROFILE_TYPE.ADD_FRIEND_REQUEST
   });
   return axiosServices
-    .get(`${prefix}getListRequestId?userId=${id_user}`)
+    .post(`${prefix}addFriend`, dataAdd)
+    .then(res => {
+      const { error, data } = res.data;
+      console.log('succ', error);
+      dispatch({
+        type: PROFILE_TYPE.ADD_FRIEND_SUCCESS,
+        payload: data
+      });
+      dispatch(fetchFriendsWait());
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      console.log('error', error);
+      dispatch({
+        type: PROFILE_TYPE.ADD_FRIEND_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const acceptFriend = dataAccept => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.ACCEPT_FRIEND_REQUEST
+  });
+  return axiosServices
+    .post(`${prefix}accepFriend`, dataAccept)
     .then(res => {
       const { error, data } = res.data;
       dispatch({
-        type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_SUCCESS,
+        type: PROFILE_TYPE.ACCEPT_FRIEND_SUCCESS,
         payload: data
       });
+      dispatch(fetchRequestFriends());
+      dispatch(fetchListFriends());
       return { error, data };
     })
     .catch(err => {
       const { error, data } = err.response?.data;
       dispatch({
-        type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_FAILURE
+        type: PROFILE_TYPE.ACCEPT_FRIEND_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const declineFriend = dataDecline => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.DECLINE_FRIEND_REQUEST
+  });
+  return axiosServices
+    .post(`${prefix}declineFriend`, dataDecline)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: PROFILE_TYPE.DECLINE_FRIEND_SUCCESS,
+        payload: data
+      });
+      dispatch(fetchRequestFriends());
+      dispatch(fetchListFriends());
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.DECLINE_FRIEND_FAILURE
       });
       return { error, data };
     });

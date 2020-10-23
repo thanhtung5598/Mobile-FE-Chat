@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { StyleSheet, ImageBackground } from 'react-native';
+import { StyleSheet, ImageBackground, Platform } from 'react-native';
 import { AuthenContext } from 'components/common/context/AuthenContext';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -16,6 +16,8 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
+import { uploadImgSingle } from 'actions/uploadImageActions';
 
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
@@ -23,6 +25,32 @@ const avatarDefault =
 const Profile = ({ navigation }) => {
   const { dataUser } = useSelector(state => state.dataUser);
   const { signOut } = useContext(AuthenContext);
+
+  const handleUploadImage = async () => {
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+      if (status === 'granted') {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1
+        });
+        const valueUpload = {
+          uri: result.uri,
+          type: 'image/png',
+          name: 'photo'
+        };
+        const formData = new FormData();
+        formData.append('avatar', valueUpload);
+        uploadImgSingle(formData);
+      }
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  };
+
   return (
     <Container>
       <Content>
@@ -34,13 +62,15 @@ const Profile = ({ navigation }) => {
           }}
         >
           <View style={styles.rect}>
-            <Thumbnail
-              large
-              source={{
-                uri: dataUser.avatar || avatarDefault
-              }}
-            />
-            <Text style={styles.leThanhTung}>{dataUser.name}</Text>
+            <TouchableOpacity onPress={handleUploadImage}>
+              <Thumbnail
+                large
+                source={{
+                  uri: dataUser?.avatar || avatarDefault
+                }}
+              />
+            </TouchableOpacity>
+            <Text style={styles.leThanhTung}>{dataUser?.name}</Text>
           </View>
           <View style={styles.SettingStyle}>
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
@@ -51,7 +81,7 @@ const Profile = ({ navigation }) => {
         <List style={styles.ContainList}>
           <ListItem>
             <Text style={styles.titleInfo}>Zola name</Text>
-            <Text style={styles.valueInfo}>{dataUser.name || '...'}</Text>
+            <Text style={styles.valueInfo}>{dataUser?.name || '...'}</Text>
           </ListItem>
           <ListItem>
             <Text style={styles.titleInfo}>Username</Text>

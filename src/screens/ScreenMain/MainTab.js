@@ -11,8 +11,10 @@ import Profile from './Profile';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import {
   getProfileUser,
+  fetchPhonebookSync,
+  fetchRequestFriends,
   fetchListFriends,
-  fetchRequestFriends
+  fetchFriendsWait
 } from 'actions/userActions';
 
 Platform.OS === 'android' && StatusBar.setHidden(true);
@@ -24,13 +26,11 @@ const MainTab = props => {
   const [footer, setFooter] = useState(true);
 
   useEffect(() => {
-    dispatch(getProfileUser()).then(res => {
-      const { error, data } = res;
-      if (!error) {
-        dispatch(fetchListFriends(data.id));
-        dispatch(fetchRequestFriends(data.id));
-      }
-    });
+    dispatch(getProfileUser());
+    dispatch(fetchRequestFriends());
+    dispatch(fetchFriendsWait());
+    dispatch(fetchListFriends());
+    dispatch(fetchPhonebookSync());
   }, [dispatch]);
 
   const handleChangeTab = target => {

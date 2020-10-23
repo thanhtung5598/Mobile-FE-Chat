@@ -3,6 +3,8 @@ import { PROFILE_TYPE } from 'constTypes';
 const initialState = {
   error: null,
   isLoading: false,
+  listFriendsWait: null,
+  listPhonebookSync: null,
   listRequestFriends: null,
   listFriends: null,
   message: null
@@ -43,6 +45,40 @@ const AuthenReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         listRequestFriends: null
+      };
+    case PROFILE_TYPE.FETCH_FRIEND_WAIT_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case PROFILE_TYPE.FETCH_FRIEND_WAIT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        listFriendsWait: action.payload
+      };
+    case PROFILE_TYPE.FETCH_FRIEND_WAIT_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        listFriendsWait: null
+      };
+    case PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        listPhonebookSync: action.payload
+      };
+    case PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        listPhonebookSync: null
       };
     default:
       return state;

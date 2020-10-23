@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment } from 'react';
+import React, { useState, useRef, Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Keyboard } from 'react-native';
 import {
@@ -35,7 +35,9 @@ import {
   clearSearch,
   addFriend,
   acceptFriend,
-  declineFriend
+  declineFriend,
+  fetchRequestFriends,
+  fetchListFriends
 } from 'actions/userActions';
 
 const avatarDefault =
@@ -58,6 +60,11 @@ const PhoneBook = () => {
   const handleToggleModal = () => {
     setVisible(true);
   };
+
+  useEffect(() => {
+    dispatch(fetchRequestFriends());
+    dispatch(fetchListFriends());
+  }, [dispatch]);
 
   const handleOpenFriendReq = () => {
     setShowFriendsReq(true);
