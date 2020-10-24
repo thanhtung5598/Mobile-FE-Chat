@@ -8,19 +8,27 @@ import {
   TouchableWithoutFeedback,
   Text
 } from 'react-native';
-import { Button } from 'native-base';
+import { Thumbnail, Button } from 'native-base';
+import { Ionicons } from '@expo/vector-icons';
+
+const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
+const avatarDefault =
+  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const ModalCustom = props => {
   const {
     visible,
     setVisible,
     info,
-    handleDeletedFriend,
-    handleToggleModalInfo,
+    setVisibleModalAction,
     positionModal
   } = props;
 
   const handleCloseModal = () => {
+    setVisible(null);
+  };
+  const handleBackToActionModal = () => {
+    setVisibleModalAction(positionModal);
     setVisible(null);
   };
 
@@ -35,20 +43,43 @@ const ModalCustom = props => {
           />
         </TouchableWithoutFeedback>
         <View style={styles.modalView}>
-          <View style={styles.headerModal}>
-            <Text style={styles.headerModalText}>{info.name}</Text>
-          </View>
           <Button
-            block
-            success
-            style={{ marginBottom: 10 }}
-            onPress={() => handleToggleModalInfo(positionModal)}
+            transparent
+            style={{
+              position: 'absolute',
+              paddingLeft: 15,
+              paddingTop: 10,
+              zIndex: 10
+            }}
+            onPress={handleBackToActionModal}
           >
-            <Text>View Info</Text>
+            <Ionicons
+              style={{
+                color: '#ffa726'
+              }}
+              name="md-arrow-back"
+              size={35}
+              color="black"
+            />
           </Button>
-          <Button block warning onPress={() => handleDeletedFriend(info.id)}>
-            <Text>Remove friend</Text>
-          </Button>
+          <View style={styles.headerModal}>
+            <Thumbnail
+              large
+              source={{
+                uri:
+                  (info.avatar && `${imaPrefix}${info.avatar}`) || avatarDefault
+              }}
+            />
+            <Text style={{ fontSize: 16, fontWeight: '600' }}>{info.name}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontWeight: 'bold' }}>Phone: </Text>
+            <Text>{info.phone || '...'}</Text>
+          </View>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={{ fontWeight: 'bold' }}>Email:&nbsp;&nbsp;&nbsp;</Text>
+            <Text>{info.email || '........'}</Text>
+          </View>
         </View>
       </View>
     </Modal>
@@ -57,21 +88,19 @@ const ModalCustom = props => {
 
 ModalCustom.propTypes = {
   visible: PropTypes.bool,
-  positionModal: PropTypes.number,
   setVisible: PropTypes.func,
-  handleDeletedFriend: PropTypes.func,
-  handleToggleModalInfo: PropTypes.func,
+  positionModal: PropTypes.number,
   setFooter: PropTypes.func,
+  setVisibleModalAction: PropTypes.func,
   children: PropTypes.objectOf(PropTypes.any),
   info: PropTypes.objectOf(PropTypes.any)
 };
 ModalCustom.defaultProps = {
   visible: false,
-  positionModal: 0,
   setVisible: () => {},
-  handleDeletedFriend: () => {},
-  handleToggleModalInfo: () => {},
+  positionModal: 0,
   setFooter: () => {},
+  setVisibleModalAction: () => {},
   children: {},
   info: {}
 };
@@ -100,12 +129,8 @@ const styles = StyleSheet.create({
     borderBottomColor: '#BBB',
     borderBottomWidth: 1,
     paddingBottom: 8,
-    marginBottom: 8
-  },
-  headerModalText: {
-    fontSize: 25,
-    fontWeight: '500',
-    paddingBottom: 8
+    marginBottom: 8,
+    alignItems: 'center'
   },
   viewProfile: {
     fontSize: 18,

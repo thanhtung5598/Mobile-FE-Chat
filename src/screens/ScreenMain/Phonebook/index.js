@@ -29,6 +29,7 @@ import HeaderSearch from './../common/header';
 import FriendRequest from './FriendRequest';
 import SyncPhonebook from './SyncPhonebook';
 import FindFriends from './FindFriends';
+import ModalInfoUser from 'components/common/ComponentsCommon/Modal/modalInfo';
 
 // action
 import {
@@ -54,6 +55,7 @@ const PhoneBook = () => {
   );
 
   const [position, setPosition] = useState(null);
+  const [positionInfo, setPositionInfo] = useState(null);
   const [userQuery, setUserQuery] = useState('');
   const [showFriendsReq, setShowFriendsReq] = useState(false);
   const [phonebook, setPhonebook] = useState(false);
@@ -65,6 +67,10 @@ const PhoneBook = () => {
 
   const handleToggleModal = _position => {
     setPosition(_position);
+  };
+  const handleToggleModalInfo = _position => {
+    setPositionInfo(_position);
+    setPosition(null);
   };
 
   useEffect(() => {
@@ -268,7 +274,7 @@ const PhoneBook = () => {
                               source={{
                                 uri:
                                   (friend.avatar &&
-                                    `${imaPrefix}friend.avatar`) ||
+                                    `${imaPrefix}${friend.avatar}`) ||
                                   avatarDefault
                               }}
                             />
@@ -291,6 +297,17 @@ const PhoneBook = () => {
                           visible={!!(position === index)}
                           setVisible={setPosition}
                           handleDeletedFriend={handleDeletedFriend}
+                          handleToggleModalInfo={handleToggleModalInfo}
+                          positionModal={index}
+                        />
+                      )}
+                      {positionInfo === index && (
+                        <ModalInfoUser
+                          info={friend}
+                          visible={!!(positionInfo === index)}
+                          setVisible={setPositionInfo}
+                          setVisibleModalAction={setPosition}
+                          positionModal={index}
                         />
                       )}
                     </Fragment>

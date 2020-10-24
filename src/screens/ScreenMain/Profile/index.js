@@ -34,14 +34,17 @@ const Profile = ({ navigation }) => {
           aspect: [4, 3],
           quality: 1
         });
-        const valueUpload = {
-          uri: result.uri,
-          type: 'image/png',
-          name: 'photo'
-        };
-        const formData = new FormData();
-        formData.append('avatar', valueUpload);
-        uploadImgSingle(formData);
+        console.log(result);
+        // const formData = new FormData();
+        // const file = new File(
+        //   [result.uri],
+        //   '122200378_1089124194835681_225501667639_n.jpg',
+        //   {
+        //     size: 36550
+        //   }
+        // );
+        // formData.append('avatar', file);
+        // uploadImgSingle(formData);
       }
       if (status !== 'granted') {
         alert('Sorry, we need camera roll permissions to make this work!');
