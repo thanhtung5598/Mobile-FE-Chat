@@ -42,7 +42,7 @@ export const accountRegister = (data, token) => dispatch => {
   return axiosServices.post(`${prefix}signup`, data).then(res => {
     const { error, data } = res.data;
     if (!error) {
-      asyncStorage.setToken(token);
+      asyncStorage.setToken(data);
       dispatch({
         type: AUTHENTICATION_TYPE.REGISTER_SUCCESS,
         payload: {
@@ -157,7 +157,7 @@ export const accountSendForgotPassword = (
 
 export const accountVerifyCodeForgot = data => dispatch => {
   dispatch({
-    type: AUTHENTICATION_TYPE.VERIFY_REQUEST
+    type: AUTHENTICATION_TYPE.VERIFY_FORGOT_REQUEST
   });
   return axiosServices
     .post(`${prefix}code/password/verify`, data)
@@ -165,7 +165,7 @@ export const accountVerifyCodeForgot = data => dispatch => {
       const { error, data } = res.data;
       if (!error) {
         dispatch({
-          type: AUTHENTICATION_TYPE.VERIFY_SUCCESS
+          type: AUTHENTICATION_TYPE.VERIFY_FORGOT_SUCCESS
         });
       }
       return { error, data };
@@ -173,7 +173,7 @@ export const accountVerifyCodeForgot = data => dispatch => {
     .catch(err => {
       const { error, data } = err.response?.data;
       dispatch({
-        type: AUTHENTICATION_TYPE.VERIFY_FAILURE,
+        type: AUTHENTICATION_TYPE.VERIFY_FORGOT_FAILURE,
         payload: {
           error
         }
@@ -184,7 +184,7 @@ export const accountVerifyCodeForgot = data => dispatch => {
 
 export const accountVerifyCodeSignUp = data => dispatch => {
   dispatch({
-    type: AUTHENTICATION_TYPE.VERIFY_REQUEST
+    type: AUTHENTICATION_TYPE.VERIFY_SIGUP_REQUEST
   });
   return axiosServices
     .post(`${prefix}code/verify`, data)
@@ -192,15 +192,16 @@ export const accountVerifyCodeSignUp = data => dispatch => {
       const { error, data } = res.data;
       if (!error) {
         dispatch({
-          type: AUTHENTICATION_TYPE.VERIFY_SUCCESS
+          type: AUTHENTICATION_TYPE.VERIFY_SIGUP_SUCCESS
         });
       }
       return { error, data };
     })
     .catch(err => {
       const { error, data } = err.response?.data;
+      console.log('err');
       dispatch({
-        type: AUTHENTICATION_TYPE.VERIFY_FAILURE,
+        type: AUTHENTICATION_TYPE.VERIFY_SIGUP_FAILURE,
         payload: {
           error
         }

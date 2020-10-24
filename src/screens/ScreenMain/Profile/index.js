@@ -80,7 +80,7 @@ const Profile = ({ navigation }) => {
                 large
                 source={{
                   uri:
-                    (dataUser.avatar && `${imaPrefix}${dataUser.avatar}`) ||
+                    (dataUser?.avatar && `${imaPrefix}${dataUser.avatar}`) ||
                     avatarDefault
                 }}
               />
@@ -101,24 +101,24 @@ const Profile = ({ navigation }) => {
           <ListItem>
             <Text style={styles.titleInfo}>Username</Text>
             <Text style={styles.valueInfo}>
-              {dataUser.phone || dataUser.email || 'Tạo user name'}
+              {dataUser?.phone || dataUser?.email || 'Tạo user name'}
             </Text>
           </ListItem>
           <ListItem>
             <Text style={styles.titleInfo}>Create At</Text>
             <Text style={styles.valueInfo}>
-              {moment(dataUser.createAt).format('YYYY/MM/DD')}
+              {moment(dataUser?.createAt).format('YYYY/MM/DD')}
             </Text>
           </ListItem>
           <ListItem>
             <Text style={styles.titleInfo}>Update At</Text>
             <Text style={styles.valueInfo}>
-              {moment(dataUser.updateAt).format('YYYY/MM/DD')}
+              {moment(dataUser?.updateAt).format('YYYY/MM/DD')}
             </Text>
           </ListItem>
           <ListItem>
             <Text style={styles.titleInfo}>Phone</Text>
-            <Text style={styles.valueInfo}>{dataUser.phone}</Text>
+            <Text style={styles.valueInfo}>{dataUser?.phone}</Text>
           </ListItem>
         </List>
         <LinearGradient

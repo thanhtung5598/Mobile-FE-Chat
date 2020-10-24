@@ -98,22 +98,6 @@ const AuthenReducer = (state = initialState, action) => {
         error: action.payload.error,
         message: action.payload.data[0]
       };
-    case AUTHENTICATION_TYPE.VERIFY_REQUEST:
-      return {
-        ...state,
-        isLoading: true
-      };
-    case AUTHENTICATION_TYPE.VERIFY_SUCCESS:
-      return {
-        ...state,
-        isLoading: false
-      };
-    case AUTHENTICATION_TYPE.VERIFY_FAILURE:
-      return {
-        ...state,
-        isLoading: false,
-        error: action.payload.error
-      };
     case AUTHENTICATION_TYPE.CHANGE_PASSWORD_REQUEST:
       return {
         ...state,

@@ -7,6 +7,7 @@ const AuthenConsumer = AuthenContext.Consumer;
 const AuthenProvider = props => {
   const [userData, setUserData] = useState({
     phone: '',
+    email: '',
     userToken: {}
   });
 

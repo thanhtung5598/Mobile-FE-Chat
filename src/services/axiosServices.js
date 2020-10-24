@@ -9,6 +9,7 @@ const axiosApiInstance = axios.create({
 axiosApiInstance.interceptors.request.use(
   async config => {
     const token = await asyncStorage.getAccessToken();
+    console.log(token);
     if (token) {
       config.headers['x-access-token'] = token;
     }

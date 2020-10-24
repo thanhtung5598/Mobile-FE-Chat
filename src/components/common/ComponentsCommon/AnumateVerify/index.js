@@ -26,7 +26,7 @@ const AnimatedVerify = ({
   userData: { phone, email }
 }) => {
   const CELL_COUNT = typeRegister === 'Email' ? 6 : 4;
-  const { isLoading } = useSelector(state => state.authen);
+  const { isLoadingVerify } = useSelector(state => state.authVerify);
   const { error } = useSelector(state => state.authen);
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
@@ -81,7 +81,7 @@ const AnimatedVerify = ({
           textContentType="oneTimeCode"
           renderCell={renderCell}
         />
-        {isLoading && (
+        {isLoadingVerify && (
           <View style={{ position: 'absolute', marginTop: 18 }}>
             <Spinner size="large" color="blue" />
           </View>
