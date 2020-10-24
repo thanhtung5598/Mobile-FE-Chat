@@ -9,7 +9,6 @@ import {
   Text
 } from 'react-native';
 import { Button } from 'native-base';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ModalCustom = props => {
   const { visible, setVisible, info, handleDeletedFriend } = props;
@@ -32,16 +31,12 @@ const ModalCustom = props => {
           <View style={styles.headerModal}>
             <Text style={styles.headerModalText}>{info.name}</Text>
           </View>
-          <TouchableOpacity>
-            <Button block success style={{ marginBottom: 10 }}>
-              <Text>View Info</Text>
-            </Button>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleDeletedFriend(info.id)}>
-            <Button block warning>
-              <Text>Remove friend</Text>
-            </Button>
-          </TouchableOpacity>
+          <Button block success style={{ marginBottom: 10 }}>
+            <Text>View Info</Text>
+          </Button>
+          <Button block warning onPress={() => handleDeletedFriend(info.id)}>
+            <Text>Remove friend</Text>
+          </Button>
         </View>
       </View>
     </Modal>

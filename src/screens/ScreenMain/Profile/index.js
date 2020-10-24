@@ -17,6 +17,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 
+const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
@@ -63,7 +64,9 @@ const Profile = ({ navigation }) => {
               <Thumbnail
                 large
                 source={{
-                  uri: dataUser?.avatar || avatarDefault
+                  uri:
+                    (dataUser.avatar && `${imaPrefix}${dataUser.avatar}`) ||
+                    avatarDefault
                 }}
               />
             </TouchableOpacity>

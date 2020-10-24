@@ -38,7 +38,7 @@ const App = () => {
         style={
           Platform.OS === 'android'
             ? {
-                paddingTop: 15,
+                paddingTop: 22,
                 backgroundColor: '#2962ff'
               }
             : {}
