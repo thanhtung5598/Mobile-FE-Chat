@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, ImageBackground, Platform } from 'react-native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -16,68 +16,47 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import Axios from 'axios';
+import { uploadImgSingle } from 'actions/uploadImageActions';
+import { uploadAvatarAction } from 'actions/userActions';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const Profile = ({ navigation }) => {
+  const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
 
   const handleUploadImage = async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
       if (status === 'granted') {
-        // let result = await ImagePicker.launchImageLibraryAsync({
-        //   mediaTypes: ImagePicker.MediaTypeOptions.All,
-        //   allowsEditing: true,
-        //   aspect: [4, 3],
-        //   quality: 1
-        // });
-        // console.log(result.uri.split("/").pop());
-        
-        // const formData = new FormData();
-
-        // // const file = new File({
-        // //   uri: Platform.OS=='ios'?result.uri.replace("file://", "/private"):result.uri,
-        // //   type: result.type,
-        // //   name: result.uri.split("/").pop()
-        // // });
-        // formData.append('avatar', file);
         let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
           allowsEditing: true,
           aspect: [4, 3],
+          quality: 1
         });
-      
-        if (result.cancelled) {
-          return;
+        if (!result.cancelled) {
+          let localUri = result.uri;
+          let filename = localUri.split('/').pop();
+          const formData = new FormData();
+          formData.append('avatar', {
+            uri: localUri,
+            name: filename,
+            type: 'image/png'
+          });
+          uploadImgSingle(formData).then(res => {
+            const { data } = res;
+            const dataUpdated = {
+              name: dataUser.name,
+              avatar: data
+            };
+            if (data) {
+              dispatch(uploadAvatarAction(dataUpdated));
+            }
+          });
         }
-      
-        // ImagePicker saves the taken photo to disk and returns a local URI to it
-        let localUri = result.uri;
-        let filename = localUri.split('/').pop();
-      
-        // Infer the type of the image
-        let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
-      
-        // Upload the image using the fetch and FormData APIs
-        let formData = new FormData();
-        // Assume "photo" is the name of the form field the server expects
-        formData.append('avatar', { uri: localUri, name: filename, type });
-        // uploadImgSingle(formData);
-        Axios({
-          method: 'POST',
-          url: 'https://api-ret.ml/api/v0/images/upload-avatar',
-          data: formData,
-          headers: {
-              'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImlkIjoxLCJuYW1lIjoiQWRtaW4iLCJwaG9uZSI6IjAzMjM0NTY3ODkiLCJlbWFpbCI6ImRsbXRydW9uZzE2MDlAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIn0sImlhdCI6MTYwMzU0NDg3MSwiZXhwIjoxNjAzNjMxMjcxfQ.w4YC0HH_Z9HY1xaWWnnqXiCRB6fkij_zlE6yrMvojB4',
-              'Accept': 'application/json',
-              'Content-Type': 'multipart/form-data;'    
-          }}) .then(function (response) { console.log('res'+ JSON.stringify(response))})
-          .catch(function (error) { console.log('err' + error)
-      });
       }
       if (status !== 'granted') {
         alert('Sorry, we need camera roll permissions to make this work!');

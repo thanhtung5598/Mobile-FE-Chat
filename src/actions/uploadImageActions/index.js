@@ -2,13 +2,13 @@ import axiosServices from 'services/axiosServices';
 
 export const uploadImgSingle = formData => {
   return axiosServices
-    .request({
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      },
-      url: `https://api-ret.ml/api/v0/images/upload-avatar`,
-      data: formData
+    .post('https://api-ret.ml/api/v0/images/upload-avatar', formData)
+    .then(res => {
+      const { data } = res.data;
+      return { data };
     })
-    .then(res => console.log(res));
+    .catch(err => {
+      const { data } = err.response?.data;
+      return { data };
+    });
 };

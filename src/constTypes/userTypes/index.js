@@ -15,6 +15,7 @@ const PROFILE_TYPE = {
   ...createRequestTypes('USER', 'ADD_FRIEND'),
   ...createRequestTypes('USER', 'DELETE_FRIEND'),
   ...createRequestTypes('USER', 'ACCEPT_FRIEND'),
-  ...createRequestTypes('USER', 'DECLINE_FRIEND')
+  ...createRequestTypes('USER', 'DECLINE_FRIEND'),
+  ...createRequestTypes('USER', 'UPLOAD_AVATAR')
 };
 export default PROFILE_TYPE;

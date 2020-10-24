@@ -216,6 +216,7 @@ export const deleteFriend = dataDelete => dispatch => {
         payload: data
       });
       dispatch(fetchListFriends());
+      dispatch(fetchPhonebookSync());
       return { error, data };
     })
     .catch(err => {
@@ -240,8 +241,8 @@ export const acceptFriend = dataAccept => dispatch => {
         type: PROFILE_TYPE.ACCEPT_FRIEND_SUCCESS,
         payload: data
       });
-      dispatch(fetchRequestFriends());
       dispatch(fetchListFriends());
+      dispatch(fetchRequestFriends());
       dispatch(fetchPhonebookSync());
       return { error, data };
     })
@@ -275,6 +276,31 @@ export const declineFriend = dataDecline => dispatch => {
       const { error, data } = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.DECLINE_FRIEND_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const uploadAvatarAction = dataUpdate => dispatch => {
+  dispatch({
+    type: PROFILE_TYPE.UPLOAD_AVATAR_REQUEST
+  });
+  return axiosServices
+    .put(`${prefix}profile/update`, dataUpdate)
+    .then(res => {
+      const { error, data } = res.data;
+      if (!error) {
+        dispatch({
+          type: PROFILE_TYPE.UPLOAD_AVATAR_SUCCESS,
+          payload: dataUpdate.avatar
+        });
+      }
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: PROFILE_TYPE.UPLOAD_AVATAR_FAILURE
       });
       return { error, data };
     });

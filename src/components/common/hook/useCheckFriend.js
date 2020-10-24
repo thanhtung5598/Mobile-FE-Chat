@@ -67,12 +67,12 @@ const useCheckFriends = ({
             }
           }
         }
-        listIndex.forEach(item => {
-          newReq[item].status = false; // is already friend
-        });
-        setListFindFill([...newReq]);
-        return;
       }
+      listIndex.forEach(item => {
+        newReq[item].status = false; // is already friend
+      });
+      setListFindFill([...newReq]);
+      return;
     }
     if (listFriends && !listFriendsWait && !listRequestFriends) {
       console.log('case 4'); // required add friends
@@ -94,12 +94,12 @@ const useCheckFriends = ({
             }
           }
         }
-        listIndex.forEach(item => {
-          newReq[item].status = true; // is already friend
-        });
-        setListFindFill([...newReq]);
-        return;
       }
+      listIndex.forEach(item => {
+        newReq[item].status = true; // is already friend
+      });
+      setListFindFill([...newReq]);
+      return;
     }
     if (listFriends && listFriendsWait && !listRequestFriends) {
       console.log('case 5'); // required add friends

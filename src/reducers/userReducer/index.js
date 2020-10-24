@@ -26,6 +26,26 @@ const AuthenReducer = (state = initialState, action) => {
         isLoading: false,
         error: null
       };
+    case PROFILE_TYPE.UPLOAD_AVATAR_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      };
+    case PROFILE_TYPE.UPLOAD_AVATAR_SUCCESS:
+      return {
+        ...state,
+        dataUser: {
+          ...state.dataUser,
+          avatar: action.payload
+        },
+        isLoading: false
+      };
+    case PROFILE_TYPE.UPLOAD_AVATAR_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        error: null
+      };
     default:
       return state;
   }
