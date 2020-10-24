@@ -42,6 +42,7 @@ import {
   fetchListFriends
 } from 'actions/userActions';
 
+const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
@@ -56,7 +57,6 @@ const PhoneBook = () => {
   const [userQuery, setUserQuery] = useState('');
   const [showFriendsReq, setShowFriendsReq] = useState(false);
   const [phonebook, setPhonebook] = useState(false);
-  const [visible, setVisible] = useState(false);
   const [find, setFind] = useState(false);
 
   const delayedQuery = useRef(
@@ -65,7 +65,6 @@ const PhoneBook = () => {
 
   const handleToggleModal = _position => {
     setPosition(_position);
-    setVisible(true);
   };
 
   useEffect(() => {
@@ -101,7 +100,6 @@ const PhoneBook = () => {
       user_id: dataUser.id,
       user_request_id: id_friend_req
     };
-    console.log(value);
     dispatch(addFriend(value));
   };
 
@@ -110,7 +108,9 @@ const PhoneBook = () => {
       user_id: `${dataUser.id}`,
       user_id_want_delete: `${id_fri_del}`
     };
-    dispatch(deleteFriend(value));
+    dispatch(deleteFriend(value)).then(() => {
+      setPosition(null);
+    });
   };
 
   const handleAcceptFriend = id_friend_accept => {
@@ -266,7 +266,10 @@ const PhoneBook = () => {
                             <Thumbnail
                               rounded
                               source={{
-                                uri: friend.avatar || avatarDefault
+                                uri:
+                                  (friend.avatar &&
+                                    `${imaPrefix}friend.avatar`) ||
+                                  avatarDefault
                               }}
                             />
                           </Left>
@@ -285,8 +288,8 @@ const PhoneBook = () => {
                       {position === index && (
                         <ModalCustom
                           info={friend}
-                          visible={visible}
-                          setIsShow={setVisible}
+                          visible={!!(position === index)}
+                          setVisible={setPosition}
                           handleDeletedFriend={handleDeletedFriend}
                         />
                       )}

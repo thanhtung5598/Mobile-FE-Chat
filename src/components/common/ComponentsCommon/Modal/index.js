@@ -8,13 +8,14 @@ import {
   TouchableWithoutFeedback,
   Text
 } from 'react-native';
+import { Button } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ModalCustom = props => {
-  const { visible, setIsShow, info, handleDeletedFriend } = props;
+  const { visible, setVisible, info, handleDeletedFriend } = props;
 
   const handleCloseModal = () => {
-    setIsShow(false);
+    setVisible(null);
   };
 
   return (
@@ -32,14 +33,14 @@ const ModalCustom = props => {
             <Text style={styles.headerModalText}>{info.name}</Text>
           </View>
           <TouchableOpacity>
-            <View>
-              <Text style={styles.viewProfile}>View profile</Text>
-            </View>
+            <Button block success style={{ marginBottom: 10 }}>
+              <Text>View Info</Text>
+            </Button>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => handleDeletedFriend(info.id)}>
-            <View>
-              <Text style={styles.actionFriend}>Remove friend</Text>
-            </View>
+            <Button block warning>
+              <Text>Remove friend</Text>
+            </Button>
           </TouchableOpacity>
         </View>
       </View>
@@ -49,7 +50,7 @@ const ModalCustom = props => {
 
 ModalCustom.propTypes = {
   visible: PropTypes.bool,
-  setIsShow: PropTypes.func,
+  setVisible: PropTypes.func,
   handleDeletedFriend: PropTypes.func,
   setFooter: PropTypes.func,
   children: PropTypes.objectOf(PropTypes.any),
@@ -57,7 +58,7 @@ ModalCustom.propTypes = {
 };
 ModalCustom.defaultProps = {
   visible: false,
-  setIsShow: () => {},
+  setVisible: () => {},
   handleDeletedFriend: () => {},
   setFooter: () => {},
   children: {},

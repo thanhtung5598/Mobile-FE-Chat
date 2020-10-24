@@ -21,6 +21,7 @@ import * as Contacts from 'expo-contacts';
 import { fetchPhonebookSync, syncDataPhonebook } from 'actions/userActions';
 import useCheckFriend from 'components/common/hook/useCheckFriend';
 
+const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
@@ -94,7 +95,12 @@ const SyncPhonebook = props => {
                       <Left>
                         <Thumbnail
                           rounded
-                          source={{ uri: friend.avatar || avatarDefault }}
+                          source={{
+                            uri:
+                              (friend.avatar &&
+                                `${imaPrefix}${friend.avatar}`) ||
+                              avatarDefault
+                          }}
                         />
                       </Left>
                       <Body style={{ borderBottomColor: 'white' }}>

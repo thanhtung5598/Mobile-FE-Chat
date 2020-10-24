@@ -208,10 +208,9 @@ export const deleteFriend = dataDelete => dispatch => {
     type: PROFILE_TYPE.DELETE_FRIEND_REQUEST
   });
   return axiosServices
-    .post(`${prefix}deleteFriend`, dataDelete)
+    .post(`${prefix}deletePhoneByIdContact`, dataDelete)
     .then(res => {
       const { error, data } = res.data;
-      console.log('succ', data);
       dispatch({
         type: PROFILE_TYPE.DELETE_FRIEND_SUCCESS,
         payload: data
