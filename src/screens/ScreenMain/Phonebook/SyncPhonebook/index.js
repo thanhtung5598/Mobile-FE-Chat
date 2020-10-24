@@ -85,67 +85,69 @@ const SyncPhonebook = props => {
             </View>
           )}
           <Content style={{ marginTop: 20 }}>
-            {listFindFill?.map((friend, index) => {
-              return (
-                <Fragment key={index}>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail
-                        rounded
-                        source={{ uri: friend.avatar || avatarDefault }}
-                      />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>{friend.name}</Text>
-                    </Body>
-                    <Right style={{ borderBottomWidth: 0 }}>
-                      {friend.status === undefined && (
-                        <LinearGradient
-                          start={{ x: -1, y: 0 }}
-                          end={{ x: 1, y: 0 }}
-                          colors={['#2962ff', '#0cb3ff']}
-                          style={styles.LinearGradientProfile}
-                        >
-                          <TouchableOpacity
-                            style={styles.UpdateProfile}
-                            onPress={() => handleAddFriend(friend.id)}
+            {listFindFill
+              ?.filter(item => item.id !== dataUser.id)
+              .map((friend, index) => {
+                return (
+                  <Fragment key={index}>
+                    <ListItem thumbnail style={{ paddingBottom: 12 }}>
+                      <Left>
+                        <Thumbnail
+                          rounded
+                          source={{ uri: friend.avatar || avatarDefault }}
+                        />
+                      </Left>
+                      <Body style={{ borderBottomColor: 'white' }}>
+                        <Text>{friend.name}</Text>
+                      </Body>
+                      <Right style={{ borderBottomWidth: 0 }}>
+                        {friend.status === undefined && (
+                          <LinearGradient
+                            start={{ x: -1, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            colors={['#2962ff', '#0cb3ff']}
+                            style={styles.LinearGradientProfile}
                           >
-                            <Text style={styles.UpdatedProfileText}>
-                              Add friend
-                            </Text>
-                          </TouchableOpacity>
-                        </LinearGradient>
-                      )}
-                      {friend.status === true && (
-                        <LinearGradient
-                          start={{ x: -1, y: 0 }}
-                          end={{ x: 1, y: 0 }}
-                          colors={['#2962ff', '#0cb3ff']}
-                          style={styles.LinearGradientProfile}
-                        ></LinearGradient>
-                      )}
-                      {friend.status === false && (
-                        <LinearGradient
-                          start={{ x: -1, y: 0 }}
-                          end={{ x: 1, y: 0 }}
-                          colors={['#a5d6a7', '#4caf50']}
-                          style={styles.LinearGradientProfile}
-                        >
-                          <TouchableOpacity
-                            style={styles.UpdateProfile}
-                            disabled
+                            <TouchableOpacity
+                              style={styles.UpdateProfile}
+                              onPress={() => handleAddFriend(friend.id)}
+                            >
+                              <Text style={styles.UpdatedProfileText}>
+                                Add friend
+                              </Text>
+                            </TouchableOpacity>
+                          </LinearGradient>
+                        )}
+                        {friend.status === true && (
+                          <LinearGradient
+                            start={{ x: -1, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            colors={['#2962ff', '#0cb3ff']}
+                            style={styles.LinearGradientProfile}
+                          ></LinearGradient>
+                        )}
+                        {friend.status === false && (
+                          <LinearGradient
+                            start={{ x: -1, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                            colors={['#a5d6a7', '#4caf50']}
+                            style={styles.LinearGradientProfile}
                           >
-                            <Text style={styles.UpdatedProfileText}>
-                              Waiting...
-                            </Text>
-                          </TouchableOpacity>
-                        </LinearGradient>
-                      )}
-                    </Right>
-                  </ListItem>
-                </Fragment>
-              );
-            })}
+                            <TouchableOpacity
+                              style={styles.UpdateProfile}
+                              disabled
+                            >
+                              <Text style={styles.UpdatedProfileText}>
+                                Waiting...
+                              </Text>
+                            </TouchableOpacity>
+                          </LinearGradient>
+                        )}
+                      </Right>
+                    </ListItem>
+                  </Fragment>
+                );
+              })}
           </Content>
         </Content>
       </Container>

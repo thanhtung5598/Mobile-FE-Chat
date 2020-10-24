@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
+import { Container } from 'native-base';
 import SceenRoot from 'screens/SceenRoot';
 import ScreenMain from 'screens/ScreenMain/Drawer';
 import { isTokenExpired } from 'actions/authenActions';
@@ -33,7 +34,18 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {isAuthenticated !== false ? <ScreenMain /> : <SceenRoot />}
+      <Container
+        style={
+          Platform.OS === 'android'
+            ? {
+                paddingTop: 15,
+                backgroundColor: '#2962ff'
+              }
+            : {}
+        }
+      >
+        {isAuthenticated !== false ? <ScreenMain /> : <SceenRoot />}
+      </Container>
     </NavigationContainer>
   );
 };

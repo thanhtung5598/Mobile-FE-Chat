@@ -101,6 +101,7 @@ const PhoneBook = () => {
       user_id: dataUser.id,
       user_request_id: id_friend_req
     };
+    console.log(value);
     dispatch(addFriend(value));
   };
 

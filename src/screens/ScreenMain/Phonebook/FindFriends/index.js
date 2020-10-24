@@ -24,6 +24,7 @@ const avatarDefault =
 
 const FindFriends = props => {
   const { handleAddFriend } = props;
+  const { dataUser } = useSelector(state => state.dataUser);
   const { isLoading, listUsers } = useSelector(state => state.listUsers);
   const { listFriends, listFriendsWait, listRequestFriends } = useSelector(
     state => state.friends
@@ -54,67 +55,69 @@ const FindFriends = props => {
               <Text style={{ color: '#AAA', fontSize: 30 }}>Nothing found</Text>
             </View>
           )}
-          {listFindFill?.map((item, index) => {
-            return (
-              <ListItem key={index} thumbnail style={{ paddingBottom: 12 }}>
-                <Left>
-                  <Thumbnail
-                    rounded
-                    source={{ uri: item.avatar || avatarDefault }}
-                  />
-                </Left>
-                <Body style={{ borderBottomColor: 'white' }}>
-                  <Text>{item.name}</Text>
-                  <Text note numberOfLines={1}>
-                    {item.status === true
-                      ? `Phone number ${item.phone}`
-                      : 'Maybe you know'}
-                  </Text>
-                </Body>
-                <Right style={{ borderBottomWidth: 0 }}>
-                  {item.status === undefined && (
-                    <LinearGradient
-                      start={{ x: -1, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      colors={['#2962ff', '#0cb3ff']}
-                      style={styles.LinearGradientProfile}
-                    >
-                      <TouchableOpacity
-                        style={styles.UpdateProfile}
-                        onPress={() => handleAddFriend(item.id)}
+          {listFindFill
+            ?.filter(item => item.id !== dataUser.id)
+            .map((item, index) => {
+              return (
+                <ListItem key={index} thumbnail style={{ paddingBottom: 12 }}>
+                  <Left>
+                    <Thumbnail
+                      rounded
+                      source={{ uri: item.avatar || avatarDefault }}
+                    />
+                  </Left>
+                  <Body style={{ borderBottomColor: 'white' }}>
+                    <Text>{item.name}</Text>
+                    <Text note numberOfLines={1}>
+                      {item.status === true
+                        ? `Phone number ${item.phone}`
+                        : 'Maybe you know'}
+                    </Text>
+                  </Body>
+                  <Right style={{ borderBottomWidth: 0 }}>
+                    {item.status === undefined && (
+                      <LinearGradient
+                        start={{ x: -1, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        colors={['#2962ff', '#0cb3ff']}
+                        style={styles.LinearGradientProfile}
                       >
-                        <Text style={styles.UpdatedProfileText}>
-                          Add friend
-                        </Text>
-                      </TouchableOpacity>
-                    </LinearGradient>
-                  )}
-                  {item.status === true && (
-                    <LinearGradient
-                      start={{ x: -1, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      colors={['#2962ff', '#0cb3ff']}
-                      style={styles.LinearGradientProfile}
-                    ></LinearGradient>
-                  )}
-                  {item.status === false && (
-                    <LinearGradient
-                      start={{ x: -1, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      colors={['#a5d6a7', '#4caf50']}
-                      style={styles.LinearGradientProfile}
-                    >
-                      <TouchableOpacity style={styles.UpdateProfile} disabled>
-                        <Text style={styles.UpdatedProfileText}>
-                          Waiting...
-                        </Text>
-                      </TouchableOpacity>
-                    </LinearGradient>
-                  )}
-                </Right>
-              </ListItem>
-            );
-          })}
+                        <TouchableOpacity
+                          style={styles.UpdateProfile}
+                          onPress={() => handleAddFriend(item.id)}
+                        >
+                          <Text style={styles.UpdatedProfileText}>
+                            Add friend
+                          </Text>
+                        </TouchableOpacity>
+                      </LinearGradient>
+                    )}
+                    {item.status === true && (
+                      <LinearGradient
+                        start={{ x: -1, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        colors={['#2962ff', '#0cb3ff']}
+                        style={styles.LinearGradientProfile}
+                      ></LinearGradient>
+                    )}
+                    {item.status === false && (
+                      <LinearGradient
+                        start={{ x: -1, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        colors={['#a5d6a7', '#4caf50']}
+                        style={styles.LinearGradientProfile}
+                      >
+                        <TouchableOpacity style={styles.UpdateProfile} disabled>
+                          <Text style={styles.UpdatedProfileText}>
+                            Waiting...
+                          </Text>
+                        </TouchableOpacity>
+                      </LinearGradient>
+                    )}
+                  </Right>
+                </ListItem>
+              );
+            })}
         </Tab>
       </Tabs>
     </Content>

@@ -3,9 +3,9 @@ import { useState, useEffect } from 'react';
 
 const useCheckFriends = ({
   listUsers, // user tìm được
-  listFriends,
-  listFriendsWait,
-  listRequestFriends
+  listFriends, // friends
+  listFriendsWait, // đả gửi kết bạn cho những người này
+  listRequestFriends // nhưng người yêu cầu kết bạn
 }) => {
   const [listFindFill, setListFindFill] = useState(null);
 
@@ -197,7 +197,9 @@ const useCheckFriends = ({
       listIndexFriendWait.forEach(item => {
         newListUserClone[item].status = 'requested';
       });
-      const newlist = newReq.filter(user => user.status !== 'requested');
+      const newlist = newListUserClone.filter(
+        user => user.status !== 'requested'
+      );
       setListFindFill([...newlist]);
       return;
     }
@@ -247,7 +249,9 @@ const useCheckFriends = ({
       listIndexFriendWait.forEach(item => {
         newListUserClone[item].status = 'requested';
       });
-      const newlist = newReq.filter(user => user.status !== 'requested');
+      const newlist = newListUserClone.filter(
+        user => user.status !== 'requested'
+      );
       setListFindFill([...newlist]);
       return;
     }
@@ -276,16 +280,16 @@ const useCheckFriends = ({
     }
     // find friend wait
     for (let i = 0; i < newListUserClone.length; i++) {
-      for (let j = 0; j < listRequestFriends.length; j++) {
+      for (let j = 0; j < listFriendsWait.length; j++) {
         if (!newListUserClone[i].email) {
           // if all user do not have email
-          if (newListUserClone[i].phone === listRequestFriends[j].phone) {
+          if (newListUserClone[i].phone === listFriendsWait[j].phone) {
             listIndexFriendWait.push(i);
           }
         }
         if (newListUserClone[i].email) {
           // if user already had email
-          if (newListUserClone[i].email === listRequestFriends[j].email) {
+          if (newListUserClone[i].email === listFriendsWait[j].email) {
             listIndexFriendWait.push(i);
           }
         }
