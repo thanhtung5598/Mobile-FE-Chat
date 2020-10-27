@@ -12,13 +12,14 @@ import {
   List,
   ListItem
 } from 'native-base';
-import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImgSingle } from 'actions/uploadImageActions';
 import { uploadAvatarAction } from 'actions/userActions';
 import { getProfileUser } from 'actions/userActions';
+import ModalAddInfo from 'components/common/ComponentsCommon/Modal/modalAddInfo';
+
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
@@ -26,9 +27,11 @@ const avatarDefault =
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
+
   useEffect(() => {
     dispatch(getProfileUser());
   }, [dispatch]);
+
   const handleUploadImage = async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
@@ -66,6 +69,8 @@ const Profile = ({ navigation }) => {
     }
   };
 
+  const handleClickedAddInfo = () => {};
+
   return (
     <Container>
       <Content>
@@ -101,10 +106,19 @@ const Profile = ({ navigation }) => {
             <Text style={styles.valueInfo}>{dataUser?.name || '...'}</Text>
           </ListItem>
           <ListItem>
-            <Text style={styles.titleInfo}>Username</Text>
-            <Text style={styles.valueInfo}>
-              {dataUser?.phone || dataUser?.email || 'Tạo user name'}
-            </Text>
+            <Text style={styles.titleInfo}>Phone</Text>
+            <Text style={styles.valueInfo}>{dataUser?.phone || '...'}</Text>
+          </ListItem>
+          <ListItem>
+            <Text style={styles.titleInfo}>Email</Text>
+            <Text style={styles.valueInfo}>{dataUser?.email || '....'}</Text>
+            {<ModalAddInfo visible={true} />}
+            <TouchableOpacity
+              style={styles.buttonAddInfo}
+              onPress={handleClickedAddInfo}
+            >
+              <AntDesign name="pluscircle" size={30} color="#2962ff" />
+            </TouchableOpacity>
           </ListItem>
           <ListItem>
             <Text style={styles.titleInfo}>Create At</Text>
@@ -118,21 +132,7 @@ const Profile = ({ navigation }) => {
               {moment(dataUser?.updateAt).format('YYYY/MM/DD')}
             </Text>
           </ListItem>
-          <ListItem>
-            <Text style={styles.titleInfo}>Phone</Text>
-            <Text style={styles.valueInfo}>{dataUser?.phone}</Text>
-          </ListItem>
         </List>
-        <LinearGradient
-          start={{ x: -1, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={['#2962ff', '#0cb3ff']}
-          style={styles.LinearGradientProfile}
-        >
-          <TouchableOpacity style={styles.UpdateProfile}>
-            <Text style={styles.UpdatedProfileText}>Updated Profile</Text>
-          </TouchableOpacity>
-        </LinearGradient>
       </Content>
     </Container>
   );
@@ -195,5 +195,6 @@ const styles = StyleSheet.create({
   },
   valueInfo: {
     color: '#AAA'
-  }
+  },
+  buttonAddInfo: { marginLeft: '70%' }
 });

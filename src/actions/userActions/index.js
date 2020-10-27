@@ -96,7 +96,6 @@ export const fetchPhonebookSync = () => dispatch => {
     .get(`${prefix}getListPhoneBookById`)
     .then(res => {
       const { error, data } = res.data;
-      console.log('data sync', data);
       dispatch({
         type: PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_SUCCESS,
         payload: data
@@ -105,7 +104,6 @@ export const fetchPhonebookSync = () => dispatch => {
     })
     .catch(err => {
       const { error, data } = err.response?.data;
-      console.log('fetch sync err', data);
       dispatch({
         type: PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_FAILURE
       });

@@ -21,8 +21,8 @@ Platform.OS === 'android' && StatusBar.setHidden(true);
 
 const MainTab = props => {
   const dispatch = useDispatch();
-  const [content, setContent] = useState(<Messages />);
-  const [isActive, setActive] = useState('message');
+  const [content, setContent] = useState(<Profile />);
+  const [isActive, setActive] = useState('profile');
   const [footer, setFooter] = useState(true);
 
   useEffect(() => {
