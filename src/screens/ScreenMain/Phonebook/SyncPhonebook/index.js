@@ -52,7 +52,7 @@ const SyncPhonebook = props => {
           );
           const dataSync = {
             user_id: dataUser.id,
-            listPhoneBook: newData.flat()
+            listPhoneBook: newData.flat().map(item => item.split(' ').join(''))
           };
           dispatch(syncDataPhonebook(dataSync));
         }

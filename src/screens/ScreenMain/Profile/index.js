@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, ImageBackground, Platform } from 'react-native';
 import moment from 'moment';
@@ -18,7 +18,7 @@ import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImgSingle } from 'actions/uploadImageActions';
 import { uploadAvatarAction } from 'actions/userActions';
-
+import { getProfileUser } from 'actions/userActions';
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const avatarDefault =
   'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
@@ -26,7 +26,9 @@ const avatarDefault =
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
-
+  useEffect(() => {
+    dispatch(getProfileUser());
+  }, [dispatch]);
   const handleUploadImage = async () => {
     if (Platform.OS !== 'web') {
       const { status } = await ImagePicker.requestCameraRollPermissionsAsync();

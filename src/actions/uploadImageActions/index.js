@@ -9,6 +9,7 @@ export const uploadImgSingle = formData => {
     })
     .catch(err => {
       const { data } = err.response?.data;
+      console.log('error', data);
       return { data };
     });
 };
