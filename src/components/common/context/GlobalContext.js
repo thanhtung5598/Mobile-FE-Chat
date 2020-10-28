@@ -24,30 +24,8 @@ const renderHelmet = meta => (
         content: 'yes'
       }
     ]}
-    link={[
-      {
-        rel: 'icon',
-        type: 'image/x-icon',
-        href: meta.image
-      },
-      // GOOGLE FONT
-      {
-        rel: 'stylesheet',
-        type: 'text/css',
-        href:
-          'https://fonts.googleapis.com/css?family=Hind:400,300,500,600%7cMontserrat:400,700'
-      },
-      {
-        rel: 'stylesheet',
-        type: 'text/css',
-        href: 'https://fonts.googleapis.com/css?family=Hind:300,400,500,600,700'
-      }
-    ]}
-    script={[
-      {
-        src: 'https://kit.fontawesome.com/4cc95513a0.js'
-      }
-    ]}
+    link={[]}
+    script={[]}
   />
 );
 

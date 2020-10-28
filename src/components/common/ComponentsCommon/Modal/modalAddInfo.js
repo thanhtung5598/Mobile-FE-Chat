@@ -23,7 +23,7 @@ const ModalCustom = props => {
   const onHandleSubmitAdd = () => {};
 
   return (
-    <Modal animationType="slide" transparent visible={true}>
+    <Modal animationType="slide" transparent visible={false}>
       <View style={styles.centeredView}>
         <TouchableWithoutFeedback onPress={handleCloseModal}>
           <BlurView

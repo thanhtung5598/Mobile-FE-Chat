@@ -112,7 +112,7 @@ const Profile = ({ navigation }) => {
           <ListItem>
             <Text style={styles.titleInfo}>Email</Text>
             <Text style={styles.valueInfo}>{dataUser?.email || '....'}</Text>
-            {<ModalAddInfo visible={true} />}
+            {<ModalAddInfo visible={false} />}
             <TouchableOpacity
               style={styles.buttonAddInfo}
               onPress={handleClickedAddInfo}

@@ -6,7 +6,7 @@ import SceenRoot from 'screens/SceenRoot';
 import ScreenMain from 'screens/ScreenMain/Drawer';
 import { isTokenExpired } from 'actions/authenActions';
 import { NavigationContainer } from '@react-navigation/native';
-// import LottieView from 'lottie-react-native';
+import * as Font from 'expo-font';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -15,10 +15,15 @@ const App = () => {
 
   useEffect(() => {
     if (!isAuthenticated) dispatch(isTokenExpired());
+    Font.loadAsync({
+      Roboto: require('native-base/Fonts/Roboto.ttf'),
+      Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')
+    });
     setTimeout(() => {
       setIsLoading(false);
     }, 2000);
   }, [dispatch, isAuthenticated]);
+
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -39,7 +44,7 @@ const App = () => {
           Platform.OS === 'android'
             ? {
                 paddingTop: 22,
-                backgroundColor: '#2962ff'
+                backgroundColor: '#F8F8F8'
               }
             : {}
         }

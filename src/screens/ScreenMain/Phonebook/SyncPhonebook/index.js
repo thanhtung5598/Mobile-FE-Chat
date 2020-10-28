@@ -44,9 +44,10 @@ const SyncPhonebook = props => {
   useEffect(() => {
     (async () => {
       const { status } = await Contacts.requestPermissionsAsync();
+      console.log(status);
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync();
-        if (data.length > 0) {
+        if (data.length >= 0) {
           const newData = data.map(item =>
             item.phoneNumbers.map(item => item.number)
           );
