@@ -10,20 +10,23 @@ import {
 import { Formik } from 'formik';
 import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { StyledInput } from 'components/common/ComponentsCommon/StyledInput';
-
 import { Button, Text } from 'native-base';
+// import { accountSendOTPSignUp } from 'actions/authenActions';
 
 const ModalCustom = props => {
+  // const { isLoading, error, message } = useSelector(state => state.authen);
   const { setVisible } = props;
 
   const handleCloseModal = () => {
     setVisible(null);
   };
 
-  const onHandleSubmitAdd = () => {};
+  const onHandleSubmitAdd = () => {
+    // dispatchEvent(accountSendOTPSignUp('email', value));
+  };
 
   return (
-    <Modal animationType="slide" transparent visible={false}>
+    <Modal animationType="slide" transparent visible={true}>
       <View style={styles.centeredView}>
         <TouchableWithoutFeedback onPress={handleCloseModal}>
           <BlurView
@@ -35,24 +38,32 @@ const ModalCustom = props => {
         <View style={styles.modalView}>
           <Formik initialValues={{ email: '' }} onSubmit={onHandleSubmitAdd}>
             {({ touched, errors, ...formikProps }) => (
-              <>
-                <StyledInput
-                  formikProps={formikProps}
-                  formikKey="email"
-                  placeholder="Your email..."
-                  value={formikProps.values.email}
-                  style={{
-                    borderBottomWidth: 0.5,
-                    borderBottomColor: '#AAA'
-                  }}
-                />
+              <View>
                 {touched.email && errors.email ? (
                   <ErrorInput text={errors.email} />
                 ) : null}
-                <Button onPress={formikProps.handleSubmit}>
-                  <Text>+</Text>
-                </Button>
-              </>
+                <View
+                  style={{
+                    flexDirection: 'row'
+                  }}
+                >
+                  <View style={{ width: '80%' }}>
+                    <StyledInput
+                      formikProps={formikProps}
+                      formikKey="email"
+                      placeholder="Your email..."
+                      value={formikProps.values.email}
+                      style={{
+                        borderBottomWidth: 0.5,
+                        borderBottomColor: '#AAA'
+                      }}
+                    />
+                  </View>
+                  <Button onPress={formikProps.handleSubmit}>
+                    <Text>+</Text>
+                  </Button>
+                </View>
+              </View>
             )}
           </Formik>
         </View>

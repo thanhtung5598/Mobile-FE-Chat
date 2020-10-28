@@ -18,7 +18,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { uploadImgSingle } from 'actions/uploadImageActions';
 import { uploadAvatarAction } from 'actions/userActions';
 import { getProfileUser } from 'actions/userActions';
-import ModalAddInfo from 'components/common/ComponentsCommon/Modal/modalAddInfo';
+// import ModalUpdatedName from 'components/common/ComponentsCommon/Modal/modalAddEmail';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const avatarDefault =
@@ -69,8 +69,6 @@ const Profile = ({ navigation }) => {
     }
   };
 
-  const handleClickedAddInfo = () => {};
-
   return (
     <Container>
       <Content>
@@ -112,13 +110,13 @@ const Profile = ({ navigation }) => {
           <ListItem>
             <Text style={styles.titleInfo}>Email</Text>
             <Text style={styles.valueInfo}>{dataUser?.email || '....'}</Text>
-            {<ModalAddInfo visible={false} />}
+            {/* {<ModalAddInfoEmail visible={false} />}
             <TouchableOpacity
               style={styles.buttonAddInfo}
               onPress={handleClickedAddInfo}
             >
               <AntDesign name="pluscircle" size={30} color="#2962ff" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </ListItem>
           <ListItem>
             <Text style={styles.titleInfo}>Create At</Text>
