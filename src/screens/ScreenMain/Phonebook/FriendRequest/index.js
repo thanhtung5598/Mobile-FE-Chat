@@ -20,8 +20,6 @@ import { Ionicons } from '@expo/vector-icons';
 import { fetchRequestFriends } from 'actions/userActions';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-const avatarDefault =
-  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const FriendRequest = props => {
   const dispatch = useDispatch();
@@ -58,11 +56,13 @@ const FriendRequest = props => {
                     <Left>
                       <Thumbnail
                         rounded
-                        source={{
-                          uri:
-                            (friend.avatar && `${imaPrefix}${friend.avatar}`) ||
-                            avatarDefault
-                        }}
+                        source={
+                          friend.avatar
+                            ? {
+                                uri: `${imaPrefix}${friend.avatar}`
+                              }
+                            : require('assets/avatarDefault.png')
+                        }
                       />
                     </Left>
                     <Body style={{ borderBottomColor: 'white' }}>

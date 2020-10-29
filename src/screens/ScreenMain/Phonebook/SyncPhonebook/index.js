@@ -22,8 +22,6 @@ import { fetchPhonebookSync, syncDataPhonebook } from 'actions/userActions';
 import useCheckFriend from 'components/common/hook/useCheckFriend';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-const avatarDefault =
-  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const SyncPhonebook = props => {
   const dispatch = useDispatch();
@@ -96,12 +94,13 @@ const SyncPhonebook = props => {
                       <Left>
                         <Thumbnail
                           rounded
-                          source={{
-                            uri:
-                              (friend.avatar &&
-                                `${imaPrefix}${friend.avatar}`) ||
-                              avatarDefault
-                          }}
+                          source={
+                            friend.avatar
+                              ? {
+                                  uri: `${imaPrefix}${friend.avatar}`
+                                }
+                              : require('assets/avatarDefault.png')
+                          }
                         />
                       </Left>
                       <Body style={{ borderBottomColor: 'white' }}>

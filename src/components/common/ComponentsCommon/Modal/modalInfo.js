@@ -12,8 +12,6 @@ import { Thumbnail, Button } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-const avatarDefault =
-  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const ModalCustom = props => {
   const {
@@ -65,10 +63,13 @@ const ModalCustom = props => {
           <View style={styles.headerModal}>
             <Thumbnail
               large
-              source={{
-                uri:
-                  (info.avatar && `${imaPrefix}${info.avatar}`) || avatarDefault
-              }}
+              source={
+                info.avatar
+                  ? {
+                      uri: `${imaPrefix}${info.avatar}`
+                    }
+                  : require('assets/avatarDefault.png')
+              }
             />
             <Text style={{ fontSize: 16, fontWeight: '600' }}>{info.name}</Text>
           </View>

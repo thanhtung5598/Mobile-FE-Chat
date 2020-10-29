@@ -280,18 +280,25 @@ export const declineFriend = dataDecline => dispatch => {
     });
 };
 
-export const uploadAvatarAction = dataUpdate => dispatch => {
-  dispatch({
-    type: PROFILE_TYPE.UPLOAD_AVATAR_REQUEST
-  });
+export const updateProfile = (dataUpdate, type = 1) => dispatch => {
+  if (type === 1) {
+    dispatch({
+      type: PROFILE_TYPE.UPDATE_PROFILE_REQUEST
+    });
+  }
+  if (type !== 1) {
+    dispatch({
+      type: PROFILE_TYPE.UPDATE_AVATAR_REQUEST
+    });
+  }
   return axiosServices
     .put(`${prefix}profile/update`, dataUpdate)
     .then(res => {
       const { error, data } = res.data;
       if (!error) {
         dispatch({
-          type: PROFILE_TYPE.UPLOAD_AVATAR_SUCCESS,
-          payload: dataUpdate.avatar
+          type: PROFILE_TYPE.UPDATE_PROFILE_SUCCESS,
+          payload: dataUpdate
         });
       }
       return { error, data };
@@ -299,7 +306,7 @@ export const uploadAvatarAction = dataUpdate => dispatch => {
     .catch(err => {
       const { error, data } = err.response?.data;
       dispatch({
-        type: PROFILE_TYPE.UPLOAD_AVATAR_FAILURE
+        type: PROFILE_TYPE.UPDATE_PROFILE_FAILURE
       });
       return { error, data };
     });

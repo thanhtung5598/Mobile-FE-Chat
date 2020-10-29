@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, ImageBackground, Platform } from 'react-native';
 import moment from 'moment';
@@ -16,17 +16,18 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import { uploadImgSingle } from 'actions/uploadImageActions';
-import { uploadAvatarAction } from 'actions/userActions';
+import { updateProfile } from 'actions/userActions';
 import { getProfileUser } from 'actions/userActions';
-// import ModalUpdatedName from 'components/common/ComponentsCommon/Modal/modalAddEmail';
+import ModalUpdatedName from 'components/common/ComponentsCommon/Modal/modalUpdatedName';
+import SvgAnimatedLinearGradient from 'react-native-svg-animated-linear-gradient';
+import { Circle } from 'react-native-svg';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-const avatarDefault =
-  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const Profile = ({ navigation }) => {
+  const modalRef = useRef(null);
   const dispatch = useDispatch();
-  const { dataUser } = useSelector(state => state.dataUser);
+  const { dataUser, isLoadingAvatar } = useSelector(state => state.dataUser);
 
   useEffect(() => {
     dispatch(getProfileUser());
@@ -58,7 +59,7 @@ const Profile = ({ navigation }) => {
               avatar: data
             };
             if (data) {
-              dispatch(uploadAvatarAction(dataUpdated));
+              dispatch(updateProfile(dataUpdated, 2));
             }
           });
         }
@@ -69,28 +70,53 @@ const Profile = ({ navigation }) => {
     }
   };
 
+  const onHandleSubmitAdd = value => {
+    dispatch(updateProfile(value)).then(res => {
+      const { error } = res;
+      if (!error) {
+        modalRef.current.toggleModal();
+      }
+    });
+  };
+
   return (
     <Container>
       <Content>
         <ImageBackground
           style={styles.container}
-          source={{
-            uri:
-              'https://scontent-sin6-1.xx.fbcdn.net/v/t1.0-9/120288473_2784359818474049_4543157042302715570_o.jpg?_nc_cat=104&_nc_sid=8bfeb9&_nc_ohc=x2FTyNa_5QAAX--KVhN&_nc_ht=scontent-sin6-1.xx&oh=0f507c759551320339ed64e555383040&oe=5F9EEB9B'
-          }}
+          source={require('assets/lawn.jpg')}
         >
           <View style={styles.rect}>
-            <TouchableOpacity onPress={handleUploadImage}>
-              <Thumbnail
-                large
-                source={{
-                  uri:
-                    (dataUser?.avatar && `${imaPrefix}${dataUser.avatar}`) ||
-                    avatarDefault
-                }}
+            {isLoadingAvatar && (
+              <SvgAnimatedLinearGradient height={80} width={80}>
+                <Circle cx="40" cy="40" r="40" />
+              </SvgAnimatedLinearGradient>
+            )}
+            {!isLoadingAvatar && (
+              <TouchableOpacity onPress={handleUploadImage}>
+                <Thumbnail
+                  large
+                  source={
+                    dataUser?.avatar
+                      ? {
+                          uri:
+                            dataUser?.avatar && `${imaPrefix}${dataUser.avatar}`
+                        }
+                      : require('assets/avatarDefault.png')
+                  }
+                />
+              </TouchableOpacity>
+            )}
+            <Text style={styles.leThanhTung}>{dataUser?.name}</Text>
+            <TouchableOpacity onPress={() => modalRef.current.toggleModal()}>
+              <AntDesign
+                style={{ marginLeft: 15 }}
+                name="edit"
+                size={30}
+                color="white"
               />
             </TouchableOpacity>
-            <Text style={styles.leThanhTung}>{dataUser?.name}</Text>
+            <ModalUpdatedName onSubmit={onHandleSubmitAdd} ref={modalRef} />
           </View>
           <View style={styles.SettingStyle}>
             <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
@@ -177,7 +203,8 @@ const styles = StyleSheet.create({
     position: 'relative',
     flexDirection: 'row',
     marginLeft: 10,
-    marginBottom: 10
+    marginBottom: 10,
+    alignItems: 'center'
   },
   leThanhTung: {
     color: '#FFF',

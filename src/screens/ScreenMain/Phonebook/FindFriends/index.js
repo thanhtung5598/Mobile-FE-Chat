@@ -20,8 +20,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import useCheckFriend from 'components/common/hook/useCheckFriend';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-const avatarDefault =
-  'https://huyhoanhotel.com/wp-content/uploads/2016/05/765-default-avatar.png';
 
 const FindFriends = props => {
   const { handleAddFriend } = props;
@@ -64,11 +62,13 @@ const FindFriends = props => {
                   <Left>
                     <Thumbnail
                       rounded
-                      source={{
-                        uri:
-                          (item.avatar && `${imaPrefix}${item.avatar}`) ||
-                          avatarDefault
-                      }}
+                      source={
+                        item.avatar
+                          ? {
+                              uri: `${imaPrefix}${item.avatar}`
+                            }
+                          : require('assets/avatarDefault.png')
+                      }
                     />
                   </Left>
                   <Body style={{ borderBottomColor: 'white' }}>

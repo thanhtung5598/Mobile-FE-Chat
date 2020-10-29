@@ -2,6 +2,7 @@ import { PROFILE_TYPE } from 'constTypes';
 
 const initialState = {
   error: null,
+  isLoadingAvatar: false,
   isLoading: false,
   dataUser: null,
   message: null
@@ -26,24 +27,31 @@ const AuthenReducer = (state = initialState, action) => {
         isLoading: false,
         error: null
       };
-    case PROFILE_TYPE.UPLOAD_AVATAR_REQUEST:
+    case PROFILE_TYPE.UPDATE_AVATAR_REQUEST:
+      return {
+        ...state,
+        isLoadingAvatar: true
+      };
+    case PROFILE_TYPE.UPDATE_PROFILE_REQUEST:
       return {
         ...state,
         isLoading: true
       };
-    case PROFILE_TYPE.UPLOAD_AVATAR_SUCCESS:
+    case PROFILE_TYPE.UPDATE_PROFILE_SUCCESS:
       return {
         ...state,
         dataUser: {
           ...state.dataUser,
-          avatar: action.payload
+          ...action.payload
         },
+        isLoadingAvatar: false,
         isLoading: false
       };
-    case PROFILE_TYPE.UPLOAD_AVATAR_FAILURE:
+    case PROFILE_TYPE.UPDATE_PROFILE_FAILURE:
       return {
         ...state,
         isLoading: false,
+        isLoadingAvatar: false,
         error: null
       };
     default:

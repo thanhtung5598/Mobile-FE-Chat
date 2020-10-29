@@ -4,6 +4,12 @@ const createRequestTypes = (base, act) =>
     acc[key] = `${base}_${act}_${type}`;
     return acc;
   }, {});
+const createSingleRequest = (base, act) =>
+  ['REQUEST'].reduce((acc, type) => {
+    const key = `${act}_${type}`;
+    acc[key] = `${base}_${act}_${type}`;
+    return acc;
+  }, {});
 const PROFILE_TYPE = {
   ...createRequestTypes('USER', 'FETCH_PROFILE'),
   ...createRequestTypes('USER', 'FETCH_LIST_FRIENDS'),
@@ -16,6 +22,7 @@ const PROFILE_TYPE = {
   ...createRequestTypes('USER', 'DELETE_FRIEND'),
   ...createRequestTypes('USER', 'ACCEPT_FRIEND'),
   ...createRequestTypes('USER', 'DECLINE_FRIEND'),
-  ...createRequestTypes('USER', 'UPLOAD_AVATAR')
+  ...createRequestTypes('USER', 'UPDATE_PROFILE'),
+  ...createSingleRequest('USER', 'UPDATE_AVATAR')
 };
 export default PROFILE_TYPE;
