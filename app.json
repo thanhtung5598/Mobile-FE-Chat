@@ -4,9 +4,11 @@
     "slug": "ChatMobileApp",
     "version": "1.0.0",
     "orientation": "portrait",
+    "icon":"./src/assets/a.png",
     "splash": {
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "image":"./src/assets/a.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -15,10 +17,15 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.thanhtung5598.Zola",
+      "buildNumber": "1.0.0",
+      "supportsTablet": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./src/assets/favicon.png"
+    },
+    "android": {
+      "package": "com.thanhtung5598.Zola"
     }
   }
 }

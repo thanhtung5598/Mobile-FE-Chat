@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { View, Platform } from 'react-native';
+import { View, Platform, Image } from 'react-native';
 import { Container } from 'native-base';
 import SceenRoot from 'screens/SceenRoot';
 import ScreenMain from 'screens/ScreenMain/Drawer';
@@ -27,12 +27,10 @@ const App = () => {
   if (isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        {/* <LottieView
-          ref={animation => {
-            animation?.play();
-          }}
-          source={require('assets/splash.json')}
-        /> */}
+        <Image
+          style={{ width: 300, height: 300 }}
+          source={require('assets/a.png')}
+        />
       </View>
     );
   }
