@@ -99,8 +99,7 @@ const Profile = ({ navigation }) => {
                   source={
                     dataUser?.avatar
                       ? {
-                          uri:
-                            dataUser?.avatar && `${imaPrefix}${dataUser.avatar}`
+                          uri: `${imaPrefix}${dataUser.avatar}`
                         }
                       : require('assets/avatarDefault.png')
                   }

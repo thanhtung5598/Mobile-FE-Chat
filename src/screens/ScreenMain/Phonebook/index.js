@@ -30,6 +30,7 @@ import FriendRequest from './FriendRequest';
 import SyncPhonebook from './SyncPhonebook';
 import FindFriends from './FindFriends';
 import ModalInfoUser from 'components/common/ComponentsCommon/Modal/modalInfo';
+import ChatRoom from './ChatRoom';
 
 // action
 import {
@@ -45,7 +46,8 @@ import {
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
-const PhoneBook = () => {
+const PhoneBook = props => {
+  const { setFooter } = props;
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
   const { listFriends, listRequestFriends } = useSelector(
@@ -58,6 +60,7 @@ const PhoneBook = () => {
   const [showFriendsReq, setShowFriendsReq] = useState(false);
   const [phonebook, setPhonebook] = useState(false);
   const [find, setFind] = useState(false);
+  const [isChatOpen, setChatOpen] = useState(false);
 
   const delayedQuery = useRef(
     _.debounce(q => dispatch(searchUserByPhoneEmailName(q)), 500)
@@ -133,9 +136,17 @@ const PhoneBook = () => {
     dispatch(declineFriend(value));
   };
 
+  const handleToggleChatRoom = () => {
+    setChatOpen(true);
+    setFooter(false);
+  };
+
   return (
     <>
       <Container>
+        {isChatOpen && (
+          <ChatRoom setChatOpen={setChatOpen} setFooter={setFooter} />
+        )}
         {find && (
           <Content>
             <HeaderSearch
@@ -148,20 +159,20 @@ const PhoneBook = () => {
             <FindFriends handleAddFriend={handleAddFriend} />
           </Content>
         )}
-        {!find && showFriendsReq && !phonebook && (
+        {showFriendsReq && (
           <FriendRequest
             setShowFriendsReq={setShowFriendsReq}
             handleAcceptFriend={handleAcceptFriend}
             handleDeclineFriend={handleDeclineFriend}
           />
         )}
-        {!find && phonebook && !showFriendsReq && (
+        {phonebook && (
           <SyncPhonebook
             setPhonebook={setPhonebook}
             handleAddFriend={handleAddFriend}
           />
         )}
-        {!find && !showFriendsReq && !phonebook && (
+        {!find && !showFriendsReq && !phonebook && !isChatOpen && (
           <>
             <HeaderSearch
               find={find}
@@ -263,6 +274,7 @@ const PhoneBook = () => {
                   return (
                     <Fragment key={index}>
                       <TouchableOpacity
+                        onPress={() => handleToggleChatRoom(index)}
                         onLongPress={() => handleToggleModal(index)}
                       >
                         <ListItem thumbnail style={{ paddingBottom: 12 }}>

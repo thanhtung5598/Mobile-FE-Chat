@@ -69,13 +69,13 @@ const SyncPhonebook = props => {
   return (
     <>
       <Container>
+        <View style={styles.rect}>
+          <TouchableOpacity onPress={() => setPhonebook(false)}>
+            <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
+          </TouchableOpacity>
+          <Text style={styles.login}>Friends from phonebook device</Text>
+        </View>
         <Content>
-          <View style={styles.rect}>
-            <TouchableOpacity onPress={() => setPhonebook(false)}>
-              <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
-            </TouchableOpacity>
-            <Text style={styles.login}>Friends from phonebook device</Text>
-          </View>
           {isLoading && <Spinner />}
           {!isLoading && !listFindFill && (
             <View style={{ alignItems: 'center', marginTop: 20 }}>
@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
   },
   rect: {
     paddingLeft: 20,
+    paddingTop: '15%',
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',
