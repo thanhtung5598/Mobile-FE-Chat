@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect } from 'react';
-
+// true: bạn, false: chờ accepted, 'requested' là nhửng request friend
 const useCheckFriends = ({
   listUsers, // user tìm được
   listFriends, // friends
@@ -8,8 +8,8 @@ const useCheckFriends = ({
   listRequestFriends // nhưng người yêu cầu kết bạn
 }) => {
   const [listFindFill, setListFindFill] = useState(null);
-
   useEffect(() => {
+    const newListUserClone = JSON.parse(JSON.stringify(listUsers));
     if (!listUsers) {
       setListFindFill([]);
       return;
@@ -21,123 +21,75 @@ const useCheckFriends = ({
     }
     if (!listFriends && !listFriendsWait && listRequestFriends) {
       console.log('case 2'); // required add friends
-      const newReq = JSON.parse(JSON.stringify(listUsers));
       const listIndex = [];
       // find friend
-      for (let i = 0; i < newReq.length; i++) {
+      for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listRequestFriends.length; j++) {
-          if (!newReq[i].email) {
-            // if all user do not have email
-            if (newReq[i].phone === listRequestFriends[j].phone) {
-              listIndex.push(i);
-            }
-          }
-          if (newReq[i].email) {
-            // if user already had email
-            if (newReq[i].email === listRequestFriends[j].email) {
-              listIndex.push(i);
-            }
-          }
-        }
-        listIndex.forEach(item => {
-          newReq[item].status = 'requested'; // is already friend
-        });
-        const newlist = newReq.filter(user => user.status !== 'requested');
-        setListFindFill([...newlist]);
-        return;
-      }
-    }
-    if (!listFriends && listFriendsWait && !listRequestFriends) {
-      console.log('case 3'); // required add friends
-      const newReq = JSON.parse(JSON.stringify(listUsers));
-      const listIndex = [];
-      // find friend
-      for (let i = 0; i < newReq.length; i++) {
-        for (let j = 0; j < listFriendsWait.length; j++) {
-          if (!newReq[i].email) {
-            // if all user do not have email
-            if (newReq[i].phone === listFriendsWait[j].phone) {
-              listIndex.push(i);
-            }
-          }
-          if (newReq[i].email) {
-            // if user already had email
-            if (newReq[i].email === listFriendsWait[j].email) {
-              listIndex.push(i);
-            }
+          if (newListUserClone[i].id === listRequestFriends[j].id) {
+            listIndex.push(i);
           }
         }
       }
       listIndex.forEach(item => {
-        newReq[item].status = false; // is already friend
+        newListUserClone[item].status = 'requested'; // is already friend
       });
-      setListFindFill([...newReq]);
+      setListFindFill([
+        ...newListUserClone.filter(user => user.status !== 'requested')
+      ]);
+      return;
+    }
+    if (!listFriends && listFriendsWait && !listRequestFriends) {
+      console.log('case 3'); // required add friends
+      const listIndex = [];
+      // find friend
+      for (let i = 0; i < newListUserClone.length; i++) {
+        for (let j = 0; j < listFriendsWait.length; j++) {
+          if (newListUserClone[i].id === listFriendsWait[j].id) {
+            listIndex.push(i);
+          }
+        }
+      }
+      listIndex.forEach(item => {
+        newListUserClone[item].status = false; // is already friend
+      });
+      setListFindFill([...newListUserClone]);
       return;
     }
     if (listFriends && !listFriendsWait && !listRequestFriends) {
       console.log('case 4'); // required add friends
-      const newReq = JSON.parse(JSON.stringify(listUsers));
       const listIndex = [];
       // find friend
-      for (let i = 0; i < newReq.length; i++) {
+      for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listFriends.length; j++) {
-          if (!newReq[i].email) {
-            // if all user do not have email
-            if (newReq[i].phone === listFriends[j].phone) {
-              listIndex.push(i);
-            }
-          }
-          if (newReq[i].email) {
-            // if user already had email
-            if (newReq[i].email === listFriends[j].email) {
-              listIndex.push(i);
-            }
+          if (newListUserClone[i].id === listFriends[j].id) {
+            listIndex.push(i);
           }
         }
       }
       listIndex.forEach(item => {
-        newReq[item].status = true; // is already friend
+        newListUserClone[item].status = true; // is already friend
       });
-      setListFindFill([...newReq]);
+      setListFindFill([...newListUserClone]);
       return;
     }
     if (listFriends && listFriendsWait && !listRequestFriends) {
       console.log('case 5'); // required add friends
-      const newListUserClone = JSON.parse(JSON.stringify(listUsers));
       const listIndexFriendFrind = [];
       const listIndexFriendWait = [];
 
       // find friend
       for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listFriends.length; j++) {
-          if (!newListUserClone[i].email) {
-            // if all user do not have email
-            if (newListUserClone[i].phone === listFriends[j].phone) {
-              listIndexFriendFrind.push(i);
-            }
-          }
-          if (newListUserClone[i].email) {
-            // if user already had email
-            if (newListUserClone[i].email === listFriends[j].email) {
-              listIndexFriendFrind.push(i);
-            }
+          if (newListUserClone[i].id === listFriends[j].id) {
+            listIndexFriendFrind.push(i);
           }
         }
       }
       // find friend wait
       for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listFriendsWait.length; j++) {
-          if (!newListUserClone[i].email) {
-            // if all user do not have email
-            if (newListUserClone[i].phone === listFriendsWait[j].phone) {
-              listIndexFriendWait.push(i);
-            }
-          }
-          if (newListUserClone[i].email) {
-            // if user already had email
-            if (newListUserClone[i].email === listFriendsWait[j].email) {
-              listIndexFriendWait.push(i);
-            }
+          if (newListUserClone[i].id === listFriendsWait[j].id) {
+            listIndexFriendWait.push(i);
           }
         }
       }
@@ -152,41 +104,22 @@ const useCheckFriends = ({
     }
     if (listFriends && !listFriendsWait && listRequestFriends) {
       console.log('case 6'); // required add friends
-      const newListUserClone = JSON.parse(JSON.stringify(listUsers));
       const listIndexFriendFrind = [];
       const listIndexFriendWait = [];
 
       // find friend
       for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listFriends.length; j++) {
-          if (!newListUserClone[i].email) {
-            // if all user do not have email
-            if (newListUserClone[i].phone === listFriends[j].phone) {
-              listIndexFriendFrind.push(i);
-            }
-          }
-          if (newListUserClone[i].email) {
-            // if user already had email
-            if (newListUserClone[i].email === listFriends[j].email) {
-              listIndexFriendFrind.push(i);
-            }
+          if (newListUserClone[i].id === listFriends[j].id) {
+            listIndexFriendFrind.push(i);
           }
         }
       }
       // find friend wait
       for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listRequestFriends.length; j++) {
-          if (!newListUserClone[i].email) {
-            // if all user do not have email
-            if (newListUserClone[i].phone === listRequestFriends[j].phone) {
-              listIndexFriendWait.push(i);
-            }
-          }
-          if (newListUserClone[i].email) {
-            // if user already had email
-            if (newListUserClone[i].email === listRequestFriends[j].email) {
-              listIndexFriendWait.push(i);
-            }
+          if (newListUserClone[i].id === listRequestFriends[j].id) {
+            listIndexFriendWait.push(i);
           }
         }
       }
@@ -197,66 +130,44 @@ const useCheckFriends = ({
       listIndexFriendWait.forEach(item => {
         newListUserClone[item].status = 'requested';
       });
-      const newlist = newListUserClone.filter(
-        user => user.status !== 'requested'
-      );
-      setListFindFill([...newlist]);
+      setListFindFill([
+        ...newListUserClone.filter(user => user.status !== 'requested')
+      ]);
       return;
     }
     if (!listFriends && listFriendsWait && listRequestFriends) {
       console.log('case 7'); // required add friends
-      const newListUserClone = JSON.parse(JSON.stringify(listUsers));
       const listIndexFriendFrind = [];
       const listIndexFriendWait = [];
 
       // find friend
       for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listFriendsWait.length; j++) {
-          if (!newListUserClone[i].email) {
-            // if all user do not have email
-            if (newListUserClone[i].phone === listFriendsWait[j].phone) {
-              listIndexFriendFrind.push(i);
-            }
-          }
-          if (newListUserClone[i].email) {
-            // if user already had email
-            if (newListUserClone[i].email === listFriendsWait[j].email) {
-              listIndexFriendFrind.push(i);
-            }
+          if (newListUserClone[i].id === listFriendsWait[j].id) {
+            listIndexFriendFrind.push(i);
           }
         }
       }
       // find friend wait
       for (let i = 0; i < newListUserClone.length; i++) {
         for (let j = 0; j < listRequestFriends.length; j++) {
-          if (!newListUserClone[i].email) {
-            // if all user do not have email
-            if (newListUserClone[i].phone === listRequestFriends[j].phone) {
-              listIndexFriendWait.push(i);
-            }
-          }
-          if (newListUserClone[i].email) {
-            // if user already had email
-            if (newListUserClone[i].email === listRequestFriends[j].email) {
-              listIndexFriendWait.push(i);
-            }
+          if (newListUserClone[i].id === listRequestFriends[j].id) {
+            listIndexFriendWait.push(i);
           }
         }
       }
       listIndexFriendFrind.forEach(item => {
-        newListUserClone[item].status = true; // is already friend
+        newListUserClone[item].status = false; // waiting...
       });
       listIndexFriendWait.forEach(item => {
         newListUserClone[item].status = 'requested';
       });
-      const newlist = newListUserClone.filter(
-        user => user.status !== 'requested'
-      );
-      setListFindFill([...newlist]);
+      setListFindFill([
+        ...newListUserClone.filter(user => user.status !== 'requested')
+      ]);
       return;
     }
     console.log('case 8'); // required add friends
-    const newListUserClone = JSON.parse(JSON.stringify(listUsers));
     const listIndexFriendFrind = [];
     const listIndexFriendWait = [];
     const listIndexFriendReq = [];
@@ -264,51 +175,24 @@ const useCheckFriends = ({
     // find friend
     for (let i = 0; i < newListUserClone.length; i++) {
       for (let j = 0; j < listFriends.length; j++) {
-        if (!newListUserClone[i].email) {
-          // if all user do not have email
-          if (newListUserClone[i].phone === listFriends[j].phone) {
-            listIndexFriendFrind.push(i);
-          }
-        }
-        if (newListUserClone[i].email) {
-          // if user already had email
-          if (newListUserClone[i].email === listFriends[j].email) {
-            listIndexFriendFrind.push(i);
-          }
+        if (newListUserClone[i].id === listFriends[j].id) {
+          listIndexFriendFrind.push(i);
         }
       }
     }
     // find friend wait
     for (let i = 0; i < newListUserClone.length; i++) {
       for (let j = 0; j < listFriendsWait.length; j++) {
-        if (!newListUserClone[i].email) {
-          // if all user do not have email
-          if (newListUserClone[i].phone === listFriendsWait[j].phone) {
-            listIndexFriendWait.push(i);
-          }
-        }
-        if (newListUserClone[i].email) {
-          // if user already had email
-          if (newListUserClone[i].email === listFriendsWait[j].email) {
-            listIndexFriendWait.push(i);
-          }
+        if (newListUserClone[i].id === listFriendsWait[j].id) {
+          listIndexFriendWait.push(i);
         }
       }
     }
     // find friend req
     for (let i = 0; i < newListUserClone.length; i++) {
       for (let j = 0; j < listRequestFriends.length; j++) {
-        if (!newListUserClone[i].email) {
-          // if all user do not have email
-          if (newListUserClone[i].phone === listRequestFriends[j].phone) {
-            listIndexFriendReq.push(i);
-          }
-        }
-        if (newListUserClone[i].email) {
-          // if user already had email
-          if (newListUserClone[i].email === listRequestFriends[j].email) {
-            listIndexFriendReq.push(i);
-          }
+        if (newListUserClone[i].id === listRequestFriends[j].id) {
+          listIndexFriendReq.push(i);
         }
       }
     }
@@ -321,8 +205,9 @@ const useCheckFriends = ({
     listIndexFriendReq.forEach(item => {
       newListUserClone[item].status = 'requested';
     });
-    newListUserClone.filter(user => user.status !== 'requested');
-    setListFindFill([...newListUserClone]);
+    setListFindFill([
+      ...newListUserClone.filter(user => user.status !== 'requested')
+    ]);
   }, [listFriends, listFriendsWait, listRequestFriends, listUsers]);
 
   return { listFindFill };
