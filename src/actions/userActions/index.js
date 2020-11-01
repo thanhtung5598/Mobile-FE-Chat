@@ -19,10 +19,14 @@ export const getProfileUser = () => async dispatch => {
     .then(res => {
       const { error, data } = res.data;
       if (!error) {
-        dispatch({
-          type: PROFILE_TYPE.FETCH_PROFILE_SUCCESS,
-          payload: data
-        });
+        axiosServices
+          .get(`https://api-ret.ml/api/v0/images/download/${data.avatar}`)
+          .then(() => {
+            dispatch({
+              type: PROFILE_TYPE.FETCH_PROFILE_SUCCESS,
+              payload: data
+            });
+          });
       }
       return { error, data };
     })
