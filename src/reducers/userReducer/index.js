@@ -45,7 +45,8 @@ const AuthenReducer = (state = initialState, action) => {
         ...state,
         dataUser: {
           ...state.dataUser,
-          ...action.payload
+          name: action.payload.name,
+          avatar: action.payload.avatar
         },
         isLoadingAvatar: false,
         isLoading: false

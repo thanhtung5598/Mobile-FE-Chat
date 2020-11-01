@@ -286,20 +286,19 @@ export const updateProfile = (dataUpdate, type = 1) => dispatch => {
       type: PROFILE_TYPE.UPDATE_PROFILE_REQUEST
     });
   }
-  if (type !== 1) {
-    dispatch({
-      type: PROFILE_TYPE.UPDATE_AVATAR_REQUEST
-    });
-  }
   return axiosServices
     .put(`${prefix}profile/update`, dataUpdate)
     .then(res => {
       const { error, data } = res.data;
       if (!error) {
-        dispatch({
-          type: PROFILE_TYPE.UPDATE_PROFILE_SUCCESS,
-          payload: dataUpdate
-        });
+        axiosServices
+          .get(`https://api-ret.ml/api/v0/images/download/${dataUpdate.avatar}`)
+          .then(() => {
+            dispatch({
+              type: PROFILE_TYPE.UPDATE_PROFILE_SUCCESS,
+              payload: dataUpdate
+            });
+          });
       }
       return { error, data };
     })

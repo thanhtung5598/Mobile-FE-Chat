@@ -52,13 +52,14 @@ const Profile = ({ navigation }) => {
             name: filename,
             type: 'image/png'
           });
-          uploadImgSingle(formData).then(res => {
+          dispatch(uploadImgSingle(formData)).then(res => {
             const { data } = res;
             const dataUpdated = {
               name: dataUser.name,
               avatar: data
             };
             if (data) {
+              console.log('here');
               dispatch(updateProfile(dataUpdated, 2));
             }
           });
@@ -71,14 +72,17 @@ const Profile = ({ navigation }) => {
   };
 
   const onHandleSubmitAdd = value => {
-    dispatch(updateProfile(value)).then(res => {
+    const dataUpdated = {
+      ...value,
+      avatar: dataUser.avatar
+    };
+    dispatch(updateProfile(dataUpdated)).then(res => {
       const { error } = res;
       if (!error) {
         modalRef.current.toggleModal();
       }
     });
   };
-
   return (
     <Container>
       <Content>
@@ -92,7 +96,7 @@ const Profile = ({ navigation }) => {
                 <Circle cx="40" cy="40" r="40" />
               </SvgAnimatedLinearGradient>
             )}
-            {!isLoadingAvatar && (
+            {!isLoadingAvatar && dataUser && (
               <TouchableOpacity onPress={handleUploadImage}>
                 <Thumbnail
                   large
