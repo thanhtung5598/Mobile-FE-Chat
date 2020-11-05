@@ -1,14 +1,16 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { StyleSheet, StatusBar, Platform } from 'react-native';
-import { Container, Text, Footer, FooterTab, Button } from 'native-base';
+import { StatusBar, Platform } from 'react-native';
+import { Container, Text } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Messages from './Messages';
+import GroupChat from './GroupChat';
 import Phonebook from './Phonebook';
 import Profile from './Profile';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+
 import {
   getProfileUser,
   fetchPhonebookSync,
@@ -16,13 +18,13 @@ import {
   fetchListFriends,
   fetchFriendsWait
 } from 'actions/userActions';
+import { fetchAllGroup } from 'actions/groupActions';
 
 Platform.OS === 'android' && StatusBar.setHidden(true);
+const Tab = createBottomTabNavigator();
 
-const MainTab = props => {
+const MainTab = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [content, setContent] = useState(<Messages />);
-  const [isActive, setActive] = useState('message');
   const [footer, setFooter] = useState(true);
 
   useEffect(() => {
@@ -31,106 +33,70 @@ const MainTab = props => {
     dispatch(fetchFriendsWait());
     dispatch(fetchListFriends());
     dispatch(fetchPhonebookSync());
+    dispatch(fetchAllGroup());
   }, [dispatch]);
-
-  const handleChangeTab = target => {
-    setActive(target);
-    target === 'message' && setContent(<Messages setFooter={setFooter} />);
-    target === 'phonebook' && setContent(<Phonebook setFooter={setFooter} />);
-    target === 'profile' &&
-      setContent(<Profile setFooter={setFooter} {...props} />);
-  };
 
   return (
     <Container>
-      {content}
-      {footer && (
-        <Footer style={{ backgroundColor: '#F6F6F6' }}>
-          <FooterTab style={{ backgroundColor: '#F6F6F6' }}>
-            <Button transparent onPress={() => handleChangeTab('message')}>
-              <TouchableHighlight activeOpacity={0.6} underlayColor="#e3f2fd">
-                <AntDesign
-                  style={
-                    isActive === 'message'
-                      ? styles.textActive
-                      : styles.textColor
-                  }
-                  name="message1"
-                  size={24}
-                  color="black"
-                />
-              </TouchableHighlight>
-              <Text
-                style={
-                  isActive === 'message' ? styles.textActive : styles.textColor
-                }
-              >
-                Message
-              </Text>
-            </Button>
-            <Button transparent onPress={() => handleChangeTab('phonebook')}>
-              <TouchableHighlight activeOpacity={0.6} underlayColor="#e3f2fd">
-                <AntDesign
-                  style={
-                    isActive === 'phonebook'
-                      ? styles.textActive
-                      : styles.textColor
-                  }
-                  name="contacts"
-                  size={24}
-                  color="black"
-                />
-              </TouchableHighlight>
-              <Text
-                style={
-                  isActive === 'phonebook'
-                    ? styles.textActive
-                    : styles.textColor
-                }
-              >
-                Phonebook
-              </Text>
-            </Button>
-            <Button transparent onPress={() => handleChangeTab('profile')}>
-              <TouchableHighlight
-                activeOpacity={0.6}
-                underlayColor="#e3f2fd"
-                onPress={() => console.log('')}
-              >
-                <AntDesign
-                  style={
-                    isActive === 'profile'
-                      ? styles.textActive
-                      : styles.textColor
-                  }
-                  name="profile"
-                  size={24}
-                  color="black"
-                />
-              </TouchableHighlight>
-              <Text
-                style={
-                  isActive === 'profile' ? styles.textActive : styles.textColor
-                }
-              >
-                Profile
-              </Text>
-            </Button>
-          </FooterTab>
-        </Footer>
-      )}
+      <Tab.Navigator
+        tabBarPosition="bottom"
+        tabBarOptions={{
+          activeTintColor: '#2196f3'
+        }}
+      >
+        <Tab.Screen
+          name="Messages"
+          options={{
+            tabBarLabel: ({ focused, color }) =>
+              focused && <Text style={{ color, fontSize: 12 }}>Messages</Text>,
+            tabBarIcon: ({ color }) => (
+              <AntDesign name="message1" size={24} color={color} />
+            )
+          }}
+        >
+          {() => <Messages setFooter={setFooter} />}
+        </Tab.Screen>
+        <Tab.Screen
+          name="GroupChat"
+          options={{
+            tabBarLabel: ({ focused, color }) =>
+              focused && <Text style={{ color, fontSize: 12 }}>Group</Text>,
+            tabBarVisible: footer,
+            tabBarIcon: ({ color }) => (
+              <AntDesign name="appstore-o" size={24} color={color} />
+            )
+          }}
+        >
+          {() => <GroupChat setFooter={setFooter} />}
+        </Tab.Screen>
+        <Tab.Screen
+          name="Phonebook"
+          options={{
+            tabBarLabel: ({ focused, color }) =>
+              focused && <Text style={{ color, fontSize: 12 }}>Phonebook</Text>,
+            tabBarVisible: footer,
+            tabBarIcon: ({ color }) => (
+              <AntDesign name="contacts" size={24} color={color} />
+            )
+          }}
+        >
+          {() => <Phonebook setFooter={setFooter} />}
+        </Tab.Screen>
+        <Tab.Screen
+          name="Profile"
+          options={{
+            tabBarLabel: ({ focused, color }) =>
+              focused && <Text style={{ color, fontSize: 12 }}>Profile</Text>,
+            tabBarIcon: ({ color }) => (
+              <AntDesign name="profile" size={24} color={color} />
+            )
+          }}
+        >
+          {() => <Profile setFooter={setFooter} navigation={navigation} />}
+        </Tab.Screen>
+      </Tab.Navigator>
     </Container>
   );
 };
 
 export default MainTab;
-
-const styles = StyleSheet.create({
-  textColor: {
-    color: '#555'
-  },
-  textActive: {
-    color: '#2196f3',
-    fontWeight: '700'
-  }
-});

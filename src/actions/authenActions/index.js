@@ -226,8 +226,9 @@ export const refreshError = () => dispatch => {
 export const isTokenExpired = () => async dispatch => {
   try {
     const token = await asyncStorage.getAccessToken();
+    const todayTime = Math.round((new Date().getTime() + 1) / 1000);
     if (token) {
-      const isExpired = jwtDecode(token)?.exp - jwtDecode(token)?.iat;
+      const isExpired = jwtDecode(token)?.exp - todayTime;
       if (isExpired > 0) {
         dispatch({
           type: AUTHENTICATION_TYPE.IS_LOGIN_REQUEST,
