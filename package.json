@@ -39,7 +39,6 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-39.0.2.tar.gz",
     "react-native-confirmation-code-field": "^6.5.0",
     "react-native-gesture-handler": "1.7.0",
-    "react-native-paper": "^4.2.0",
     "react-native-reanimated": "^1.13.1",
     "react-native-safe-area-context": "3.1.4",
     "react-native-screens": "~2.10.1",

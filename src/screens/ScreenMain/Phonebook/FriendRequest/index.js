@@ -33,13 +33,13 @@ const FriendRequest = props => {
   return (
     <>
       <Container>
+        <View style={styles.rect}>
+          <TouchableOpacity onPress={() => setShowFriendsReq(false)}>
+            <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
+          </TouchableOpacity>
+          <Text style={styles.login}>Friends request</Text>
+        </View>
         <Content>
-          <View style={styles.rect}>
-            <TouchableOpacity onPress={() => setShowFriendsReq(false)}>
-              <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
-            </TouchableOpacity>
-            <Text style={styles.login}>Friends request</Text>
-          </View>
           {isLoading && <Spinner />}
           {!isLoading && !listRequestFriends && (
             <View style={{ alignItems: 'center', marginTop: 20 }}>
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
   },
   rect: {
     paddingLeft: 20,
+    paddingTop: '15%',
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',

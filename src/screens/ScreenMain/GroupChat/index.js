@@ -37,7 +37,7 @@ import {
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
 const GroupChat = props => {
-  const { setFooter } = props;
+  const { footer, setFooter } = props;
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
   const { listGroups } = useSelector(state => state.groups);
@@ -66,8 +66,8 @@ const GroupChat = props => {
     setFind(true);
   };
   const onHandleToggleCreate = () => {
-    setCreate(true);
-    setFooter(false);
+    setCreate(!isCreate);
+    setFooter(!footer);
   };
 
   const handleChangeValue = value => {
@@ -99,9 +99,7 @@ const GroupChat = props => {
           </Content>
         )}
         {isCreate && (
-          <Content>
-            <GroupCreate />
-          </Content>
+          <GroupCreate onHandleToggleCreate={onHandleToggleCreate} />
         )}
         {!find && !isCreate && (
           <>
@@ -113,7 +111,7 @@ const GroupChat = props => {
               handleChangeValue={handleChangeValue}
             />
             <Content>
-              <List style={{ marginBottom: 5 }}>
+              <List style={{ marginBottom: 5, marginTop: 5 }}>
                 <TouchableOpacity onPress={onHandleToggleCreate}>
                   <ListItem thumbnail>
                     <Left
@@ -247,8 +245,10 @@ const GroupChat = props => {
 export default GroupChat;
 
 GroupChat.propTypes = {
-  setFooter: PropTypes.func
+  setFooter: PropTypes.func,
+  footer: PropTypes.bool
 };
 GroupChat.defaultProps = {
-  setFooter: () => {}
+  setFooter: () => {},
+  footer: false
 };

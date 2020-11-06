@@ -67,7 +67,7 @@ const MainTab = ({ navigation }) => {
             )
           }}
         >
-          {() => <GroupChat setFooter={setFooter} />}
+          {() => <GroupChat setFooter={setFooter} footer={footer} />}
         </Tab.Screen>
         <Tab.Screen
           name="Phonebook"
