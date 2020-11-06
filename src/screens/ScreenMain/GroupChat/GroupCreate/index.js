@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import {
@@ -16,7 +16,8 @@ import {
   Thumbnail,
   Body,
   Footer,
-  Icon
+  Icon,
+  Spinner
 } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -25,24 +26,31 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
+// actions
+import { createGroupChat, fetchAllGroup } from 'actions/groupActions';
+
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
 const CreateGroup = props => {
-  const { onHandleToggleCreate } = props;
+  const { onHandleToggleCreate, handleToggleChatRoom } = props;
   const [listChecked, setListChecked] = useState([]);
   const [searchText, setSearchText] = useState(null);
+  const [groupName, setGroupName] = useState('');
+  const dispatch = useDispatch();
   const { listFriends } = useSelector(state => state.friends);
+  const { dataUser } = useSelector(state => state.dataUser);
+  const { isLoadingCreate } = useSelector(state => state.groups);
 
-  const handleCheckedItem = item_name => {
+  const handleCheckedItem = item_id => {
     const tempList = [...listChecked];
     setSearchText(null);
-    if (tempList.includes(item_name)) {
-      const index = tempList.findIndex(item => item === item_name);
+    if (tempList.includes(item_id)) {
+      const index = tempList.findIndex(item => item === item_id);
       tempList.splice(index, 1);
       setListChecked([...tempList]);
       return;
     }
-    tempList.push(item_name);
+    tempList.push(item_id);
     setListChecked(tempList);
   };
 
@@ -74,6 +82,20 @@ const CreateGroup = props => {
     return filterDoubleItem;
   }, [listFriends, searchText]);
 
+  const handleCreateNewGroup = () => {
+    const values = {
+      list_user_id: listChecked,
+      name: groupName.split('').length > 0 ? groupName : dataUser.name
+    };
+    dispatch(createGroupChat(values)).then(res => {
+      const { error } = res;
+      if (!error) {
+        handleToggleChatRoom();
+        dispatch(fetchAllGroup());
+      }
+    });
+  };
+
   return (
     <Container>
       <View style={styles.rect}>
@@ -89,6 +111,7 @@ const CreateGroup = props => {
             marginLeft: 20,
             marginRight: 20
           }}
+          onChangeText={text => setGroupName(text)}
           placeholder="Name the new group"
         />
       </Item>
@@ -105,6 +128,7 @@ const CreateGroup = props => {
           style={{ color: '#777', fontSize: 24, paddingLeft: 15 }}
         />
         <Input
+          value={searchText}
           style={{
             height: 40
           }}
@@ -117,9 +141,7 @@ const CreateGroup = props => {
           {filterTextSearch()?.map((friend, index) => {
             return (
               <Fragment key={index}>
-                <TouchableOpacity
-                  onPress={() => handleCheckedItem(friend.name)}
-                >
+                <TouchableOpacity onPress={() => handleCheckedItem(friend.id)}>
                   <ListItem
                     style={{
                       paddingTop: 3,
@@ -142,7 +164,7 @@ const CreateGroup = props => {
                       <Text>{friend.name}</Text>
                     </Body>
                     <Right style={{ borderBottomWidth: 0 }}>
-                      {listChecked.includes(friend.name) ? (
+                      {listChecked.includes(friend.id) ? (
                         <AntDesign
                           name="checkcircle"
                           size={24}
@@ -191,12 +213,16 @@ const CreateGroup = props => {
                 width: 150,
                 height: 60
               }}
+              onPress={handleCreateNewGroup}
             >
-              <View>
-                <Text>
-                  <AntDesign name="arrowright" size={35} color="white" />
-                </Text>
-              </View>
+              {isLoadingCreate && <Spinner size="large" color="white" />}
+              {!isLoadingCreate && (
+                <View>
+                  <Text>
+                    <AntDesign name="arrowright" size={35} color="white" />
+                  </Text>
+                </View>
+              )}
             </TouchableOpacity>
           </LinearGradient>
         </Footer>
@@ -208,10 +234,12 @@ const CreateGroup = props => {
 export default CreateGroup;
 
 CreateGroup.propTypes = {
-  onHandleToggleCreate: PropTypes.func
+  onHandleToggleCreate: PropTypes.func,
+  handleToggleChatRoom: PropTypes.func
 };
 CreateGroup.defaultProps = {
-  onHandleToggleCreate: () => {}
+  onHandleToggleCreate: () => {},
+  handleToggleChatRoom: () => {}
 };
 
 const styles = StyleSheet.create({

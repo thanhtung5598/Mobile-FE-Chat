@@ -3,6 +3,7 @@ import { GROUP_TYPE } from 'constTypes';
 const initialState = {
   error: null,
   isLoading: false,
+  isLoadingCreate: false,
   message: null,
   listGroups: null,
   paginator: null
@@ -27,6 +28,21 @@ const AuthenReducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: null
+      };
+    case GROUP_TYPE.CREATE_GROUP_REQUEST:
+      return {
+        ...state,
+        isLoadingCreate: true
+      };
+    case GROUP_TYPE.CREATE_GROUP_SUCCESS:
+      return {
+        ...state,
+        isLoadingCreate: false
+      };
+    case GROUP_TYPE.CREATE_GROUP_FAILURE:
+      return {
+        ...state,
+        isLoadingCreate: false
       };
     default:
       return state;

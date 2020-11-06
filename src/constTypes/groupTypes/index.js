@@ -5,6 +5,7 @@ const createRequestTypes = (base, act) =>
     return acc;
   }, {});
 const GROUP_TYPE = {
-  ...createRequestTypes('USER', 'FETCH_ALL_GROUP')
+  ...createRequestTypes('USER', 'FETCH_ALL_GROUP'),
+  ...createRequestTypes('USER', 'CREATE_GROUP')
 };
 export default GROUP_TYPE;

@@ -8,7 +8,7 @@ export const fetchAllGroup = () => dispatch => {
     type: GROUP_TYPE.FETCH_ALL_GROUP_REQUEST
   });
   return axiosServices
-    .get(`${prefix}?currentPage=1&perPage=10`)
+    .get(`${prefix}?currentPage=1&perPage=20`)
     .then(res => {
       const { data } = res.data;
       dispatch({
@@ -23,6 +23,28 @@ export const fetchAllGroup = () => dispatch => {
       const { error, data } = err.response?.data;
       dispatch({
         type: GROUP_TYPE.FETCH_ALL_GROUP_FAILURE
+      });
+      return { error, data };
+    });
+};
+
+export const createGroupChat = data => dispatch => {
+  dispatch({
+    type: GROUP_TYPE.CREATE_GROUP_REQUEST
+  });
+  return axiosServices
+    .post(`${prefix}group`, data)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: GROUP_TYPE.CREATE_GROUP_SUCCESS
+      });
+      return { error, data };
+    })
+    .catch(() => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: GROUP_TYPE.CREATE_GROUP_FAILURE
       });
       return { error, data };
     });

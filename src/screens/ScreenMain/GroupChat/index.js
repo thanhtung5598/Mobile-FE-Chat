@@ -1,4 +1,4 @@
-import React, { useState, useRef, Fragment, useEffect } from 'react';
+import React, { useState, useRef, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Keyboard, Image } from 'react-native';
 import {
@@ -24,14 +24,13 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import HeaderSearch from './../common/header';
 import FindFriends from './FindFriends';
 import GroupCreate from './GroupCreate';
+import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
 
 // action
 import {
   searchUserByPhoneEmailName,
   clearSearch,
-  addFriend,
-  fetchRequestFriends,
-  fetchListFriends
+  addFriend
 } from 'actions/userActions';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
@@ -45,15 +44,11 @@ const GroupChat = props => {
   const [userQuery, setUserQuery] = useState('');
   const [find, setFind] = useState(false);
   const [isCreate, setCreate] = useState(false);
+  const [isChatOpen, setChatOpen] = useState(false);
 
   const delayedQuery = useRef(
     _.debounce(q => dispatch(searchUserByPhoneEmailName(q)), 500)
   ).current;
-
-  useEffect(() => {
-    dispatch(fetchRequestFriends());
-    dispatch(fetchListFriends());
-  }, [dispatch]);
 
   const handleTurnBack = () => {
     setUserQuery('');
@@ -83,9 +78,17 @@ const GroupChat = props => {
     dispatch(addFriend(value));
   };
 
+  const handleToggleChatRoom = () => {
+    setChatOpen(true);
+    setCreate(false);
+  };
+
   return (
     <>
       <Container>
+        {isChatOpen && (
+          <ChatRoom setChatOpen={setChatOpen} setFooter={setFooter} />
+        )}
         {find && (
           <Content>
             <HeaderSearch
@@ -99,9 +102,12 @@ const GroupChat = props => {
           </Content>
         )}
         {isCreate && (
-          <GroupCreate onHandleToggleCreate={onHandleToggleCreate} />
+          <GroupCreate
+            onHandleToggleCreate={onHandleToggleCreate}
+            handleToggleChatRoom={handleToggleChatRoom}
+          />
         )}
-        {!find && !isCreate && (
+        {!find && !isCreate && !isChatOpen && (
           <>
             <HeaderSearch
               find={find}
@@ -217,9 +223,9 @@ const GroupChat = props => {
                             </View>
                           </Left>
                           <Body>
-                            <Text>Thanh Thanh</Text>
+                            <Text>{group.name}</Text>
                             <Text note numberOfLines={1}>
-                              Its time to build a difference . .
+                              Take your time to start . .
                             </Text>
                           </Body>
                           <Right style={{ marginRight: 10 }}>
