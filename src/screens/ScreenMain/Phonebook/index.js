@@ -30,7 +30,7 @@ import FriendRequest from './FriendRequest';
 import SyncPhonebook from './SyncPhonebook';
 import FindFriends from './FindFriends';
 import ModalInfoUser from 'components/common/ComponentsCommon/Modal/modalInfo';
-import ChatRoom from './ChatRoom';
+import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
 
 // action
 import {

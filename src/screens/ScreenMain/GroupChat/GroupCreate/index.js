@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
@@ -30,19 +30,49 @@ const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 const CreateGroup = props => {
   const { onHandleToggleCreate } = props;
   const [listChecked, setListChecked] = useState([]);
+  const [searchText, setSearchText] = useState(null);
   const { listFriends } = useSelector(state => state.friends);
 
-  const handleCheckedItem = item_index => {
+  const handleCheckedItem = item_name => {
     const tempList = [...listChecked];
-    if (tempList.includes(item_index)) {
-      const index = tempList.findIndex(item => item === item_index);
+    setSearchText(null);
+    if (tempList.includes(item_name)) {
+      const index = tempList.findIndex(item => item === item_name);
       tempList.splice(index, 1);
       setListChecked([...tempList]);
       return;
     }
-    tempList.push(item_index);
+    tempList.push(item_name);
     setListChecked(tempList);
   };
+
+  const filterTextSearch = useCallback(() => {
+    const tempList = JSON.parse(JSON.stringify(listFriends)); // deep clone
+    if (searchText === null) return [...tempList];
+    const filterName = tempList.filter(
+      item => item.name.toUpperCase().search(searchText.toUpperCase()) !== -1
+    );
+    const filterPhone = tempList.filter(item => {
+      if (!item.phone) return;
+      else
+        return (
+          item.phone?.toUpperCase().search(searchText.toUpperCase()) !== -1
+        );
+    });
+
+    const filterEmail = tempList.filter(item => {
+      if (!item.email) return;
+      else
+        return (
+          item.email?.toUpperCase().search(searchText.toUpperCase()) !== -1
+        );
+    });
+    const newList = [...filterName, ...filterPhone, ...filterEmail];
+    const filterDoubleItem = newList.filter((itemCheck, index) => {
+      return newList.findIndex(item => item.id == itemCheck.id) === index;
+    });
+    return filterDoubleItem;
+  }, [listFriends, searchText]);
 
   return (
     <Container>
@@ -78,15 +108,18 @@ const CreateGroup = props => {
           style={{
             height: 40
           }}
+          onChangeText={text => setSearchText(text)}
           placeholder="Search by phone or name or email"
         />
       </Item>
       <Content>
         <List style={{ marginTop: 10 }}>
-          {listFriends?.map((friend, index) => {
+          {filterTextSearch()?.map((friend, index) => {
             return (
               <Fragment key={index}>
-                <TouchableOpacity onPress={() => handleCheckedItem(index)}>
+                <TouchableOpacity
+                  onPress={() => handleCheckedItem(friend.name)}
+                >
                   <ListItem
                     style={{
                       paddingTop: 3,
@@ -109,7 +142,7 @@ const CreateGroup = props => {
                       <Text>{friend.name}</Text>
                     </Body>
                     <Right style={{ borderBottomWidth: 0 }}>
-                      {listChecked.includes(index) ? (
+                      {listChecked.includes(friend.name) ? (
                         <AntDesign
                           name="checkcircle"
                           size={24}
@@ -128,6 +161,11 @@ const CreateGroup = props => {
               </Fragment>
             );
           })}
+          {filterTextSearch().length === 0 && (
+            <View style={{ alignItems: 'center', marginTop: 20 }}>
+              <Text style={{ color: '#AAA', fontSize: 30 }}>Nothing found</Text>
+            </View>
+          )}
         </List>
       </Content>
       {listChecked.length > 0 && (
