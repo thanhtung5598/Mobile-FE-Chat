@@ -1,4 +1,5 @@
 import React, { useState, Fragment } from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import {
@@ -9,13 +10,13 @@ import {
   View,
   Container,
   Content,
-  Form,
   Item,
   Input,
   List,
   Thumbnail,
   Body,
-  Footer
+  Footer,
+  Icon
 } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 
@@ -24,9 +25,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
+const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
+
 const CreateGroup = props => {
   const { onHandleToggleCreate } = props;
   const [listChecked, setListChecked] = useState([]);
+  const { listFriends } = useSelector(state => state.friends);
 
   const handleCheckedItem = item_index => {
     const tempList = [...listChecked];
@@ -48,29 +52,61 @@ const CreateGroup = props => {
         </TouchableOpacity>
         <Text style={styles.login}>Group new</Text>
       </View>
+      <Item style={{ borderBottomWidth: 0, paddingTop: 5, paddingBottom: 5 }}>
+        <Input
+          style={{
+            textAlign: 'center',
+            marginLeft: 20,
+            marginRight: 20
+          }}
+          placeholder="Name the new group"
+        />
+      </Item>
+      <Item
+        style={{
+          backgroundColor: '#f5f5f5',
+          marginLeft: 20,
+          marginRight: 20,
+          borderRadius: 10
+        }}
+      >
+        <Icon
+          name="ios-search"
+          style={{ color: '#777', fontSize: 24, paddingLeft: 15 }}
+        />
+        <Input
+          style={{
+            height: 40
+          }}
+          placeholder="Search by phone or name or email"
+        />
+      </Item>
       <Content>
-        <Form>
-          <Item>
-            <Input
-              style={{ textAlign: 'center' }}
-              placeholder="Name the new group"
-            />
-          </Item>
-        </Form>
         <List style={{ marginTop: 10 }}>
-          {['Hoang', 'Tam', 'trinh', 'Ngoc'].map((item, index) => {
+          {listFriends?.map((friend, index) => {
             return (
-              <Fragment key={item}>
+              <Fragment key={index}>
                 <TouchableOpacity onPress={() => handleCheckedItem(index)}>
                   <ListItem
-                    style={{ paddingTop: 3, paddingBottom: 3 }}
+                    style={{
+                      paddingTop: 3,
+                      paddingBottom: 3
+                    }}
                     thumbnail
                   >
                     <Left>
-                      <Thumbnail source={require('assets/avatarDefault.png')} />
+                      <Thumbnail
+                        source={
+                          friend.avatar
+                            ? {
+                                uri: `${imaPrefix}${friend.avatar}`
+                              }
+                            : require('assets/avatarDefault.png')
+                        }
+                      />
                     </Left>
                     <Body style={{ borderBottomWidth: 0 }}>
-                      <Text>{item}</Text>
+                      <Text>{friend.name}</Text>
                     </Body>
                     <Right style={{ borderBottomWidth: 0 }}>
                       {listChecked.includes(index) ? (
@@ -96,12 +132,18 @@ const CreateGroup = props => {
       </Content>
       {listChecked.length > 0 && (
         <Footer
-          style={{ backgroundColor: 'white', width: '100%', borderTopWidth: 0 }}
+          style={{
+            backgroundColor: 'white',
+            width: '100%',
+            borderTopWidth: 0
+          }}
         >
           <LinearGradient
             start={{ x: -1, y: 0 }}
             end={{ x: 1, y: 0 }}
-            style={{ borderRadius: 30 }}
+            style={{
+              borderRadius: 28
+            }}
             colors={['#2962ff', '#0cb3ff']}
           >
             <TouchableOpacity
