@@ -85,7 +85,8 @@ const CreateGroup = props => {
   const handleCreateNewGroup = () => {
     const values = {
       list_user_id: listChecked,
-      name: groupName.split('').length > 0 ? groupName : dataUser.name
+      name:
+        groupName.split('').length > 0 ? groupName : `${dataUser.name} group`
     };
     dispatch(createGroupChat(values)).then(res => {
       const { error } = res;
@@ -190,7 +191,7 @@ const CreateGroup = props => {
           )}
         </List>
       </Content>
-      {listChecked.length > 0 && (
+      {listChecked.length > 1 && (
         <Footer
           style={{
             backgroundColor: 'white',
