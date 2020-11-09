@@ -3,19 +3,22 @@ import { GROUP_TYPE } from 'constTypes';
 
 const prefix = 'rooms/';
 
-export const fetchAllGroup = () => dispatch => {
+export const fetchAllGroup = (currentPage = 1, dataOld = null) => dispatch => {
   dispatch({
     type: GROUP_TYPE.FETCH_ALL_GROUP_REQUEST
   });
   return axiosServices
-    .get(`${prefix}?currentPage=1&perPage=20`)
+    .get(`${prefix}?currentPage=${currentPage}&perPage=8`)
     .then(res => {
-      const { data } = res.data;
+      const {
+        data: { itemsList, paginator }
+      } = res.data;
+      const listDataGroup = dataOld ? [...dataOld, ...itemsList] : itemsList;
       dispatch({
         type: GROUP_TYPE.FETCH_ALL_GROUP_SUCCESS,
         payload: {
-          listGroups: data.itemsList,
-          paginator: data.paginator
+          listGroups: listDataGroup,
+          paginator: paginator
         }
       });
     })

@@ -1,30 +1,29 @@
-import React, { useState, useRef, Fragment } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Keyboard, Image } from 'react-native';
+import { Keyboard, Image, FlatList } from 'react-native';
 import {
   Container,
   Content,
   List,
   ListItem,
-  Thumbnail,
   Text,
   Left,
   Body,
   Right,
-  View,
-  Badge
+  Spinner
 } from 'native-base';
 import PropTypes from 'prop-types';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 import _ from 'lodash';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { fetchAllGroup } from 'actions/groupActions';
 
 // Component
 import HeaderSearch from './../common/header';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import GroupCreate from './GroupCreate';
 import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
+import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
 
 // action
 import {
@@ -33,13 +32,13 @@ import {
   addFriend
 } from 'actions/userActions';
 
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-
 const GroupChat = props => {
   const { footer, setFooter } = props;
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
-  const { listGroups } = useSelector(state => state.groups);
+  const { listGroups, paginator, isLoading } = useSelector(
+    state => state.groups
+  );
 
   const [userQuery, setUserQuery] = useState('');
   const [find, setFind] = useState(false);
@@ -60,6 +59,7 @@ const GroupChat = props => {
   const handleFind = () => {
     setFind(true);
   };
+
   const onHandleToggleCreate = () => {
     setCreate(!isCreate);
     setFooter(!footer);
@@ -81,6 +81,76 @@ const GroupChat = props => {
   const handleToggleChatRoom = () => {
     setChatOpen(true);
     setCreate(false);
+  };
+
+  const renderItemPhonebook = ({ item: group }) => <ItemGroups group={group} />;
+
+  const renderListHeaderGroup = () => {
+    return (
+      <List style={{ marginTop: 5, marginBottom: 5 }}>
+        <TouchableOpacity onPress={onHandleToggleCreate}>
+          <ListItem thumbnail>
+            <Left
+              style={{
+                width: 45,
+                height: 45,
+                borderRadius: 45,
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'black'
+              }}
+            >
+              <Image
+                source={require('assets/iconGroup.jpg')}
+                style={{
+                  width: 55,
+                  height: 55,
+                  borderWidth: 1,
+                  borderColor: 'green',
+                  borderRadius: 45
+                }}
+              />
+            </Left>
+            <Body style={{ borderBottomColor: 'white' }}>
+              <Text style={{ fontSize: 16 }}>Create new Group</Text>
+            </Body>
+          </ListItem>
+        </TouchableOpacity>
+        <ListItem
+          itemDivider
+          style={{ backgroundColor: 'white', paddingBottom: 10 }}
+        >
+          <Left>
+            <Text style={{ fontSize: 14, fontWeight: '600' }}>
+              Group Joined
+            </Text>
+            <Body></Body>
+            <Right>
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: '600',
+                  color: '#42a5f5'
+                }}
+              >
+                All Group
+              </Text>
+            </Right>
+          </Left>
+        </ListItem>
+      </List>
+    );
+  };
+
+  const handlePullToRefesh = () => {
+    dispatch(fetchAllGroup());
+  };
+
+  const handleLoadingMore = (paginator, listGroups) => {
+    const { next } = paginator;
+    if (next) {
+      dispatch(fetchAllGroup(next, listGroups));
+    }
   };
 
   return (
@@ -118,132 +188,17 @@ const GroupChat = props => {
               handleTurnBack={handleTurnBack}
               handleChangeValue={handleChangeValue}
             />
-            <Content>
-              <List style={{ marginBottom: 5, marginTop: 5 }}>
-                <TouchableOpacity onPress={onHandleToggleCreate}>
-                  <ListItem thumbnail>
-                    <Left
-                      style={{
-                        width: 45,
-                        height: 45,
-                        borderRadius: 45,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        backgroundColor: 'black'
-                      }}
-                    >
-                      <Image
-                        source={require('assets/iconGroup.jpg')}
-                        style={{
-                          width: 55,
-                          height: 55,
-                          borderWidth: 1,
-                          borderColor: 'green',
-                          borderRadius: 45
-                        }}
-                      />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text style={{ fontSize: 16 }}>Create new Group</Text>
-                    </Body>
-                  </ListItem>
-                </TouchableOpacity>
-              </List>
-              <List>
-                <ListItem
-                  itemDivider
-                  style={{ backgroundColor: 'white', paddingBottom: 10 }}
-                >
-                  <Left>
-                    <Text style={{ fontSize: 14, fontWeight: '600' }}>
-                      Group Joined
-                    </Text>
-                    <Body></Body>
-                    <Right>
-                      <Text
-                        style={{
-                          fontSize: 14,
-                          fontWeight: '600',
-                          color: '#42a5f5'
-                        }}
-                      >
-                        All Group
-                      </Text>
-                    </Right>
-                  </Left>
-                </ListItem>
-                {listGroups?.map((group, index) => {
-                  return (
-                    <Fragment key={index}>
-                      <TouchableOpacity>
-                        <ListItem thumbnail>
-                          <Left>
-                            <View>
-                              <View
-                                style={{
-                                  flexDirection: 'row',
-                                  width: 50,
-                                  flexWrap: 'wrap'
-                                }}
-                              >
-                                {group?.users.map((user, index) => {
-                                  if (index > 2) return; // 0 1 2
-                                  return (
-                                    <Fragment key={index}>
-                                      <Thumbnail
-                                        rounded
-                                        style={{
-                                          width: 25,
-                                          height: 25
-                                        }}
-                                        source={
-                                          user?.avatar
-                                            ? {
-                                                uri: `${imaPrefix}${user.avatar}`
-                                              }
-                                            : require('assets/avatarDefault.png')
-                                        }
-                                      />
-                                    </Fragment>
-                                  );
-                                })}
-                                {group?.users.length >= 4 && (
-                                  <Fragment key={index}>
-                                    <Badge
-                                      style={{
-                                        width: 25,
-                                        height: 25,
-                                        backgroundColor: '#AAA',
-                                        marginTop: 1
-                                      }}
-                                    >
-                                      <Text>{group?.users.length - 3}</Text>
-                                    </Badge>
-                                  </Fragment>
-                                )}
-                              </View>
-                            </View>
-                          </Left>
-                          <Body>
-                            <Text>{group.name}</Text>
-                            <Text note numberOfLines={1}>
-                              Take your time to start . .
-                            </Text>
-                          </Body>
-                          <Right style={{ marginRight: 10 }}>
-                            <MaterialCommunityIcons
-                              name="qqchat"
-                              size={30}
-                              color="#CCC"
-                            />
-                          </Right>
-                        </ListItem>
-                      </TouchableOpacity>
-                    </Fragment>
-                  );
-                })}
-              </List>
-            </Content>
+            <FlatList
+              data={listGroups}
+              ListHeaderComponent={renderListHeaderGroup}
+              ListFooterComponent={() => isLoading && <Spinner />}
+              renderItem={renderItemPhonebook}
+              keyExtractor={item => `${item._id}`}
+              refreshing={isLoading}
+              onRefresh={handlePullToRefesh}
+              onEndReached={() => handleLoadingMore(paginator, listGroups)}
+              onEndReachedThreshold={0}
+            />
           </>
         )}
       </Container>
