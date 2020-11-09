@@ -22,7 +22,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 // Component
 import HeaderSearch from './../common/header';
-import FindFriends from './FindFriends';
+import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import GroupCreate from './GroupCreate';
 import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
 
@@ -90,7 +90,7 @@ const GroupChat = props => {
           <ChatRoom setChatOpen={setChatOpen} setFooter={setFooter} />
         )}
         {find && (
-          <Content>
+          <>
             <HeaderSearch
               find={find}
               userQuery={userQuery}
@@ -98,8 +98,10 @@ const GroupChat = props => {
               handleTurnBack={handleTurnBack}
               handleChangeValue={handleChangeValue}
             />
-            <FindFriends handleAddFriend={handleAddFriend} />
-          </Content>
+            <Content>
+              <FindFriends handleAddFriend={handleAddFriend} />
+            </Content>
+          </>
         )}
         {isCreate && (
           <GroupCreate

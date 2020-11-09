@@ -1,25 +1,13 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
-import {
-  Container,
-  ListItem,
-  Thumbnail,
-  Text,
-  Left,
-  Body,
-  Right,
-  Content,
-  View,
-  Spinner
-} from 'native-base';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Container, Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { fetchRequestFriends } from 'actions/userActions';
-
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
+import EmptyList from 'screens/ScreenMain/common/EmptyList';
+import { ItemFriendsRequired } from 'screens/ScreenMain/common/ItemRender';
 
 const FriendRequest = props => {
   const dispatch = useDispatch();
@@ -30,6 +18,19 @@ const FriendRequest = props => {
     dispatch(fetchRequestFriends());
   }, [dispatch]);
 
+  const renderEmptyComponent = () => (
+    <EmptyList message={' No friends requested'} />
+  );
+
+  const renderItemFriendRequired = ({ item: friend }) => (
+    <ItemFriendsRequired
+      friend={friend}
+      handleDeclineFriend={handleDeclineFriend}
+      handleAcceptFriend={handleAcceptFriend}
+    />
+  );
+
+  const handlePullToRefesh = () => {};
   return (
     <>
       <Container>
@@ -39,71 +40,16 @@ const FriendRequest = props => {
           </TouchableOpacity>
           <Text style={styles.login}>Friends request</Text>
         </View>
-        <Content>
-          {isLoading && <Spinner />}
-          {!isLoading && !listRequestFriends && (
-            <View style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={{ color: '#AAA', fontSize: 30 }}>
-                No friends requested
-              </Text>
-            </View>
-          )}
-          <Content style={{ marginTop: 20 }}>
-            {listRequestFriends?.map((friend, index) => {
-              return (
-                <Fragment key={index}>
-                  <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                    <Left>
-                      <Thumbnail
-                        rounded
-                        source={
-                          friend.avatar
-                            ? {
-                                uri: `${imaPrefix}${friend.avatar}`
-                              }
-                            : require('assets/avatarDefault.png')
-                        }
-                      />
-                    </Left>
-                    <Body style={{ borderBottomColor: 'white' }}>
-                      <Text>{friend.name}</Text>
-                    </Body>
-                    <Right
-                      style={{ borderBottomWidth: 0, flexDirection: 'row' }}
-                    >
-                      <LinearGradient
-                        start={{ x: -1, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        colors={['#e64a19', '#ff7043']}
-                        style={styles.LinearGradientLeft}
-                      >
-                        <TouchableOpacity
-                          style={styles.UpdateProfile}
-                          onPress={() => handleDeclineFriend(friend.id)}
-                        >
-                          <Text style={styles.UpdatedProfileText}>Decline</Text>
-                        </TouchableOpacity>
-                      </LinearGradient>
-                      <LinearGradient
-                        start={{ x: -1, y: 0 }}
-                        end={{ x: 1, y: 0 }}
-                        colors={['#2962ff', '#0cb3ff']}
-                        style={styles.LinearGradientRight}
-                      >
-                        <TouchableOpacity
-                          style={styles.UpdateProfile}
-                          onPress={() => handleAcceptFriend(friend.id)}
-                        >
-                          <Text style={styles.UpdatedProfileText}>Accept</Text>
-                        </TouchableOpacity>
-                      </LinearGradient>
-                    </Right>
-                  </ListItem>
-                </Fragment>
-              );
-            })}
-          </Content>
-        </Content>
+        <View style={{ marginTop: 10, height: '100%' }}>
+          <FlatList
+            data={listRequestFriends}
+            renderItem={renderItemFriendRequired}
+            keyExtractor={item => `${item.id}`}
+            refreshing={isLoading}
+            ListEmptyComponent={renderEmptyComponent}
+            onRefresh={handlePullToRefesh}
+          />
+        </View>
       </Container>
     </>
   );

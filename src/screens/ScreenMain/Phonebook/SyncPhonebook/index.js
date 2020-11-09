@@ -1,27 +1,16 @@
-import React, { useEffect, Fragment } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
-import {
-  Container,
-  ListItem,
-  Thumbnail,
-  Text,
-  Left,
-  Body,
-  Right,
-  Content,
-  View,
-  Spinner
-} from 'native-base';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Container, Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import * as Contacts from 'expo-contacts';
-import { fetchPhonebookSync, syncDataPhonebook } from 'actions/userActions';
+import { syncDataPhonebook } from 'actions/userActions';
 import useCheckFriend from 'components/common/hook/useCheckFriend';
-
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
+import EmptyList from 'screens/ScreenMain/common/EmptyList';
+// Item Render
+import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
 
 const SyncPhonebook = props => {
   const dispatch = useDispatch();
@@ -42,7 +31,6 @@ const SyncPhonebook = props => {
   useEffect(() => {
     (async () => {
       const { status } = await Contacts.requestPermissionsAsync();
-      console.log(status);
       if (status === 'granted') {
         const { data } = await Contacts.getContactsAsync();
         if (data.length >= 0) {
@@ -62,9 +50,37 @@ const SyncPhonebook = props => {
     })();
   }, [dataUser, dispatch]);
 
-  useEffect(() => {
-    dispatch(fetchPhonebookSync());
-  }, [dispatch]);
+  const renderItemSyncPhone = ({ item: friend }) => (
+    <ItemFriends
+      friend={friend}
+      handleAddFriend={handleAddFriend}
+      status={true}
+    />
+  );
+
+  const renderEmptyComponent = () => <EmptyList message={'No friends sync'} />;
+
+  const handlePullToRefesh = () => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === 'granted') {
+        const { data } = await Contacts.getContactsAsync();
+        if (data.length >= 0) {
+          const newData = data.map(item =>
+            item.phoneNumbers.map(item => item.number)
+          );
+          const dataSync = {
+            user_id: dataUser.id,
+            listPhoneBook: newData.flat().map(item => item.split(' ').join(''))
+          };
+          dispatch(syncDataPhonebook(dataSync));
+        }
+      }
+      if (status === 'denied') {
+        //doing somthing
+      }
+    })();
+  };
 
   return (
     <>
@@ -75,87 +91,16 @@ const SyncPhonebook = props => {
           </TouchableOpacity>
           <Text style={styles.login}>Friends from phonebook device</Text>
         </View>
-        <Content>
-          {isLoading && <Spinner />}
-          {!isLoading && !listFindFill && (
-            <View style={{ alignItems: 'center', marginTop: 20 }}>
-              <Text style={{ color: '#AAA', fontSize: 30 }}>
-                No friends sync
-              </Text>
-            </View>
-          )}
-          <Content style={{ marginTop: 20 }}>
-            {listFindFill
-              ?.filter(item => item.id !== dataUser.id)
-              .map((friend, index) => {
-                return (
-                  <Fragment key={index}>
-                    <ListItem thumbnail style={{ paddingBottom: 12 }}>
-                      <Left>
-                        <Thumbnail
-                          rounded
-                          source={
-                            friend.avatar
-                              ? {
-                                  uri: `${imaPrefix}${friend.avatar}`
-                                }
-                              : require('assets/avatarDefault.png')
-                          }
-                        />
-                      </Left>
-                      <Body style={{ borderBottomColor: 'white' }}>
-                        <Text>{friend.name}</Text>
-                      </Body>
-                      <Right style={{ borderBottomWidth: 0 }}>
-                        {friend.status === undefined && (
-                          <LinearGradient
-                            start={{ x: -1, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#2962ff', '#0cb3ff']}
-                            style={styles.LinearGradientProfile}
-                          >
-                            <TouchableOpacity
-                              style={styles.UpdateProfile}
-                              onPress={() => handleAddFriend(friend.id)}
-                            >
-                              <Text style={styles.UpdatedProfileText}>
-                                Add friend
-                              </Text>
-                            </TouchableOpacity>
-                          </LinearGradient>
-                        )}
-                        {friend.status === true && (
-                          <LinearGradient
-                            start={{ x: -1, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#2962ff', '#0cb3ff']}
-                            style={styles.LinearGradientProfile}
-                          ></LinearGradient>
-                        )}
-                        {friend.status === false && (
-                          <LinearGradient
-                            start={{ x: -1, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            colors={['#a5d6a7', '#4caf50']}
-                            style={styles.LinearGradientProfile}
-                          >
-                            <TouchableOpacity
-                              style={styles.UpdateProfile}
-                              disabled
-                            >
-                              <Text style={styles.UpdatedProfileText}>
-                                Waiting...
-                              </Text>
-                            </TouchableOpacity>
-                          </LinearGradient>
-                        )}
-                      </Right>
-                    </ListItem>
-                  </Fragment>
-                );
-              })}
-          </Content>
-        </Content>
+        <View style={{ marginTop: 10, height: '100%' }}>
+          <FlatList
+            data={listFindFill?.filter(item => item.id !== dataUser.id)}
+            renderItem={renderItemSyncPhone}
+            keyExtractor={item => `${item.id}`}
+            refreshing={isLoading}
+            ListEmptyComponent={renderEmptyComponent}
+            onRefresh={handlePullToRefesh}
+          />
+        </View>
       </Container>
     </>
   );
