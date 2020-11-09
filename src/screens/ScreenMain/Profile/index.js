@@ -1,17 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { StyleSheet, ImageBackground, Platform } from 'react-native';
+import { StyleSheet, ImageBackground, Platform, FlatList } from 'react-native';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import {
-  Container,
-  Content,
-  Text,
-  View,
-  Thumbnail,
-  List,
-  ListItem
-} from 'native-base';
+import { Container, Text, View, Thumbnail, List, ListItem } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
@@ -21,17 +13,16 @@ import { getProfileUser } from 'actions/userActions';
 import ModalUpdatedName from 'components/common/ComponentsCommon/Modal/modalUpdatedName';
 import SvgAnimatedLinearGradient from 'react-native-svg-animated-linear-gradient';
 import { Circle } from 'react-native-svg';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
 const Profile = ({ navigation }) => {
   const modalRef = useRef(null);
   const dispatch = useDispatch();
-  const { dataUser, isLoadingAvatar } = useSelector(state => state.dataUser);
-
-  useEffect(() => {
-    dispatch(getProfileUser());
-  }, [dispatch]);
+  const { dataUser, isLoadingAvatar, isLoading } = useSelector(
+    state => state.dataUser
+  );
 
   const handleUploadImage = async () => {
     if (Platform.OS !== 'web') {
@@ -83,84 +74,101 @@ const Profile = ({ navigation }) => {
       }
     });
   };
+
+  const handleRefeshDataUser = () => {
+    dispatch(getProfileUser());
+  };
+
   return (
     <Container>
-      <Content>
-        <ImageBackground
-          style={styles.container}
-          source={require('assets/lawn.jpg')}
-        >
-          <View style={styles.rect}>
-            {isLoadingAvatar && (
-              <SvgAnimatedLinearGradient height={80} width={80}>
-                <Circle cx="40" cy="40" r="40" />
-              </SvgAnimatedLinearGradient>
-            )}
-            {!isLoadingAvatar && dataUser && (
-              <TouchableOpacity onPress={handleUploadImage}>
-                <Thumbnail
-                  large
-                  source={
-                    dataUser?.avatar
-                      ? {
-                          uri: `${imaPrefix}${dataUser.avatar}`
+      <SafeAreaView style={{ height: '100%' }}>
+        <FlatList
+          ListHeaderComponent={() => (
+            <>
+              <ImageBackground
+                style={styles.container}
+                source={require('assets/lawn.jpg')}
+              >
+                <View style={styles.rect}>
+                  {isLoadingAvatar && (
+                    <SvgAnimatedLinearGradient height={80} width={80}>
+                      <Circle cx="40" cy="40" r="40" />
+                    </SvgAnimatedLinearGradient>
+                  )}
+                  {!isLoadingAvatar && dataUser && (
+                    <TouchableOpacity onPress={handleUploadImage}>
+                      <Thumbnail
+                        large
+                        source={
+                          dataUser?.avatar
+                            ? {
+                                uri: `${imaPrefix}${dataUser.avatar}`
+                              }
+                            : require('assets/avatarDefault.png')
                         }
-                      : require('assets/avatarDefault.png')
-                  }
-                />
-              </TouchableOpacity>
-            )}
-            <Text style={styles.leThanhTung}>{dataUser?.name}</Text>
-            <TouchableOpacity onPress={() => modalRef.current.toggleModal()}>
-              <AntDesign
-                style={{ marginLeft: 15 }}
-                name="edit"
-                size={30}
-                color="white"
-              />
-            </TouchableOpacity>
-            <ModalUpdatedName onSubmit={onHandleSubmitAdd} ref={modalRef} />
-          </View>
-          <View style={styles.SettingStyle}>
-            <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
-              <AntDesign name="setting" size={30} color="white" />
-            </TouchableOpacity>
-          </View>
-        </ImageBackground>
-        <List style={styles.ContainList}>
-          <ListItem>
-            <Text style={styles.titleInfo}>Zola name</Text>
-            <Text style={styles.valueInfo}>{dataUser?.name || '...'}</Text>
-          </ListItem>
-          <ListItem>
-            <Text style={styles.titleInfo}>Phone</Text>
-            <Text style={styles.valueInfo}>{dataUser?.phone || '...'}</Text>
-          </ListItem>
-          <ListItem>
-            <Text style={styles.titleInfo}>Email</Text>
-            <Text style={styles.valueInfo}>{dataUser?.email || '....'}</Text>
-            {/* {<ModalAddInfoEmail visible={false} />}
-            <TouchableOpacity
-              style={styles.buttonAddInfo}
-              onPress={handleClickedAddInfo}
-            >
-              <AntDesign name="pluscircle" size={30} color="#2962ff" />
-            </TouchableOpacity> */}
-          </ListItem>
-          <ListItem>
-            <Text style={styles.titleInfo}>Create At</Text>
-            <Text style={styles.valueInfo}>
-              {moment(dataUser?.createAt).format('YYYY/MM/DD')}
-            </Text>
-          </ListItem>
-          <ListItem>
-            <Text style={styles.titleInfo}>Update At</Text>
-            <Text style={styles.valueInfo}>
-              {moment(dataUser?.updateAt).format('YYYY/MM/DD')}
-            </Text>
-          </ListItem>
-        </List>
-      </Content>
+                      />
+                    </TouchableOpacity>
+                  )}
+                  <Text style={styles.leThanhTung}>{dataUser?.name}</Text>
+                  <TouchableOpacity
+                    onPress={() => modalRef.current.toggleModal()}
+                  >
+                    <AntDesign
+                      style={{ marginLeft: 15 }}
+                      name="edit"
+                      size={30}
+                      color="white"
+                    />
+                  </TouchableOpacity>
+                  <ModalUpdatedName
+                    onSubmit={onHandleSubmitAdd}
+                    ref={modalRef}
+                  />
+                </View>
+                <View style={styles.SettingStyle}>
+                  <TouchableOpacity onPress={() => navigation.toggleDrawer()}>
+                    <AntDesign name="setting" size={30} color="white" />
+                  </TouchableOpacity>
+                </View>
+              </ImageBackground>
+              <List style={styles.ContainList}>
+                <ListItem>
+                  <Text style={styles.titleInfo}>Zola name</Text>
+                  <Text style={styles.valueInfo}>
+                    {dataUser?.name || '...'}
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text style={styles.titleInfo}>Phone</Text>
+                  <Text style={styles.valueInfo}>
+                    {dataUser?.phone || '...'}
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text style={styles.titleInfo}>Email</Text>
+                  <Text style={styles.valueInfo}>
+                    {dataUser?.email || '....'}
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text style={styles.titleInfo}>Create At</Text>
+                  <Text style={styles.valueInfo}>
+                    {moment(dataUser?.createAt).format('YYYY/MM/DD')}
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text style={styles.titleInfo}>Update At</Text>
+                  <Text style={styles.valueInfo}>
+                    {moment(dataUser?.updateAt).format('YYYY/MM/DD')}
+                  </Text>
+                </ListItem>
+              </List>
+            </>
+          )}
+          refreshing={isLoading}
+          onRefresh={handleRefeshDataUser}
+        />
+      </SafeAreaView>
     </Container>
   );
 };
