@@ -41,7 +41,7 @@ export const createGroupChat = data => dispatch => {
       });
       return { error, data };
     })
-    .catch(() => {
+    .catch(err => {
       const { error, data } = err.response?.data;
       dispatch({
         type: GROUP_TYPE.CREATE_GROUP_FAILURE

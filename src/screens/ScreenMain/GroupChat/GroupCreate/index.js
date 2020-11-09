@@ -191,7 +191,7 @@ const CreateGroup = props => {
           )}
         </List>
       </Content>
-      {listChecked.length > 1 && (
+      {listChecked.length >= 1 && (
         <Footer
           style={{
             backgroundColor: 'white',
