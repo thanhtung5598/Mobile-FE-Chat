@@ -44,6 +44,7 @@ const GroupChat = props => {
   const [find, setFind] = useState(false);
   const [isCreate, setCreate] = useState(false);
   const [isChatOpen, setChatOpen] = useState(false);
+  const [currentGroup, setCurrentGroup] = useState(null);
 
   const delayedQuery = useRef(
     _.debounce(q => dispatch(searchUserByPhoneEmailName(q)), 500)
@@ -78,12 +79,12 @@ const GroupChat = props => {
     dispatch(addFriend(value));
   };
 
-  const handleToggleChatRoom = () => {
+  const handleToggleChatRoom = group => {
+    setCurrentGroup(group);
     setChatOpen(true);
     setCreate(false);
+    setFooter(false);
   };
-
-  const renderItemPhonebook = ({ item: group }) => <ItemGroups group={group} />;
 
   const renderListHeaderGroup = () => {
     return (
@@ -153,11 +154,24 @@ const GroupChat = props => {
     }
   };
 
+  const renderItemPhonebook = ({ item: group }) => {
+    return (
+      <TouchableOpacity onPress={() => handleToggleChatRoom(group)}>
+        <ItemGroups group={group} />
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <>
       <Container>
         {isChatOpen && (
-          <ChatRoom setChatOpen={setChatOpen} setFooter={setFooter} />
+          <ChatRoom
+            setChatOpen={setChatOpen}
+            setFooter={setFooter}
+            currentGroup={currentGroup}
+            typeChat="group"
+          />
         )}
         {find && (
           <>
@@ -182,11 +196,8 @@ const GroupChat = props => {
         {!find && !isCreate && !isChatOpen && (
           <>
             <HeaderSearch
-              find={find}
-              userQuery={userQuery}
               handleFind={handleFind}
               handleTurnBack={handleTurnBack}
-              handleChangeValue={handleChangeValue}
             />
             <FlatList
               data={listGroups}
