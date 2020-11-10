@@ -1,36 +1,87 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import { View, Text } from 'native-base';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { GroupContext } from 'components/common/context/GroupContext';
+import ModalOptionGroup from 'components/common/ComponentsCommon/Modal/modalOptionGroup';
+import ModalUpdateRoomName from 'components/common/ComponentsCommon/Modal/modalUpdateRoomName';
+import { updateRoomName, exitRoom } from 'actions/groupActions';
 
 const HeaderChat = props => {
-  const { currentGroup } = useContext(GroupContext);
+  const modalRef = useRef(null);
+  const modalRefName = useRef(null);
+  const [isLoading, setLoading] = useState(false);
+  const { currentGroup, setCurrentGroup } = useContext(GroupContext);
   const { setChatOpen, setFooter, setAddMember } = props;
-  const { users, name } = currentGroup;
+  const { users, name, _id } = currentGroup;
 
   const handleChatClose = () => {
     setChatOpen(false);
     setFooter(true);
   };
 
+  const onHandleSubmitAdd = value => {
+    setLoading(true);
+    updateRoomName(value, _id).then(() => {
+      setCurrentGroup({
+        ...currentGroup,
+        name: value.name
+      });
+      setLoading(false);
+      modalRefName.current.toggleModal();
+    });
+  };
+
+  const handleExitRoom = () => {
+    setLoading(true);
+    exitRoom(_id).then(() => {
+      setLoading(false);
+      handleChatClose();
+    });
+  };
+
   return (
     <View style={styles.rect}>
+      <ModalOptionGroup ref={modalRef} handleExitRoom={handleExitRoom} />
+      <ModalUpdateRoomName
+        isLoading={isLoading}
+        onSubmit={onHandleSubmitAdd}
+        ref={modalRefName}
+      />
       <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity onPress={handleChatClose}>
           <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
         </TouchableOpacity>
         <View>
-          <Text style={styles.name}>{name}</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Text style={styles.name}>{name}</Text>
+            <TouchableOpacity
+              onPress={() => modalRefName.current.toggleModal()}
+            >
+              <AntDesign
+                style={{ marginLeft: 10 }}
+                name="edit"
+                size={20}
+                color="black"
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.time}>{users.length} members</Text>
         </View>
       </View>
       <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
-        <TouchableOpacity onPress={() => setAddMember(true)}>
-          <MaterialIcons name="group-add" size={32} color="black" />
-        </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={() => setAddMember(true)}>
+            <MaterialIcons name="group-add" size={32} color="black" />
+          </TouchableOpacity>
+        </View>
+        <View style={{ marginLeft: 15 }}>
+          <TouchableOpacity onPress={() => modalRef.current.toggleModal()}>
+            <Entypo name="dots-three-horizontal" size={28} color="black" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

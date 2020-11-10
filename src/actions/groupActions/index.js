@@ -52,3 +52,30 @@ export const createGroupChat = data => dispatch => {
       return { error, data };
     });
 };
+export const updateRoomName = (data, idRoom) => {
+  return axiosServices
+    .put(`${prefix}?id=${idRoom}`, data)
+    .then(res => {
+      const { error, data } = res.data;
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      return { error, data };
+    });
+};
+
+export const exitRoom = idRoom => {
+  return axiosServices
+    .put(`${prefix}?id=${idRoom}`)
+    .then(res => {
+      const { error, data } = res.data;
+      console.log('succ', data);
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      console.log('err', data);
+      return { error, data };
+    });
+};
