@@ -3,24 +3,21 @@ import PropTypes from 'prop-types';
 import { HeaderGroupChat, HeaderSingleChat } from './headerChat';
 import BodyChat from './bodyChat';
 import FooterChat from './footerChat';
-import AddMember from './AddMember';
+import GroupAddMember from './GroupAddMember';
 
 const ChatRoom = props => {
-  const [isAddMember, SetAddMember] = useState(false);
-  const { setChatOpen, setFooter, typeChat, currentGroup } = props;
+  const [isAddMember, setAddMember] = useState(false);
+  const { setChatOpen, setFooter, typeChat } = props;
   return (
     <Fragment>
-      {isAddMember && (
-        <AddMember SetAddMember={SetAddMember} currentGroup={currentGroup} />
-      )}
+      {isAddMember && <GroupAddMember setAddMember={setAddMember} />}
       {!isAddMember && (
         <>
           {typeChat === 'group' && (
             <HeaderGroupChat
               setChatOpen={setChatOpen}
               setFooter={setFooter}
-              currentGroup={currentGroup}
-              SetAddMember={SetAddMember}
+              setAddMember={setAddMember}
             />
           )}
           {typeChat === 'single' && (

@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback } from 'react';
+import React, { useState, Fragment, useCallback, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
@@ -25,14 +25,16 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import { GroupContext } from 'components/common/context/GroupContext';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
-const AddMember = props => {
+const GroupAddMember = props => {
+  const { setAddMember } = props;
   const {
-    SetAddMember,
     currentGroup: { users }
-  } = props;
+  } = useContext(GroupContext);
+
   const [listChecked, setListChecked] = useState([]);
   const [searchText, setSearchText] = useState(null);
   // const dispatch = useDispatch();
@@ -93,7 +95,7 @@ const AddMember = props => {
   return (
     <Container>
       <View style={styles.rect}>
-        <TouchableOpacity onPress={() => SetAddMember(false)}>
+        <TouchableOpacity onPress={() => setAddMember(false)}>
           <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
         </TouchableOpacity>
         <Text style={styles.login}>Add Member</Text>
@@ -225,17 +227,17 @@ const AddMember = props => {
   );
 };
 
-export default AddMember;
+export default GroupAddMember;
 
-AddMember.propTypes = {
+GroupAddMember.propTypes = {
   currentGroup: PropTypes.objectOf(PropTypes.any),
-  SetAddMember: PropTypes.func,
+  setAddMember: PropTypes.func,
   onHandleToggleCreate: PropTypes.func,
   handleToggleChatRoom: PropTypes.func
 };
-AddMember.defaultProps = {
+GroupAddMember.defaultProps = {
   currentGroup: {},
-  SetAddMember: () => {},
+  setAddMember: () => {},
   onHandleToggleCreate: () => {},
   handleToggleChatRoom: () => {}
 };

@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
 import { View, Text } from 'native-base';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { GroupContext } from 'components/common/context/GroupContext';
 
 const HeaderChat = props => {
-  const { setChatOpen, setFooter, currentGroup, SetAddMember } = props;
+  const { currentGroup } = useContext(GroupContext);
+  const { setChatOpen, setFooter, setAddMember } = props;
   const { users, name } = currentGroup;
 
   const handleChatClose = () => {
@@ -26,7 +28,7 @@ const HeaderChat = props => {
         </View>
       </View>
       <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
-        <TouchableOpacity onPress={() => SetAddMember(true)}>
+        <TouchableOpacity onPress={() => setAddMember(true)}>
           <MaterialIcons name="group-add" size={32} color="black" />
         </TouchableOpacity>
       </View>
@@ -37,12 +39,12 @@ export default HeaderChat;
 
 HeaderChat.propTypes = {
   setChatOpen: PropTypes.func,
-  SetAddMember: PropTypes.func,
+  setAddMember: PropTypes.func,
   currentGroup: PropTypes.objectOf(PropTypes.any),
   setFooter: PropTypes.func
 };
 HeaderChat.defaultProps = {
-  SetAddMember: () => {},
+  setAddMember: () => {},
   setChatOpen: () => {},
   currentGroup: {},
   setFooter: () => {}

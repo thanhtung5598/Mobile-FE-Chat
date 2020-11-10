@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Keyboard, Image, FlatList } from 'react-native';
 import {
@@ -21,9 +21,10 @@ import { fetchAllGroup } from 'actions/groupActions';
 // Component
 import HeaderSearch from './../common/header';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
-import GroupCreate from './GroupCreate';
+import GroupCreate from 'screens/ScreenMain/common/ChatRoom/GroupCreate';
 import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
 import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
+import { GroupContext } from 'components/common/context/GroupContext';
 
 // action
 import {
@@ -33,6 +34,7 @@ import {
 } from 'actions/userActions';
 
 const GroupChat = props => {
+  const { setCurrentGroup } = useContext(GroupContext);
   const { footer, setFooter } = props;
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
@@ -44,7 +46,6 @@ const GroupChat = props => {
   const [find, setFind] = useState(false);
   const [isCreate, setCreate] = useState(false);
   const [isChatOpen, setChatOpen] = useState(false);
-  const [currentGroup, setCurrentGroup] = useState(null);
 
   const delayedQuery = useRef(
     _.debounce(q => dispatch(searchUserByPhoneEmailName(q)), 500)
@@ -169,7 +170,6 @@ const GroupChat = props => {
           <ChatRoom
             setChatOpen={setChatOpen}
             setFooter={setFooter}
-            currentGroup={currentGroup}
             typeChat="group"
           />
         )}
