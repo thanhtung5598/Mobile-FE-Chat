@@ -28,6 +28,7 @@ import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
 
 // Item Render
 import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
+import EmptyList from 'screens/ScreenMain/common/EmptyList';
 
 // action
 import {
@@ -177,7 +178,7 @@ const PhoneBook = props => {
               )}
             </Left>
             <Body style={{ borderBottomColor: 'white' }}>
-              <Text>Lời mời kết bạn</Text>
+              <Text>Friends Requested</Text>
             </Body>
           </ListItem>
         </TouchableOpacity>
@@ -196,7 +197,7 @@ const PhoneBook = props => {
               <FontAwesome name="address-book" size={24} color="white" />
             </Left>
             <Body style={{ borderBottomColor: 'white' }}>
-              <Text>Danh bạ từ máy</Text>
+              <Text>Sync Phonebook</Text>
             </Body>
           </ListItem>
         </TouchableOpacity>
@@ -228,6 +229,8 @@ const PhoneBook = props => {
       </>
     );
   };
+
+  const renderComponentEmpty = () => <EmptyList message={'Empty friends'} />;
 
   const renderItemPhonebook = ({ item: friend, index }) => {
     return (
@@ -306,6 +309,7 @@ const PhoneBook = props => {
             <FlatList
               data={listFriends}
               ListHeaderComponent={renderHeaderPhonebook}
+              ListEmptyComponent={renderComponentEmpty}
               renderItem={renderItemPhonebook}
               keyExtractor={item => `${item.id}`}
               refreshing={isLoading}

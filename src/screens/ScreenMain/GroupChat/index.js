@@ -24,6 +24,7 @@ import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import GroupCreate from 'screens/ScreenMain/common/ChatRoom/GroupCreate';
 import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
 import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
+import EmptyList from 'screens/ScreenMain/common/EmptyList';
 
 // action
 import {
@@ -162,6 +163,8 @@ const GroupChat = props => {
     );
   };
 
+  const renderComponentEmpty = () => <EmptyList message={'Empty groups'} />;
+
   return (
     <>
       <Container>
@@ -205,6 +208,7 @@ const GroupChat = props => {
               renderItem={renderItemPhonebook}
               keyExtractor={item => `${item._id}`}
               refreshing={isLoading}
+              ListEmptyComponent={renderComponentEmpty}
               onRefresh={handlePullToRefesh}
               onEndReached={() => handleLoadingMore(paginator, listGroups)}
               onEndReachedThreshold={0}
