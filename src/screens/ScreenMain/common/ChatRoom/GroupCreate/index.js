@@ -56,7 +56,7 @@ const CreateGroup = props => {
 
   const filterTextSearch = useCallback(() => {
     const tempList = JSON.parse(JSON.stringify(listFriends)); // deep clone
-    if (searchText === null) return [...tempList];
+    if (searchText === null) return tempList ? [...tempList] : [];
     const filterName = tempList.filter(
       item => item.name.toUpperCase().search(searchText.toUpperCase()) !== -1
     );

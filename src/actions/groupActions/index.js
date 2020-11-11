@@ -43,6 +43,7 @@ export const createGroupChat = data => dispatch => {
 
       dispatch(fetchAllGroup()).then(res => {
         const { listDataGroup } = res;
+        const { _id } = data;
         const groupNew = listDataGroup.filter(item => item._id === _id);
         dispatch({
           type: GROUP_TYPE.CREATE_GROUP_SUCCESS,

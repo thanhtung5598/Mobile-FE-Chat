@@ -15,7 +15,6 @@ const HeaderChat = props => {
   const dispatch = useDispatch();
   const { setChatOpen, setFooter, setAddMember } = props;
   const { currentGroup } = useSelector(state => state.groups);
-  const { users, name, _id } = currentGroup;
 
   const handleChatClose = () => {
     setChatOpen(false);
@@ -29,9 +28,10 @@ const HeaderChat = props => {
   };
 
   const handleExitRoom = () => {
-    dispatch(exitRoom(_id)).then(() => {
-      handleChatClose();
-    });
+    currentGroup &&
+      dispatch(exitRoom(currentGroup._id)).then(() => {
+        handleChatClose();
+      });
   };
 
   return (
@@ -44,7 +44,7 @@ const HeaderChat = props => {
         </TouchableOpacity>
         <View>
           <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.name}>{currentGroup && currentGroup.name}</Text>
             <TouchableOpacity
               onPress={() => modalRefName.current.toggleModal()}
             >
@@ -56,7 +56,9 @@ const HeaderChat = props => {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.time}>{users?.length} members</Text>
+          <Text style={styles.time}>
+            {currentGroup && currentGroup.users.length} members
+          </Text>
         </View>
       </View>
       <View style={{ alignSelf: 'center', flexDirection: 'row' }}>
