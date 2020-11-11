@@ -41,6 +41,7 @@ import {
   fetchRequestFriends,
   fetchListFriends
 } from 'actions/userActions';
+import { updateCurrentSingleGroup } from 'actions/groupActions';
 
 const PhoneBook = props => {
   const { setFooter } = props;
@@ -132,7 +133,8 @@ const PhoneBook = props => {
     dispatch(declineFriend(value));
   };
 
-  const handleToggleChatRoom = () => {
+  const handleToggleChatRoom = friend => {
+    dispatch(updateCurrentSingleGroup(friend));
     setChatOpen(true);
     setFooter(false);
   };
@@ -236,7 +238,7 @@ const PhoneBook = props => {
     return (
       <Fragment key={index}>
         <TouchableOpacity
-          onPress={() => handleToggleChatRoom(index)}
+          onPress={() => handleToggleChatRoom(friend)}
           onLongPress={() => handleToggleModal(index)}
         >
           <ItemFriends friend={friend} />
@@ -268,7 +270,11 @@ const PhoneBook = props => {
     <>
       <Container>
         {isChatOpen && (
-          <ChatRoom setChatOpen={setChatOpen} setFooter={setFooter} />
+          <ChatRoom
+            typeChat="single"
+            setChatOpen={setChatOpen}
+            setFooter={setFooter}
+          />
         )}
         {find && (
           <>

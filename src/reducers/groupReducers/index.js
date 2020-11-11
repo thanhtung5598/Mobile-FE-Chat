@@ -9,6 +9,7 @@ const initialState = {
   message: null,
   listGroups: null,
   currentGroup: null,
+  currentSingleGroup: null,
   paginator: null
 };
 
@@ -97,6 +98,11 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         currentGroup: action.payload
+      };
+    case GROUP_TYPE.CURRENT_SINGLE_GROUP_REQUEST:
+      return {
+        ...state,
+        currentSingleGroup: action.payload
       };
     default:
       return state;

@@ -89,6 +89,12 @@ export const updateCurrentGroup = currentGroup => dispatch => {
     payload: currentGroup
   });
 };
+export const updateCurrentSingleGroup = currentGroup => dispatch => {
+  dispatch({
+    type: GROUP_TYPE.CURRENT_SINGLE_GROUP_REQUEST,
+    payload: currentGroup
+  });
+};
 
 export const exitRoom = idRoom => dispatch => {
   dispatch({

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { StyleSheet } from 'react-native';
 import { View, Text } from 'native-base';
 import { Ionicons, Entypo } from '@expo/vector-icons';
@@ -7,6 +8,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const HeaderChat = props => {
   const { setChatOpen, setFooter } = props;
+  const { currentSingleGroup } = useSelector(state => state.groups);
+  const { name } = currentSingleGroup;
 
   const handleChatClose = () => {
     setChatOpen(false);
@@ -20,7 +23,7 @@ const HeaderChat = props => {
           <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
         </TouchableOpacity>
         <View>
-          <Text style={styles.name}>Thanh Huyền</Text>
+          <Text style={styles.name}>{name}</Text>
           <Text style={styles.time}>Vừa mới truy cập</Text>
         </View>
       </View>

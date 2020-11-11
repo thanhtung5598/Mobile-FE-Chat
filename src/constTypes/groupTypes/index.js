@@ -16,6 +16,7 @@ const GROUP_TYPE = {
   ...createRequestTypes('GROUP', 'UPDATE_GROUP_NAME'),
   ...createRequestTypes('GROUP', 'EXIT_GROUP'),
   ...createSingleRequested('GROUP', 'CURRENT_GROUP'),
+  ...createSingleRequested('GROUP', 'CURRENT_SINGLE_GROUP'),
   ...createRequestTypes('GROUP', 'ADD_MEMBER')
 };
 export default GROUP_TYPE;
