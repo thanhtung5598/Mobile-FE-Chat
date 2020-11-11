@@ -111,3 +111,30 @@ export const exitRoom = idRoom => dispatch => {
       return { error, data };
     });
 };
+
+export const addMemberGroup = (valueAdd, idRoom) => dispatch => {
+  dispatch({
+    type: GROUP_TYPE.ADD_MEMBER_REQUEST
+  });
+  return axiosServices
+    .put(`${prefix}members?id=${idRoom}`, valueAdd)
+    .then(res => {
+      const { error, data } = res.data;
+      dispatch({
+        type: GROUP_TYPE.ADD_MEMBER_SUCCESS
+      });
+      dispatch(fetchAllGroup()).then(res => {
+        const { listDataGroup } = res;
+        const groupNew = listDataGroup.filter(item => item._id === idRoom);
+        dispatch(updateCurrentGroup(groupNew[0]));
+      });
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      dispatch({
+        type: GROUP_TYPE.ADD_MEMBER_FAILURE
+      });
+      return { error, data };
+    });
+};
