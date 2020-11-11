@@ -1,5 +1,4 @@
 import React from 'react';
-import { FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Content, Tabs, Tab, Spinner } from 'native-base';
@@ -22,15 +21,6 @@ const FindFriends = props => {
     listFriendsWait,
     listRequestFriends
   });
-  const renderItemSyncPhone = ({ item: friend }) => (
-    <ItemFriends
-      friend={friend}
-      handleAddFriend={handleAddFriend}
-      status={true}
-    />
-  );
-
-  const renderEmptyComponent = () => <EmptyList message={'Nothing found'} />;
 
   return (
     <Content>
@@ -46,13 +36,21 @@ const FindFriends = props => {
           heading="All Result"
         >
           {isLoading && <Spinner />}
-          <FlatList
-            data={listFindFill?.filter(item => item.id !== dataUser.id)}
-            renderItem={renderItemSyncPhone}
-            keyExtractor={item => `${item.id}`}
-            refreshing={isLoading}
-            ListEmptyComponent={renderEmptyComponent}
-          />
+          {listFindFill
+            ?.filter(item => item.id !== dataUser.id)
+            .map(item => {
+              return (
+                <>
+                  <ItemFriends
+                    friend={item}
+                    handleAddFriend={handleAddFriend}
+                    status={true}
+                  />
+                </>
+              );
+            })}
+          {listFindFill?.filter(item => item.id !== dataUser.id).length ===
+            0 && <EmptyList message={'Nothing found'} />}
         </Tab>
       </Tabs>
     </Content>
