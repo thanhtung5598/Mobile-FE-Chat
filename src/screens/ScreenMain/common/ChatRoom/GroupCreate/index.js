@@ -27,7 +27,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 
 // actions
-import { createGroupChat, fetchAllGroup } from 'actions/groupActions';
+import { createGroupChat } from 'actions/groupActions';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
@@ -82,19 +82,17 @@ const CreateGroup = props => {
     return filterDoubleItem;
   }, [listFriends, searchText]);
 
-  const handleCreateNewGroup = () => {
+  const handleCreateNewGroup = async () => {
     const values = {
       list_user_id: listChecked,
       name:
         groupName.split('').length > 0 ? groupName : `${dataUser.name} group`
     };
-    dispatch(createGroupChat(values)).then(res => {
-      const { error } = res;
-      if (!error) {
-        handleToggleChatRoom();
-        dispatch(fetchAllGroup());
-      }
-    });
+    const res = await dispatch(createGroupChat(values));
+    const { error } = res;
+    if (!error) {
+      handleToggleChatRoom();
+    }
   };
 
   return (

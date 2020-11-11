@@ -1,6 +1,7 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { BlurView } from 'expo-blur';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import {
   Modal,
   View,
@@ -21,6 +22,7 @@ const defaultSchema = {
 };
 
 const ModalCustom = (props, ref) => {
+  const { isLoading } = useSelector(state => state.groups);
   const [visible, setVisible] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -60,8 +62,8 @@ const ModalCustom = (props, ref) => {
                   />
                 </View>
                 <Button block onPress={formikProps.handleSubmit}>
-                  {props.isLoading && <Spinner color="white" size="small" />}
-                  {!props.isLoading && <Text>Save</Text>}
+                  {isLoading && <Spinner color="white" size="small" />}
+                  {!isLoading && <Text>Save</Text>}
                 </Button>
               </>
             )}

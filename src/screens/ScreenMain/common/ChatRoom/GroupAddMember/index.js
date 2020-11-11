@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback, useContext } from 'react';
+import React, { useState, Fragment, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
@@ -25,21 +25,20 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { GroupContext } from 'components/common/context/GroupContext';
 
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
 const GroupAddMember = props => {
   const { setAddMember } = props;
-  const {
-    currentGroup: { users }
-  } = useContext(GroupContext);
 
   const [listChecked, setListChecked] = useState([]);
   const [searchText, setSearchText] = useState(null);
   // const dispatch = useDispatch();
   const { listFriends } = useSelector(state => state.friends);
   const { isLoadingCreate } = useSelector(state => state.groups);
+  const {
+    currentGroup: { users }
+  } = useSelector(state => state.groups);
 
   const handleCheckedItem = item_id => {
     const tempList = [...listChecked];

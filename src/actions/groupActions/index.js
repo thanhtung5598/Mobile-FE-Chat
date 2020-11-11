@@ -21,6 +21,7 @@ export const fetchAllGroup = (currentPage = 1, dataOld = null) => dispatch => {
           paginator: paginator
         }
       });
+      return { listDataGroup };
     })
     .catch(err => {
       const { error, data } = err.response?.data;
@@ -39,8 +40,14 @@ export const createGroupChat = data => dispatch => {
     .post(`${prefix}group`, data)
     .then(res => {
       const { error, data } = res.data;
-      dispatch({
-        type: GROUP_TYPE.CREATE_GROUP_SUCCESS
+
+      dispatch(fetchAllGroup()).then(res => {
+        const { listDataGroup } = res;
+        const groupNew = listDataGroup.filter(item => item._id === _id);
+        dispatch({
+          type: GROUP_TYPE.CREATE_GROUP_SUCCESS,
+          payload: groupNew[0]
+        });
       });
       return { error, data };
     })
@@ -52,30 +59,54 @@ export const createGroupChat = data => dispatch => {
       return { error, data };
     });
 };
-export const updateRoomName = (data, idRoom) => {
+export const updateRoomName = (dataUpdate, idRoom) => dispatch => {
+  dispatch({
+    type: GROUP_TYPE.UPDATE_GROUP_NAME_REQUEST
+  });
   return axiosServices
-    .put(`${prefix}?id=${idRoom}`, data)
+    .put(`${prefix}?id=${idRoom}`, dataUpdate)
     .then(res => {
       const { error, data } = res.data;
+      dispatch({
+        type: GROUP_TYPE.UPDATE_GROUP_NAME_SUCCESS,
+        payload: dataUpdate
+      });
       return { error, data };
     })
     .catch(err => {
       const { error, data } = err.response?.data;
+      dispatch({
+        type: GROUP_TYPE.UPDATE_GROUP_NAME_FAILURE
+      });
       return { error, data };
     });
 };
 
-export const exitRoom = idRoom => {
+export const updateCurrentGroup = currentGroup => dispatch => {
+  dispatch({
+    type: GROUP_TYPE.CURRENT_GROUP_REQUEST,
+    payload: currentGroup
+  });
+};
+
+export const exitRoom = idRoom => dispatch => {
+  dispatch({
+    type: GROUP_TYPE.EXIT_GROUP_REQUEST
+  });
   return axiosServices
-    .put(`${prefix}?id=${idRoom}`)
+    .put(`${prefix}exit?id=${idRoom}`)
     .then(res => {
       const { error, data } = res.data;
-      console.log('succ', data);
+      dispatch({
+        type: GROUP_TYPE.EXIT_GROUP_SUCCESS
+      });
       return { error, data };
     })
     .catch(err => {
       const { error, data } = err.response?.data;
-      console.log('err', data);
+      dispatch({
+        type: GROUP_TYPE.EXIT_GROUP_FAILURE
+      });
       return { error, data };
     });
 };

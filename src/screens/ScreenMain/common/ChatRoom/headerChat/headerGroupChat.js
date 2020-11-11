@@ -1,10 +1,10 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet } from 'react-native';
 import { View, Text } from 'native-base';
 import { Ionicons, MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { GroupContext } from 'components/common/context/GroupContext';
 import ModalOptionGroup from 'components/common/ComponentsCommon/Modal/modalOptionGroup';
 import ModalUpdateRoomName from 'components/common/ComponentsCommon/Modal/modalUpdateRoomName';
 import { updateRoomName, exitRoom } from 'actions/groupActions';
@@ -12,9 +12,9 @@ import { updateRoomName, exitRoom } from 'actions/groupActions';
 const HeaderChat = props => {
   const modalRef = useRef(null);
   const modalRefName = useRef(null);
-  const [isLoading, setLoading] = useState(false);
-  const { currentGroup, setCurrentGroup } = useContext(GroupContext);
+  const dispatch = useDispatch();
   const { setChatOpen, setFooter, setAddMember } = props;
+  const { currentGroup } = useSelector(state => state.groups);
   const { users, name, _id } = currentGroup;
 
   const handleChatClose = () => {
@@ -23,21 +23,13 @@ const HeaderChat = props => {
   };
 
   const onHandleSubmitAdd = value => {
-    setLoading(true);
-    updateRoomName(value, _id).then(() => {
-      setCurrentGroup({
-        ...currentGroup,
-        name: value.name
-      });
-      setLoading(false);
+    dispatch(updateRoomName(value, _id)).then(() => {
       modalRefName.current.toggleModal();
     });
   };
 
   const handleExitRoom = () => {
-    setLoading(true);
-    exitRoom(_id).then(() => {
-      setLoading(false);
+    dispatch(exitRoom(_id)).then(() => {
       handleChatClose();
     });
   };
@@ -45,11 +37,7 @@ const HeaderChat = props => {
   return (
     <View style={styles.rect}>
       <ModalOptionGroup ref={modalRef} handleExitRoom={handleExitRoom} />
-      <ModalUpdateRoomName
-        isLoading={isLoading}
-        onSubmit={onHandleSubmitAdd}
-        ref={modalRefName}
-      />
+      <ModalUpdateRoomName onSubmit={onHandleSubmitAdd} ref={modalRefName} />
       <View style={{ flexDirection: 'row' }}>
         <TouchableOpacity onPress={handleChatClose}>
           <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
@@ -68,7 +56,7 @@ const HeaderChat = props => {
               />
             </TouchableOpacity>
           </View>
-          <Text style={styles.time}>{users.length} members</Text>
+          <Text style={styles.time}>{users?.length} members</Text>
         </View>
       </View>
       <View style={{ alignSelf: 'center', flexDirection: 'row' }}>

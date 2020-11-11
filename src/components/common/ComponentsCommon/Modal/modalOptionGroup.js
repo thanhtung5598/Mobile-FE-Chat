@@ -1,14 +1,16 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { BlurView } from 'expo-blur';
 import { Modal, StyleSheet, TouchableWithoutFeedback } from 'react-native';
-import { View, Text, ListItem } from 'native-base';
+import { View, Text, ListItem, Spinner } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 
 const ModalCustom = (props, ref) => {
+  const { isLoadingExit } = useSelector(state => state.groups);
   const [visible, setVisible] = useState(false);
-
+  console.log(isLoadingExit);
   useImperativeHandle(ref, () => ({
     toggleModal: () => {
       setVisible(!visible);
@@ -27,7 +29,10 @@ const ModalCustom = (props, ref) => {
           />
         </TouchableWithoutFeedback>
         <View style={styles.modalView}>
-          <TouchableOpacity onPress={props.handleExitRoom}>
+          <TouchableOpacity
+            disabled={isLoadingExit}
+            onPress={props.handleExitRoom}
+          >
             <ListItem>
               <Text style={{ marginRight: 10 }}>
                 <Ionicons name="md-exit" size={28} color="black" />
@@ -43,6 +48,7 @@ const ModalCustom = (props, ref) => {
               </Text>
             </ListItem>
           </TouchableOpacity>
+          {isLoadingExit && <Spinner size="small" />}
         </View>
       </View>
     </Modal>

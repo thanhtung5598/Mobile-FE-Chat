@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Keyboard, Image, FlatList } from 'react-native';
 import {
@@ -24,7 +24,6 @@ import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import GroupCreate from 'screens/ScreenMain/common/ChatRoom/GroupCreate';
 import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
 import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
-import { GroupContext } from 'components/common/context/GroupContext';
 
 // action
 import {
@@ -32,9 +31,9 @@ import {
   clearSearch,
   addFriend
 } from 'actions/userActions';
+import { updateCurrentGroup } from 'actions/groupActions';
 
 const GroupChat = props => {
-  const { setCurrentGroup } = useContext(GroupContext);
   const { footer, setFooter } = props;
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
@@ -81,7 +80,7 @@ const GroupChat = props => {
   };
 
   const handleToggleChatRoom = group => {
-    setCurrentGroup(group);
+    dispatch(updateCurrentGroup(group));
     setChatOpen(true);
     setCreate(false);
     setFooter(false);
