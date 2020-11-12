@@ -31,6 +31,7 @@
     "lodash": "^4.17.20",
     "lottie-react-native": "2.6.1",
     "moment": "^2.29.1",
+    "mongodb": "^3.6.3",
     "native-base": "^2.13.14",
     "prop-types": "^15.7.2",
     "react": "16.13.1",
@@ -50,6 +51,8 @@
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
+    "socket.io-client": "^3.0.1",
+    "use-socket.io-client": "^1.1.0",
     "yup": "^0.29.3"
   },
   "devDependencies": {
