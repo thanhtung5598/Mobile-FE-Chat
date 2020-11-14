@@ -19,7 +19,7 @@ import {
   fetchListFriends,
   fetchFriendsWait
 } from 'actions/userActions';
-import { fetchAllGroup } from 'actions/groupActions';
+import { fetchAllGroup, fetchAllGroupsForChecked } from 'actions/groupActions';
 
 Platform.OS === 'android' && StatusBar.setHidden(true);
 const Tab = createBottomTabNavigator();
@@ -35,6 +35,7 @@ const MainTab = ({ navigation }) => {
     dispatch(fetchListFriends());
     dispatch(fetchPhonebookSync());
     dispatch(fetchAllGroup());
+    dispatch(fetchAllGroupsForChecked());
   }, [dispatch]);
 
   return (

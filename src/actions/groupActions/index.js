@@ -3,7 +3,10 @@ import { GROUP_TYPE } from 'constTypes';
 
 const prefix = 'rooms/';
 
-export const fetchAllGroup = (currentPage = 1, dataOld = null) => dispatch => {
+export const fetchAllGroup = (
+  currentPage = 1,
+  dataOld = null
+) => async dispatch => {
   dispatch({
     type: GROUP_TYPE.FETCH_ALL_GROUP_REQUEST
   });
@@ -14,10 +17,11 @@ export const fetchAllGroup = (currentPage = 1, dataOld = null) => dispatch => {
         data: { itemsList, paginator }
       } = res.data;
       const listDataGroup = dataOld ? [...dataOld, ...itemsList] : itemsList;
+      const listGroup = listDataGroup.filter(item => item.group === true);
       dispatch({
         type: GROUP_TYPE.FETCH_ALL_GROUP_SUCCESS,
         payload: {
-          listGroups: listDataGroup,
+          listGroups: listGroup,
           paginator: paginator
         }
       });
@@ -32,6 +36,37 @@ export const fetchAllGroup = (currentPage = 1, dataOld = null) => dispatch => {
     });
 };
 
+export const fetchAllGroupsForChecked = () => dispatch => {
+  return axiosServices
+    .get(`https://api-chat.ga/api/v0/rooms?currentPage=1&perPage=1000`)
+    .then(res => {
+      const {
+        data: { itemsList }
+      } = res.data;
+      const singleGroups = itemsList.filter(item => item.group === false);
+      dispatch({
+        type: GROUP_TYPE.FETCH_ALL_GROUP_CHECKED_REQUEST,
+        payload: singleGroups
+      });
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      return { error, data };
+    });
+};
+
+export const createSingleRoom = (friend_id, data) => {
+  return axiosServices
+    .post(`${prefix}single?friend_id=${friend_id}`, data)
+    .then(res => {
+      const { error, data } = res.data;
+      return { error, data };
+    })
+    .catch(err => {
+      const { error, data } = err.response?.data;
+      return { error, data };
+    });
+};
 export const createGroupChat = data => dispatch => {
   dispatch({
     type: GROUP_TYPE.CREATE_GROUP_REQUEST

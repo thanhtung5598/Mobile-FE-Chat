@@ -6,7 +6,7 @@ const defaultTung =
   'https://scontent.fvca1-1.fna.fbcdn.net/v/t1.0-1/p480x480/104483297_1777530932386533_1453571394136712521_o.jpg?_nc_cat=108&ccb=2&_nc_sid=7206a8&_nc_ohc=FSu8nvfDN9kAX8_HvuJ&_nc_ht=scontent.fvca1-1.fna&tp=6&oh=66e12bcbe04cbfda87c361d29d819f41&oe=5FC0B54A';
 
 const RightChat = props => {
-  const { message } = props;
+  const { message, name } = props;
   return (
     <View
       style={{
@@ -26,7 +26,7 @@ const RightChat = props => {
           }}
         >
           <Text style={{ fontSize: 13, color: 'rgb(138, 141, 145)' }}>
-            Tùng
+            {name}
           </Text>
         </View>
         {message.map((text, index) => (
@@ -56,8 +56,10 @@ const RightChat = props => {
 export default RightChat;
 
 RightChat.propTypes = {
-  message: PropTypes.array
+  message: PropTypes.array,
+  name: PropTypes.string
 };
 RightChat.defaultProps = {
-  message: []
+  message: [],
+  name: ''
 };

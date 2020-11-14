@@ -1,11 +1,11 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { HeaderGroupChat, HeaderSingleChat } from './headerChat';
 import BodyChat from './bodyChat';
-import FooterChat from './footerChat';
 import GroupAddMember from './GroupAddMember';
 import { fetchAllGroup } from 'actions/groupActions';
+import { KeyboardAvoidingView } from 'react-native';
 
 const ChatRoom = props => {
   const dispatch = useDispatch();
@@ -19,7 +19,9 @@ const ChatRoom = props => {
   }, [dispatch]);
 
   return (
-    <Fragment>
+    <KeyboardAvoidingView
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+    >
       {isAddMember && <GroupAddMember setAddMember={setAddMember} />}
       {!isAddMember && (
         <>
@@ -34,10 +36,9 @@ const ChatRoom = props => {
             <HeaderSingleChat setChatOpen={setChatOpen} setFooter={setFooter} />
           )}
           <BodyChat />
-          <FooterChat />
         </>
       )}
-    </Fragment>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -17,22 +17,30 @@ const HeaderChat = props => {
   };
 
   return (
-    <View style={styles.rect}>
-      <View style={{ flexDirection: 'row' }}>
-        <TouchableOpacity onPress={handleChatClose}>
-          <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
-        </TouchableOpacity>
-        <View>
-          <Text style={styles.name}>{name}</Text>
-          <Text style={styles.time}>Vừa mới truy cập</Text>
+    <>
+      <View
+        style={
+          Platform.OS === 'android'
+            ? { ...styles.rect }
+            : { ...styles.rect, paddingTop: '15%' }
+        }
+      >
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity onPress={handleChatClose}>
+            <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.time}>Vừa mới truy cập</Text>
+          </View>
+        </View>
+        <View style={{ alignSelf: 'center' }}>
+          <TouchableOpacity>
+            <Entypo name="dots-three-horizontal" size={28} color="black" />
+          </TouchableOpacity>
         </View>
       </View>
-      <View style={{ alignSelf: 'center' }}>
-        <TouchableOpacity>
-          <Entypo name="dots-three-horizontal" size={28} color="black" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </>
   );
 };
 export default HeaderChat;
@@ -50,7 +58,6 @@ const styles = StyleSheet.create({
   rect: {
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: '15%',
     backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',

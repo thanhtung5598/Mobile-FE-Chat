@@ -97,7 +97,13 @@ const CreateGroup = props => {
 
   return (
     <Container>
-      <View style={styles.rect}>
+      <View
+        style={
+          Platform.OS === 'android'
+            ? { ...styles.rect }
+            : { ...styles.rect, paddingTop: '15%' }
+        }
+      >
         <TouchableOpacity onPress={onHandleToggleCreate}>
           <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
         </TouchableOpacity>
@@ -247,7 +253,6 @@ const styles = StyleSheet.create({
   },
   rect: {
     paddingLeft: 20,
-    paddingTop: '15%',
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'white',

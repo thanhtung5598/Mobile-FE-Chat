@@ -7,6 +7,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
 const ItemFriendRequired = ({
+  styles,
   friend,
   handleDeclineFriend,
   handleAcceptFriend
@@ -65,11 +66,13 @@ export default ItemFriendRequired;
 ItemFriendRequired.propTypes = {
   handleAcceptFriend: PropTypes.func,
   handleDeclineFriend: PropTypes.func,
-  friend: PropTypes.objectOf(PropTypes.any)
+  friend: PropTypes.objectOf(PropTypes.any),
+  styles: PropTypes.objectOf(PropTypes.any)
 };
 
 ItemFriendRequired.defaultProps = {
   handleAcceptFriend: () => {},
   handleDeclineFriend: () => {},
-  friend: {}
+  friend: {},
+  styles: {}
 };

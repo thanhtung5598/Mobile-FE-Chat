@@ -24,6 +24,7 @@ const FriendRequest = props => {
 
   const renderItemFriendRequired = ({ item: friend }) => (
     <ItemFriendsRequired
+      styles={styles}
       friend={friend}
       handleDeclineFriend={handleDeclineFriend}
       handleAcceptFriend={handleAcceptFriend}

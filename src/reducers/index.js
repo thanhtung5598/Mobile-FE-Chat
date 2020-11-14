@@ -5,6 +5,7 @@ import dataUser from './userReducer';
 import listUsers from './userSearch';
 import friends from './friendReducer';
 import groups from './groupReducers';
+import groupChecks from './groupReducers/groupCheck';
 
 const appReducer = combineReducers({
   authen,
@@ -12,7 +13,8 @@ const appReducer = combineReducers({
   listUsers,
   friends,
   authVerify,
-  groups
+  groups,
+  groupChecks
 });
 
 export default appReducer;

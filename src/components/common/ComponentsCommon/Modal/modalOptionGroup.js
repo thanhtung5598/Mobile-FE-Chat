@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 const ModalCustom = (props, ref) => {
   const { isLoadingExit } = useSelector(state => state.groups);
   const [visible, setVisible] = useState(false);
-  console.log(isLoadingExit);
+
   useImperativeHandle(ref, () => ({
     toggleModal: () => {
       setVisible(!visible);

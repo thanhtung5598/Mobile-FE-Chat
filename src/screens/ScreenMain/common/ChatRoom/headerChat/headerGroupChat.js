@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { View, Text } from 'native-base';
 import { Ionicons, MaterialIcons, Entypo, AntDesign } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -35,7 +35,13 @@ const HeaderChat = props => {
   };
 
   return (
-    <View style={styles.rect}>
+    <View
+      style={
+        Platform.OS === 'android'
+          ? { ...styles.rect }
+          : { ...styles.rect, paddingTop: '15%' }
+      }
+    >
       <ModalOptionGroup ref={modalRef} handleExitRoom={handleExitRoom} />
       <ModalUpdateRoomName onSubmit={onHandleSubmitAdd} ref={modalRefName} />
       <View style={{ flexDirection: 'row' }}>
@@ -95,7 +101,6 @@ const styles = StyleSheet.create({
   rect: {
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: '15%',
     backgroundColor: 'white',
     flexDirection: 'row',
     justifyContent: 'space-between',

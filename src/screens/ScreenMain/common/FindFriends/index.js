@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Content, Tabs, Tab, Spinner } from 'native-base';
@@ -38,15 +38,15 @@ const FindFriends = props => {
           {isLoading && <Spinner />}
           {listFindFill
             ?.filter(item => item.id !== dataUser.id)
-            .map(item => {
+            .map((item, index) => {
               return (
-                <>
+                <Fragment key={index}>
                   <ItemFriends
                     friend={item}
                     handleAddFriend={handleAddFriend}
                     status={true}
                   />
-                </>
+                </Fragment>
               );
             })}
           {listFindFill?.filter(item => item.id !== dataUser.id).length ===
