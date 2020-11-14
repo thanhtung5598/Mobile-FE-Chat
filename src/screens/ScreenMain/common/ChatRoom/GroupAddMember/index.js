@@ -39,7 +39,7 @@ const GroupAddMember = props => {
   const { isLoadingAddMember } = useSelector(state => state.groups);
   const {
     currentGroup: { users, _id: idGroup }
-  } = useSelector(state => state.groups);
+  } = useSelector(state => state.groupSelected);
 
   const handleCheckedItem = item_id => {
     const tempList = [...listChecked];

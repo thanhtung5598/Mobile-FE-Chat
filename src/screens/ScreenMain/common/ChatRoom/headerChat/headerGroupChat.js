@@ -14,7 +14,7 @@ const HeaderChat = props => {
   const modalRefName = useRef(null);
   const dispatch = useDispatch();
   const { setChatOpen, setFooter, setAddMember } = props;
-  const { currentGroup } = useSelector(state => state.groups);
+  const { currentGroup } = useSelector(state => state.groupSelected);
 
   const handleChatClose = () => {
     setChatOpen(false);
@@ -22,7 +22,7 @@ const HeaderChat = props => {
   };
 
   const onHandleSubmitAdd = value => {
-    dispatch(updateRoomName(value, _id)).then(() => {
+    dispatch(updateRoomName(value, currentGroup._id)).then(() => {
       modalRefName.current.toggleModal();
     });
   };

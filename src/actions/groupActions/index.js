@@ -81,9 +81,9 @@ export const createGroupChat = data => dispatch => {
         const { _id } = data;
         const groupNew = listDataGroup.filter(item => item._id === _id);
         dispatch({
-          type: GROUP_TYPE.CREATE_GROUP_SUCCESS,
-          payload: groupNew[0]
+          type: GROUP_TYPE.CREATE_GROUP_SUCCESS
         });
+        dispatch(updateCurrentGroup(groupNew[0]));
       });
       return { error, data };
     })

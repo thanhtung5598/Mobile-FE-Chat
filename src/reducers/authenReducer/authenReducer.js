@@ -23,7 +23,7 @@ const AuthenReducer = (state = initialState, action) => {
         isAuthenticated: true,
         error: null,
         message: null,
-        auth_token: action.payload
+        auth_token: action.payload.accessToken
       };
     case AUTHENTICATION_TYPE.LOGIN_FAILURE:
       return {

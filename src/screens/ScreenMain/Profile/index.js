@@ -50,7 +50,6 @@ const Profile = ({ navigation }) => {
               avatar: data
             };
             if (data) {
-              console.log('here');
               dispatch(updateProfile(dataUpdated, 2));
             }
           });
@@ -81,6 +80,7 @@ const Profile = ({ navigation }) => {
 
   return (
     <Container>
+      <ModalUpdatedName onSubmit={onHandleSubmitAdd} ref={modalRef} />
       <SafeAreaView style={{ height: '100%' }}>
         <FlatList
           ListHeaderComponent={() => (
@@ -120,10 +120,6 @@ const Profile = ({ navigation }) => {
                       color="white"
                     />
                   </TouchableOpacity>
-                  <ModalUpdatedName
-                    onSubmit={onHandleSubmitAdd}
-                    ref={modalRef}
-                  />
                 </View>
                 <View style={styles.SettingStyle}>
                   <TouchableOpacity onPress={() => navigation.toggleDrawer()}>

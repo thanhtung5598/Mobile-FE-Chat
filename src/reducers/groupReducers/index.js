@@ -8,8 +8,6 @@ const initialState = {
   isLoadingAddMember: false,
   message: null,
   listGroups: null,
-  currentGroup: null,
-  currentSingleGroup: null,
   paginator: null
 };
 
@@ -41,28 +39,12 @@ const AuthenReducer = (state = initialState, action) => {
     case GROUP_TYPE.CREATE_GROUP_SUCCESS:
       return {
         ...state,
-        isLoadingCreate: false,
-        currentGroup: action.payload
+        isLoadingCreate: false
       };
     case GROUP_TYPE.CREATE_GROUP_FAILURE:
       return {
         ...state,
         isLoadingCreate: false
-      };
-    case GROUP_TYPE.UPDATE_GROUP_NAME_REQUEST:
-      return {
-        ...state,
-        isLoading: true
-      };
-    case GROUP_TYPE.UPDATE_GROUP_NAME_SUCCESS:
-      return {
-        ...state,
-        isLoading: false
-      };
-    case GROUP_TYPE.UPDATE_GROUP_NAME_FAILURE:
-      return {
-        ...state,
-        isLoading: false
       };
     case GROUP_TYPE.EXIT_GROUP_REQUEST:
       return {
@@ -93,16 +75,6 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoadingAddMember: false
-      };
-    case GROUP_TYPE.CURRENT_GROUP_REQUEST:
-      return {
-        ...state,
-        currentGroup: action.payload
-      };
-    case GROUP_TYPE.CURRENT_SINGLE_GROUP_REQUEST:
-      return {
-        ...state,
-        currentSingleGroup: action.payload
       };
     default:
       return state;

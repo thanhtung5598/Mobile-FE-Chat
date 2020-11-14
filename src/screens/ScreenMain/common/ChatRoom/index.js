@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { HeaderGroupChat, HeaderSingleChat } from './headerChat';
-import BodyChat from './bodyChat';
+import BodySingleChat from './bodyChat';
 import GroupAddMember from './GroupAddMember';
 import { fetchAllGroup } from 'actions/groupActions';
-import { KeyboardAvoidingView } from 'react-native';
+import { Container } from 'native-base';
 
 const ChatRoom = props => {
   const dispatch = useDispatch();
@@ -19,9 +19,7 @@ const ChatRoom = props => {
   }, [dispatch]);
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-    >
+    <Container>
       {isAddMember && <GroupAddMember setAddMember={setAddMember} />}
       {!isAddMember && (
         <>
@@ -33,12 +31,17 @@ const ChatRoom = props => {
             />
           )}
           {typeChat === 'single' && (
-            <HeaderSingleChat setChatOpen={setChatOpen} setFooter={setFooter} />
+            <>
+              <HeaderSingleChat
+                setChatOpen={setChatOpen}
+                setFooter={setFooter}
+              />
+              <BodySingleChat />
+            </>
           )}
-          <BodyChat />
         </>
       )}
-    </KeyboardAvoidingView>
+    </Container>
   );
 };
 
@@ -46,13 +49,11 @@ export default ChatRoom;
 
 ChatRoom.propTypes = {
   typeChat: PropTypes.string,
-  currentGroup: PropTypes.objectOf(PropTypes.any),
   setChatOpen: PropTypes.func,
   setFooter: PropTypes.func
 };
 ChatRoom.defaultProps = {
   typeChat: '',
-  currentGroup: {},
   setChatOpen: () => {},
   setFooter: () => {}
 };

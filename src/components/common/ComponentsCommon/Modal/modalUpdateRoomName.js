@@ -22,7 +22,7 @@ const defaultSchema = {
 };
 
 const ModalCustom = (props, ref) => {
-  const { isLoading } = useSelector(state => state.groups);
+  const { isLoading } = useSelector(state => state.groupSelected);
   const [visible, setVisible] = useState(false);
 
   useImperativeHandle(ref, () => ({

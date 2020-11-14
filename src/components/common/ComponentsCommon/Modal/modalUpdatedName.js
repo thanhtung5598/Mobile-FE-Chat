@@ -21,7 +21,7 @@ const defaultSchema = {
 };
 
 const ModalCustom = (props, ref) => {
-  const { isLoading } = useSelector(state => state.dataUser);
+  const { isLoadingChangeName } = useSelector(state => state.dataUser);
   const [visible, setVisible] = useState(false);
 
   useImperativeHandle(ref, () => ({
@@ -61,8 +61,10 @@ const ModalCustom = (props, ref) => {
                   />
                 </View>
                 <Button block onPress={formikProps.handleSubmit}>
-                  {isLoading && <Spinner color="white" size="small" />}
-                  {!isLoading && <Text>Save</Text>}
+                  {isLoadingChangeName && (
+                    <Spinner color="white" size="small" />
+                  )}
+                  {!isLoadingChangeName && <Text>Save</Text>}
                 </Button>
               </>
             )}

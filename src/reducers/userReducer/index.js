@@ -3,6 +3,7 @@ import { PROFILE_TYPE } from 'constTypes';
 const initialState = {
   error: null,
   isLoadingAvatar: false,
+  isLoadingChangeName: false,
   isLoading: false,
   dataUser: null,
   message: null
@@ -38,7 +39,7 @@ const AuthenReducer = (state = initialState, action) => {
     case PROFILE_TYPE.UPDATE_PROFILE_REQUEST:
       return {
         ...state,
-        isLoading: true
+        isLoadingChangeName: true
       };
     case PROFILE_TYPE.UPDATE_PROFILE_SUCCESS:
       return {
@@ -49,12 +50,12 @@ const AuthenReducer = (state = initialState, action) => {
           avatar: action.payload.avatar
         },
         isLoadingAvatar: false,
-        isLoading: false
+        isLoadingChangeName: false
       };
     case PROFILE_TYPE.UPDATE_PROFILE_FAILURE:
       return {
         ...state,
-        isLoading: false,
+        isLoadingChangeName: false,
         isLoadingAvatar: false,
         error: null
       };

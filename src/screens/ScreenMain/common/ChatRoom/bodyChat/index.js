@@ -17,7 +17,7 @@ const BodyChat = () => {
   const { socket } = useContext(SocketContext);
   const { dataUser } = useSelector(state => state.dataUser);
   const { singleGroups } = useSelector(state => state.groupChecks);
-  const { currentSingleGroup } = useSelector(state => state.groups);
+  const { currentSingleGroup } = useSelector(state => state.groupSelected);
   const { messages, setMessages } = useChatSocket({
     singleGroups,
     currentSingleGroup,
