@@ -40,7 +40,8 @@ const BodyChat = () => {
   };
 
   const renderItem = ({ item: itemMess, index }) => {
-    if (!itemMess) return;
+    console.log('itemMess', itemMess);
+    if (itemMess?.length === 0) return;
     if (itemMess.user.id === dataUser.id) {
       return (
         <>
@@ -96,7 +97,7 @@ const BodyChat = () => {
         ref={scrollViewRef}
         inverted={true}
         renderItem={renderItem}
-        keyExtractor={item => `${item._id}`}
+        keyExtractor={item => `${item.length > 0 ? item._id : Math.random()}`}
         onEndReached={() => scrollViewRef.current.scrollToEnd()}
       />
     </>

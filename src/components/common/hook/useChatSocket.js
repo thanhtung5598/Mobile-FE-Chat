@@ -41,7 +41,7 @@ const useChatSocket = ({ dataUser }) => {
         });
       });
       if (isGroupCreated.length > 0) {
-        // setMessages([...isGroupCreated[0].messages]);
+        console.log('old');
         const info = {
           list_user: [
             {
@@ -63,34 +63,40 @@ const useChatSocket = ({ dataUser }) => {
         });
       }
       if (isGroupCreated.length === 0) {
+        console.log('new');
         createSingleRoom(currentGroup.id, {
           name: 'C'
-        }).then(res => {
-          const { data, error } = res;
-          if (!error) {
-            const info = {
-              list_user: [
-                {
-                  id: dataUser.id,
-                  name: dataUser.name
-                },
-                {
-                  id: currentGroup.id,
-                  name: currentGroup.name
-                }
-              ],
-              roomId: data._id, // if roomId khong ton tai se tu tao 1 room moi, if 2 user da co room single thi se tu dong tao group co 2 ng
-              positionUserCurrent: 0 // day la vi tri user dang login laf Truong
-            };
-            socket.emit('join', info);
-            socket.emit('rooms_request', currentGroup.id);
-            const listMess = [];
-            socket.on('load_message', function (msg) {
-              listMess.push(msg);
-              setMessages([...listMess]);
-            });
-          }
-        });
+        })
+          .then(res => {
+            const { data, error } = res;
+            if (!error) {
+              const info = {
+                list_user: [
+                  {
+                    id: dataUser.id,
+                    name: dataUser.name
+                  },
+                  {
+                    id: currentGroup.id,
+                    name: currentGroup.name
+                  }
+                ],
+                roomId: data._id, // if roomId khong ton tai se tu tao 1 room moi, if 2 user da co room single thi se tu dong tao group co 2 ng
+                positionUserCurrent: 0 // day la vi tri user dang login laf Truong
+              };
+              socket.emit('join', info);
+              socket.emit('rooms_request', currentGroup.id);
+              const listMess = [];
+              socket.on('load_message', function (msg) {
+                listMess.push(msg);
+                setMessages([...listMess]);
+              });
+            }
+          })
+          .catch(err => {
+            const { data } = err.response?.data;
+            console.log(data);
+          });
       }
     }
   }, [

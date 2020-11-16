@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useSocket from 'use-socket.io-client';
 import { useSelector } from 'react-redux';
+import { createSingleRoom } from 'actions/groupActions';
 
 const SocketContext = React.createContext();
 const SocketConsumer = SocketContext.Consumer;
@@ -19,6 +20,15 @@ const SocketProvider = props => {
     pingTimeout: 5000,
     cookie: false
   });
+  useEffect(() => {
+    try {
+      createSingleRoom(1, {
+        name: 'C'
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
   return (
     <SocketContext.Provider value={{ socket }}>
       {props.children}
