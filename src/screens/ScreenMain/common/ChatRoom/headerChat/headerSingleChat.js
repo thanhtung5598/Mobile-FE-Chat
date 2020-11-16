@@ -8,8 +8,8 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const HeaderChat = props => {
   const { setChatOpen, setFooter } = props;
-  const { currentSingleGroup } = useSelector(state => state.groupSelected);
-  const { name } = currentSingleGroup;
+  const { currentGroup } = useSelector(state => state.groupSelected);
+  const { name } = currentGroup;
 
   const handleChatClose = () => {
     setChatOpen(false);

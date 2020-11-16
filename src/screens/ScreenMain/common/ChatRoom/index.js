@@ -1,22 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { HeaderGroupChat, HeaderSingleChat } from './headerChat';
 import BodySingleChat from './bodyChat';
 import GroupAddMember from './GroupAddMember';
-import { fetchAllGroup } from 'actions/groupActions';
 import { Container } from 'native-base';
+import { SocketContext } from 'components/common/context/SocketContext';
 
 const ChatRoom = props => {
-  const dispatch = useDispatch();
   const [isAddMember, setAddMember] = useState(false);
   const { setChatOpen, setFooter, typeChat } = props;
+  const { socket } = useContext(SocketContext);
+  const { dataUser } = useSelector(state => state.dataUser);
 
   useEffect(() => {
     return () => {
-      dispatch(fetchAllGroup());
+      socket.emit('rooms_request', dataUser.id);
     };
-  }, [dispatch]);
+  }, [dataUser.id, socket]);
 
   return (
     <Container>

@@ -16,7 +16,6 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { fetchAllGroup } from 'actions/groupActions';
 
 // Component
 import HeaderSearch from './../common/header';
@@ -33,14 +32,15 @@ import {
   addFriend
 } from 'actions/userActions';
 import { updateCurrentGroup } from 'actions/groupActions';
+import useFetchAllGroups from 'components/common/hook/useFetchAllGroups';
 
 const GroupChat = props => {
   const { footer, setFooter } = props;
   const dispatch = useDispatch();
+  const [isLoading, setLoading] = useState(false);
+  const [numInit, setNumInit] = useState(8);
   const { dataUser } = useSelector(state => state.dataUser);
-  const { listGroups, paginator, isLoading } = useSelector(
-    state => state.groups
-  );
+  const { listGroups } = useFetchAllGroups({ dataUser });
 
   const [userQuery, setUserQuery] = useState('');
   const [find, setFind] = useState(false);
@@ -145,14 +145,15 @@ const GroupChat = props => {
   };
 
   const handlePullToRefesh = () => {
-    dispatch(fetchAllGroup());
+    setNumInit(8);
   };
 
-  const handleLoadingMore = (paginator, listGroups) => {
-    const { next } = paginator;
-    if (next) {
-      dispatch(fetchAllGroup(next, listGroups));
-    }
+  const handleLoadingMore = () => {
+    setTimeout(() => {
+      setLoading(true);
+      setNumInit(numInit + 8);
+      setLoading(false);
+    }, 800);
   };
 
   const renderItemPhonebook = ({ item: group }) => {
@@ -202,7 +203,7 @@ const GroupChat = props => {
               handleTurnBack={handleTurnBack}
             />
             <FlatList
-              data={listGroups}
+              data={listGroups.slice(0, numInit)}
               ListHeaderComponent={renderListHeaderGroup}
               ListFooterComponent={() => isLoading && <Spinner />}
               renderItem={renderItemPhonebook}
@@ -210,7 +211,7 @@ const GroupChat = props => {
               refreshing={isLoading}
               ListEmptyComponent={renderComponentEmpty}
               onRefresh={handlePullToRefesh}
-              onEndReached={() => handleLoadingMore(paginator, listGroups)}
+              onEndReached={handleLoadingMore}
               onEndReachedThreshold={0}
             />
           </>

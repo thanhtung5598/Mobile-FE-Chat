@@ -1,10 +1,10 @@
 import React, { useState, useContext, useRef } from 'react';
 import { Image } from 'react-native';
+import { useSelector } from 'react-redux';
 import { Content, View, Text } from 'native-base';
 import LeftChat from './LeftChat';
 import RightChat from './RightChat';
 import { SocketContext } from 'components/common/context/SocketContext';
-import { useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
 import HeaderChat from '../footerChat';
 import useChatSocket from 'components/common/hook/useChatSocket';
@@ -16,11 +16,7 @@ const BodyChat = () => {
   const [textChat, setTextChat] = useState('');
   const { socket } = useContext(SocketContext);
   const { dataUser } = useSelector(state => state.dataUser);
-  const { singleGroups } = useSelector(state => state.groupChecks);
-  const { currentSingleGroup } = useSelector(state => state.groupSelected);
   const { messages, setMessages } = useChatSocket({
-    singleGroups,
-    currentSingleGroup,
     dataUser
   });
 
@@ -44,6 +40,7 @@ const BodyChat = () => {
   };
 
   const renderItem = ({ item: itemMess, index }) => {
+    if (!itemMess) return;
     if (itemMess.user.id === dataUser.id) {
       return (
         <>

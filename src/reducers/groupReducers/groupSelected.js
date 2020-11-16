@@ -4,8 +4,7 @@ const initialState = {
   error: null,
   message: null,
   isLoading: false,
-  currentGroup: null,
-  currentSingleGroup: null
+  currentGroup: null
 };
 
 const AuthenReducer = (state = initialState, action) => {
@@ -34,11 +33,7 @@ const AuthenReducer = (state = initialState, action) => {
         ...state,
         currentGroup: action.payload
       };
-    case GROUP_TYPE.CURRENT_SINGLE_GROUP_REQUEST:
-      return {
-        ...state,
-        currentSingleGroup: action.payload
-      };
+
     default:
       return state;
   }

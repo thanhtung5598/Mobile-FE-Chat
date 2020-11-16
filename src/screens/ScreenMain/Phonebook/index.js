@@ -41,7 +41,7 @@ import {
   fetchRequestFriends,
   fetchListFriends
 } from 'actions/userActions';
-import { updateCurrentSingleGroup } from 'actions/groupActions';
+import { updateCurrentGroup } from 'actions/groupActions';
 
 const PhoneBook = props => {
   const { setFooter } = props;
@@ -134,7 +134,7 @@ const PhoneBook = props => {
   };
 
   const handleToggleChatRoom = friend => {
-    dispatch(updateCurrentSingleGroup(friend));
+    dispatch(updateCurrentGroup(friend));
     setChatOpen(true);
     setFooter(false);
   };
