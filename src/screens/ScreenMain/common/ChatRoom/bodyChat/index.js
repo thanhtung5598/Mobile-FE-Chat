@@ -10,7 +10,7 @@ import HeaderChat from '../footerChat';
 import useChatSocket from 'components/common/hook/useChatSocket';
 import ModalRemoveMess from 'components/common/ComponentsCommon/Modal/modalRemoveMess';
 
-const BodyChat = () => {
+const BodySingleChat = () => {
   const scrollViewRef = useRef(null);
   const [position, setPosition] = useState(null);
   const [textChat, setTextChat] = useState('');
@@ -41,13 +41,14 @@ const BodyChat = () => {
 
   const renderItem = ({ item: itemMess, index }) => {
     if (itemMess?.length === 0) return;
-    if (itemMess.user.id === dataUser.id) {
+    if (itemMess.user.id !== dataUser.id) {
       return (
         <>
           <LeftChat
+            type="single-chat"
             indexToggle={index}
             handleToggleModalRemove={handleToggleModalRemove}
-            name={itemMess.user.name}
+            user={itemMess.user}
             message={[itemMess.content]}
           />
           {position === index && (
@@ -61,9 +62,24 @@ const BodyChat = () => {
         </>
       );
     }
-    if (itemMess.user.id !== dataUser.id) {
+    if (itemMess.user.id === dataUser.id) {
       return (
-        <RightChat name={itemMess.user.name} message={[itemMess.content]} />
+        <>
+          <RightChat
+            indexToggle={index}
+            handleToggleModalRemove={handleToggleModalRemove}
+            user={itemMess.user}
+            message={[itemMess.content]}
+          />
+          {position === index && (
+            <ModalRemoveMess
+              visible={!!(position === index)}
+              setVisible={setPosition}
+              onHandleRemoveMess={onHandleRemoveMess}
+              idMess={itemMess._id}
+            />
+          )}
+        </>
       );
     }
   };
@@ -103,4 +119,4 @@ const BodyChat = () => {
   );
 };
 
-export default BodyChat;
+export default BodySingleChat;

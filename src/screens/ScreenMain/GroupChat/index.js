@@ -10,10 +10,11 @@ import {
   Left,
   Body,
   Right,
-  Spinner
+  Button
 } from 'native-base';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import { MaterialIcons } from '@expo/vector-icons';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
@@ -145,18 +146,39 @@ const GroupChat = props => {
   };
 
   const handlePullToRefesh = () => {
-    setNumInit(8);
+    setLoading(true);
+    setTimeout(() => {
+      setNumInit(8);
+      setLoading(false);
+    }, 100);
   };
 
   const handleLoadingMore = () => {
-    setTimeout(() => {
-      setLoading(true);
-      setNumInit(numInit + 8);
-      setLoading(false);
-    }, 800);
+    if (listGroups.length > 8 && numInit < listGroups.length) {
+      return (
+        <TouchableOpacity onPress={() => setNumInit(numInit + 8)}>
+          <Button full transparent light>
+            <Text
+              style={{
+                color: '#2196f3'
+              }}
+            >
+              More
+            </Text>
+            <MaterialIcons name="expand-more" size={24} color="#2196f3" />
+          </Button>
+        </TouchableOpacity>
+      );
+    } else {
+      return (
+        <Button full transparent light>
+          <Text></Text>
+        </Button>
+      );
+    }
   };
 
-  const renderItemPhonebook = ({ item: group }) => {
+  const renderItemGroup = ({ item: group }) => {
     return (
       <TouchableOpacity onPress={() => handleToggleChatRoom(group)}>
         <ItemGroups group={group} />
@@ -201,14 +223,12 @@ const GroupChat = props => {
             <FlatList
               data={listGroups.slice(0, numInit)}
               ListHeaderComponent={renderListHeaderGroup}
-              ListFooterComponent={() => isLoading && <Spinner />}
-              renderItem={renderItemPhonebook}
+              ListEmptyComponent={renderComponentEmpty}
+              ListFooterComponent={handleLoadingMore}
+              renderItem={renderItemGroup}
               keyExtractor={item => `${item._id}`}
               refreshing={isLoading}
-              ListEmptyComponent={renderComponentEmpty}
               onRefresh={handlePullToRefesh}
-              onEndReached={handleLoadingMore}
-              onEndReachedThreshold={0}
             />
           </>
         )}

@@ -81,6 +81,9 @@ const useChatSocket = ({ dataUser }) => {
           });
       }
     }
+    return () => {
+      setMessages([]);
+    };
   }, [
     currentGroup.id,
     currentGroup.name,

@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import { Thumbnail, View, Text } from 'native-base';
-
-const defaultTung =
-  'https://scontent.fvca1-1.fna.fbcdn.net/v/t1.0-1/p480x480/104483297_1777530932386533_1453571394136712521_o.jpg?_nc_cat=108&ccb=2&_nc_sid=7206a8&_nc_ohc=FSu8nvfDN9kAX8_HvuJ&_nc_ht=scontent.fvca1-1.fna&tp=6&oh=66e12bcbe04cbfda87c361d29d819f41&oe=5FC0B54A';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const RightChat = props => {
-  const { message, name } = props;
+  const { message, user, indexToggle, handleToggleModalRemove } = props;
+  const { dataUser } = useSelector(state => state.dataUser);
+
   return (
     <View
       style={{
@@ -26,31 +27,41 @@ const RightChat = props => {
           }}
         >
           <Text style={{ fontSize: 13, color: 'rgb(138, 141, 145)' }}>
-            {name}
+            {user.name}
           </Text>
         </View>
-        {message.map((text, index) => (
-          <View
-            key={index}
-            style={{
-              width: 200,
-              paddingLeft: 15,
-              paddingTop: 10,
-              paddingBottom: 10,
-              backgroundColor: '#e4e6eb',
-              borderRadius: 18,
-              marginBottom: 3
-            }}
-          >
-            <Text>{text}</Text>
-          </View>
-        ))}
+        <TouchableOpacity
+          onLongPress={() => handleToggleModalRemove(indexToggle)}
+        >
+          {message.map((text, index) => (
+            <View
+              key={index}
+              style={{
+                width: 200,
+                paddingLeft: 15,
+                paddingTop: 10,
+                paddingBottom: 10,
+                backgroundColor: '#e4e6eb',
+                borderRadius: 18,
+                marginBottom: 3
+              }}
+            >
+              <Text>{text}</Text>
+            </View>
+          ))}
+        </TouchableOpacity>
       </View>
       <View style={{ alignSelf: 'flex-end', marginLeft: 5 }}>
         <Thumbnail
           style={{ width: 50, height: 50 }}
           rounded
-          source={{ uri: defaultTung }}
+          source={
+            dataUser?.avatar
+              ? {
+                  uri: `${dataUser.avatar}`
+                }
+              : require('assets/avatarDefault.png')
+          }
         />
       </View>
     </View>
@@ -61,9 +72,13 @@ export default RightChat;
 
 RightChat.propTypes = {
   message: PropTypes.array,
-  name: PropTypes.string
+  handleToggleModalRemove: PropTypes.func,
+  indexToggle: PropTypes.number,
+  user: PropTypes.objectOf(PropTypes.any)
 };
 RightChat.defaultProps = {
   message: [],
-  name: ''
+  handleToggleModalRemove: () => {},
+  indexToggle: () => {},
+  user: {}
 };

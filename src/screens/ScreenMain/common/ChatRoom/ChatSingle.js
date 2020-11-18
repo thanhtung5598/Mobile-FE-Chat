@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { HeaderSingleChat } from './headerChat';
-import BodySingleChat from './bodyChat';
+import BodyChat from './bodyChat';
 import { Container } from 'native-base';
 
 const ChatSingle = props => {
@@ -10,7 +10,7 @@ const ChatSingle = props => {
   return (
     <Container>
       <HeaderSingleChat setChatOpen={setChatOpen} setFooter={setFooter} />
-      <BodySingleChat />
+      <BodyChat />
     </Container>
   );
 };
