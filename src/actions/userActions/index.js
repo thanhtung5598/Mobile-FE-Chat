@@ -19,14 +19,10 @@ export const getProfileUser = () => async dispatch => {
     .then(res => {
       const { error, data } = res.data;
       if (!error) {
-        axiosServices
-          .get(`https://api-ret.ml/api/v0/images/download/${data.avatar}`)
-          .then(() => {
-            dispatch({
-              type: PROFILE_TYPE.FETCH_PROFILE_SUCCESS,
-              payload: data
-            });
-          });
+        dispatch({
+          type: PROFILE_TYPE.FETCH_PROFILE_SUCCESS,
+          payload: data
+        });
       }
       return { error, data };
     })
@@ -295,14 +291,10 @@ export const updateProfile = (dataUpdate, type = 1) => dispatch => {
     .then(res => {
       const { error, data } = res.data;
       if (!error) {
-        axiosServices
-          .get(`https://api-ret.ml/api/v0/images/download/${dataUpdate.avatar}`)
-          .then(() => {
-            dispatch({
-              type: PROFILE_TYPE.UPDATE_PROFILE_SUCCESS,
-              payload: dataUpdate
-            });
-          });
+        dispatch({
+          type: PROFILE_TYPE.UPDATE_PROFILE_SUCCESS,
+          payload: dataUpdate
+        });
       }
       return { error, data };
     })

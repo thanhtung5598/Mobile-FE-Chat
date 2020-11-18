@@ -11,7 +11,6 @@ import {
 } from 'native-base';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
 
 const ItemGroups = ({ group }) => {
   return (
@@ -38,7 +37,7 @@ const ItemGroups = ({ group }) => {
                     source={
                       user?.avatar
                         ? {
-                            uri: `${imaPrefix}${user.avatar}`
+                            uri: `${user.avatar}`
                           }
                         : require('assets/avatarDefault.png')
                     }

@@ -27,8 +27,6 @@ import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { addMemberGroup } from 'actions/groupActions';
 
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-
 const GroupAddMember = props => {
   const { setAddMember } = props;
 
@@ -157,7 +155,7 @@ const GroupAddMember = props => {
                         source={
                           friend.avatar
                             ? {
-                                uri: `${imaPrefix}${friend.avatar}`
+                                uri: `${friend.avatar}`
                               }
                             : require('assets/avatarDefault.png')
                         }

@@ -15,8 +15,6 @@ import SvgAnimatedLinearGradient from 'react-native-svg-animated-linear-gradient
 import { Circle } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-
 const Profile = ({ navigation }) => {
   const modalRef = useRef(null);
   const dispatch = useDispatch();
@@ -38,7 +36,7 @@ const Profile = ({ navigation }) => {
           let localUri = result.uri;
           let filename = localUri.split('/').pop();
           const formData = new FormData();
-          formData.append('avatar', {
+          formData.append('files', {
             uri: localUri,
             name: filename,
             type: 'image/png'
@@ -47,7 +45,7 @@ const Profile = ({ navigation }) => {
             const { data } = res;
             const dataUpdated = {
               name: dataUser.name,
-              avatar: data
+              avatar: data[0]
             };
             if (data) {
               dispatch(updateProfile(dataUpdated, 2));
@@ -102,7 +100,7 @@ const Profile = ({ navigation }) => {
                         source={
                           dataUser?.avatar
                             ? {
-                                uri: `${imaPrefix}${dataUser.avatar}`
+                                uri: `${dataUser.avatar}`
                               }
                             : require('assets/avatarDefault.png')
                         }

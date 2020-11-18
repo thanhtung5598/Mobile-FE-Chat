@@ -11,8 +11,6 @@ import {
 import { Thumbnail, Button } from 'native-base';
 import { Ionicons } from '@expo/vector-icons';
 
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-
 const ModalCustom = props => {
   const {
     visible,
@@ -66,7 +64,7 @@ const ModalCustom = props => {
               source={
                 info.avatar
                   ? {
-                      uri: `${imaPrefix}${info.avatar}`
+                      uri: `${info.avatar}`
                     }
                   : require('assets/avatarDefault.png')
               }

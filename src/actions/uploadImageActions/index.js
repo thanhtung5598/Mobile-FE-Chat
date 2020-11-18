@@ -6,7 +6,7 @@ export const uploadImgSingle = formData => dispatch => {
     type: PROFILE_TYPE.UPDATE_AVATAR_REQUEST
   });
   return axiosServices
-    .post('https://api-ret.ml/api/v0/images/upload-avatar', formData)
+    .post('https://api-ret.ml/api/v0/files/upload', formData)
     .then(res => {
       const { data } = res.data;
       return { data };

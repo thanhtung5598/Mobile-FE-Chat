@@ -29,8 +29,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 // actions
 import { createGroupChat } from 'actions/groupActions';
 
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-
 const CreateGroup = props => {
   const { onHandleToggleCreate, handleToggleChatRoom } = props;
   const [listChecked, setListChecked] = useState([]);
@@ -159,7 +157,7 @@ const CreateGroup = props => {
                         source={
                           friend.avatar
                             ? {
-                                uri: `${imaPrefix}${friend.avatar}`
+                                uri: `${friend.avatar}`
                               }
                             : require('assets/avatarDefault.png')
                         }

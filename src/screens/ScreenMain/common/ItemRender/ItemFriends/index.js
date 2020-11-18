@@ -6,8 +6,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-
 const ItemFriends = ({ friend, status = null, handleAddFriend }) => {
   return (
     <ListItem thumbnail style={{ paddingBottom: 12 }}>
@@ -17,7 +15,7 @@ const ItemFriends = ({ friend, status = null, handleAddFriend }) => {
           source={
             friend.avatar
               ? {
-                  uri: `${imaPrefix}${friend.avatar}`
+                  uri: `${friend.avatar}`
                 }
               : require('assets/avatarDefault.png')
           }

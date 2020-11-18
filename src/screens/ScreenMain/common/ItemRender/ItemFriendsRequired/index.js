@@ -4,8 +4,6 @@ import { ListItem, Thumbnail, Text, Left, Body, Right } from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const imaPrefix = 'https://api-ret.ml/api/v0/images/download/';
-
 const ItemFriendRequired = ({
   styles,
   friend,
@@ -20,7 +18,7 @@ const ItemFriendRequired = ({
           source={
             friend.avatar
               ? {
-                  uri: `${imaPrefix}${friend.avatar}`
+                  uri: `${friend.avatar}`
                 }
               : require('assets/avatarDefault.png')
           }
