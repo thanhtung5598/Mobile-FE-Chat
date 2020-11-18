@@ -24,7 +24,7 @@ import FriendRequest from './FriendRequest';
 import SyncPhonebook from './SyncPhonebook';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import ModalInfoUser from 'components/common/ComponentsCommon/Modal/modalInfo';
-import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
+import { ChatSingle } from 'screens/ScreenMain/common/ChatRoom';
 
 // Item Render
 import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
@@ -270,11 +270,7 @@ const PhoneBook = props => {
     <>
       <Container>
         {isChatOpen && (
-          <ChatRoom
-            typeChat="single"
-            setChatOpen={setChatOpen}
-            setFooter={setFooter}
-          />
+          <ChatSingle setChatOpen={setChatOpen} setFooter={setFooter} />
         )}
         {find && (
           <>

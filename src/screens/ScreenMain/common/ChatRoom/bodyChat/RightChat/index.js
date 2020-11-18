@@ -47,7 +47,11 @@ const RightChat = props => {
         ))}
       </View>
       <View style={{ alignSelf: 'flex-end', marginLeft: 5 }}>
-        <Thumbnail rounded source={{ uri: defaultTung }} />
+        <Thumbnail
+          style={{ width: 50, height: 50 }}
+          rounded
+          source={{ uri: defaultTung }}
+        />
       </View>
     </View>
   );

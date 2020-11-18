@@ -21,7 +21,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import HeaderSearch from './../common/header';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import GroupCreate from 'screens/ScreenMain/common/ChatRoom/GroupCreate';
-import ChatRoom from 'screens/ScreenMain/common/ChatRoom';
+import { ChatGroup } from 'screens/ScreenMain/common/ChatRoom';
 import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
 import EmptyList from 'screens/ScreenMain/common/EmptyList';
 
@@ -170,11 +170,7 @@ const GroupChat = props => {
     <>
       <Container>
         {isChatOpen && (
-          <ChatRoom
-            setChatOpen={setChatOpen}
-            setFooter={setFooter}
-            typeChat="group"
-          />
+          <ChatGroup setChatOpen={setChatOpen} setFooter={setFooter} />
         )}
         {find && (
           <>

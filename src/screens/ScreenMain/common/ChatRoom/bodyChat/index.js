@@ -40,7 +40,6 @@ const BodyChat = () => {
   };
 
   const renderItem = ({ item: itemMess, index }) => {
-    console.log('itemMess', itemMess);
     if (itemMess?.length === 0) return;
     if (itemMess.user.id === dataUser.id) {
       return (

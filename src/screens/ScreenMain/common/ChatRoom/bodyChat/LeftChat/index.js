@@ -11,7 +11,11 @@ const LeftChat = props => {
   return (
     <View style={{ flexDirection: 'row', paddingTop: '5%', paddingLeft: 5 }}>
       <View style={{ alignSelf: 'flex-end', marginRight: 5 }}>
-        <Thumbnail rounded source={{ uri: defaultPhuong }} />
+        <Thumbnail
+          style={{ width: 50, height: 50 }}
+          rounded
+          source={{ uri: defaultPhuong }}
+        />
       </View>
       <View>
         <View
@@ -34,6 +38,7 @@ const LeftChat = props => {
               key={index}
               style={{
                 width: 200,
+                minHeight: 30,
                 paddingLeft: 15,
                 paddingTop: 10,
                 paddingBottom: 10,
