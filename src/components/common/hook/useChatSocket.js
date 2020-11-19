@@ -57,10 +57,10 @@ const useChatSocket = ({ dataUser }) => {
           positionUserCurrent: 0 // day la vi tri user dang login laf Truong
         };
         socket.emit('join', info);
-        // const listMess = [];
-        socket.on('load_message', function (msg) {
-          setMessages(msg);
-        });
+        setMessages(isGroupCreated[0].messages);
+        // socket.on('load_message', function (msg) {
+        //   setMessages(msg);
+        // });
       }
       if (isGroupCreated.length === 0) {
         console.log('new');

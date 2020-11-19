@@ -22,7 +22,10 @@ const BodySingleChat = () => {
 
   const onHandleSendMess = () => {
     if (textChat === '') return;
-    socket.emit('send_and_recive', textChat);
+    socket.emit('send_and_recive', {
+      message: textChat,
+      type: 'String' // type is String, or Image, Video
+    });
     socket.on('send_and_recive', function (msg) {
       setMessages([...messages, msg]);
     });

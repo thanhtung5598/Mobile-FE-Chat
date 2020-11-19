@@ -5,12 +5,16 @@ import { HeaderGroupChat } from './headerChat';
 import GroupAddMember from './GroupAddMember';
 import { Container } from 'native-base';
 import { SocketContext } from 'components/common/context/SocketContext';
+// import useChatGroupSocket from 'components/common/hook/useChatGroupSocket';
 
 const ChatGroup = props => {
   const [isAddMember, setAddMember] = useState(false);
   const { setChatOpen, setFooter } = props;
   const { socket } = useContext(SocketContext);
   const { dataUser } = useSelector(state => state.dataUser);
+  // const { messages, setMessages } = useChatGroupSocket({
+  //   dataUser
+  // });
 
   useEffect(() => {
     return () => {
