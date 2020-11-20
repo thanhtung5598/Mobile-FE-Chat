@@ -243,14 +243,12 @@ export default GroupAddMember;
 GroupAddMember.propTypes = {
   currentGroup: PropTypes.objectOf(PropTypes.any),
   setAddMember: PropTypes.func,
-  onHandleToggleCreate: PropTypes.func,
-  handleToggleChatRoom: PropTypes.func
+  onHandleToggleCreate: PropTypes.func
 };
 GroupAddMember.defaultProps = {
   currentGroup: {},
   setAddMember: () => {},
-  onHandleToggleCreate: () => {},
-  handleToggleChatRoom: () => {}
+  onHandleToggleCreate: () => {}
 };
 
 const styles = StyleSheet.create({

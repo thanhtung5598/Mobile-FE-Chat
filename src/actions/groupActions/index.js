@@ -55,17 +55,15 @@ export const createGroupChat = data => dispatch => {
   });
   return axiosServices
     .post(`${prefix}group`, data)
-    .then(res => {
+    .then(async res => {
       const { error, data } = res.data;
       const { _id: idRoom } = data;
-      findRoomDetail(idRoom).then(res => {
-        const { data: roomNew } = res;
-        dispatch({
-          type: GROUP_TYPE.CREATE_GROUP_SUCCESS
-        });
-        dispatch(updateCurrentGroup(roomNew));
+      const resRoomDetails = await findRoomDetail(idRoom);
+      const { data: roomNew } = resRoomDetails;
+      dispatch({
+        type: GROUP_TYPE.CREATE_GROUP_SUCCESS
       });
-      return { error, data };
+      return { error, roomNew };
     })
     .catch(err => {
       const { error, data } = err.response?.data;
@@ -126,10 +124,12 @@ export const updateRoomName = (dataUpdate, idRoom) => dispatch => {
 };
 
 export const updateCurrentGroup = currentGroup => dispatch => {
+  let error = false;
   dispatch({
     type: GROUP_TYPE.CURRENT_GROUP_REQUEST,
     payload: currentGroup
   });
+  return { error };
 };
 
 export const exitRoom = idRoom => dispatch => {

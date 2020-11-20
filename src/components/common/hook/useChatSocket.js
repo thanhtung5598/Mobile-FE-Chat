@@ -12,20 +12,17 @@ const useChatSocket = ({ dataUser }) => {
 
   useEffect(() => {
     if (singleGroups.length > 0) {
-      const singleGroupsFill = singleGroups.filter(
-        group => group.group === false
-      );
       const host = [];
       const userChatSingle = [];
       const isGroupCreated = [];
-      singleGroupsFill.forEach(group =>
+      singleGroups.forEach(group =>
         group.users.forEach(user => {
           if (user.id === dataUser.id) {
             host.push(group);
           }
         })
       );
-      singleGroupsFill.forEach(group =>
+      singleGroups.forEach(group =>
         group.users.forEach(user => {
           if (user.id === currentGroup.id) {
             userChatSingle.push(group);

@@ -1,17 +1,16 @@
 import { useState, useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { SocketContext } from 'components/common/context/SocketContext';
-// import useFetchAllGroups from 'components/common/hook/useFetchAllGroups';
 
 const useChatSocket = ({ dataUser }) => {
   const { socket } = useContext(SocketContext);
-  // const { listGroups } = useFetchAllGroups({ dataUser });
   const {
     currentGroup: { _id, users, messages: messGroup }
   } = useSelector(state => state.groupSelected);
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
+    console.log('old chat group');
     const filterUserGroup = users
       .filter(user => user.id !== dataUser.id)
       .map(userGroup => {
@@ -33,9 +32,6 @@ const useChatSocket = ({ dataUser }) => {
     };
     socket.emit('join', info);
     setMessages(messGroup);
-    // socket.on('load_message', function (msg) {
-    //   setMessages(msg);
-    // });
     return () => {
       setMessages([]);
     };

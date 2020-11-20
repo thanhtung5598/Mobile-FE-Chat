@@ -8,13 +8,17 @@ const LeftChat = props => {
   const { currentGroup } = useSelector(state => state.groupSelected);
   const { message, user, indexToggle, handleToggleModalRemove } = props;
 
-  const filterAvatar = _currentGroup => {
-    if (!_currentGroup?.length) {
+  const filterAvatar = (_currentGroup, _user) => {
+    if (!_currentGroup?.users?.length) {
       return _currentGroup.avatar;
+    }
+    if (_currentGroup?.users?.length) {
+      return _currentGroup?.users.filter(user => user.id === _user.id)[0]
+        .avatar;
     }
   };
 
-  const avatarUser = filterAvatar(currentGroup);
+  const avatarUser = filterAvatar(currentGroup, user);
 
   return (
     <View style={{ flexDirection: 'row', paddingTop: '5%', paddingLeft: 5 }}>
