@@ -24,7 +24,7 @@ import FriendRequest from './FriendRequest';
 import SyncPhonebook from './SyncPhonebook';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import ModalInfoUser from 'components/common/ComponentsCommon/Modal/modalInfo';
-import { ChatSingle } from 'screens/ScreenMain/common/ChatRoom';
+import { ChatSingle } from 'screens/ScreenMain/common/ChatRoomCustom';
 
 // Item Render
 import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
