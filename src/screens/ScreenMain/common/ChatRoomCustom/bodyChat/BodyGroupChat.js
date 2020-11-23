@@ -1,13 +1,15 @@
 import React, { useContext } from 'react';
-import { ActionSheetIOS, KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Container } from 'native-base';
 import { SocketContext } from 'components/common/context/SocketContext';
 import useChatGroupSocket from 'components/common/hook/useChatGroupSocket';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { useActionSheet } from '@expo/react-native-action-sheet';
 
 const BodyGroupChat = () => {
   const { socket } = useContext(SocketContext);
+  const { showActionSheetWithOptions } = useActionSheet();
   const { currentGroup } = useSelector(state => state.groupSelected);
   const { dataUser } = useSelector(state => state.dataUser);
   const { messages, setMessages } = useChatGroupSocket({
@@ -41,7 +43,8 @@ const BodyGroupChat = () => {
   };
 
   const handleLongPressMess = (context, message) => {
-    ActionSheetIOS.showActionSheetWithOptions(
+    Keyboard.dismiss();
+    showActionSheetWithOptions(
       {
         options: ['Remove', 'Cancel'],
         cancelButtonIndex: 1,
@@ -77,7 +80,12 @@ const BodyGroupChat = () => {
           _id: dataUser.id
         }}
       />
-      {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />}
+      {Platform.OS === 'android' && (
+        <KeyboardAvoidingView
+          behavior="padding"
+          keyboardVerticalOffset={-150}
+        />
+      )}
     </Container>
   );
 };

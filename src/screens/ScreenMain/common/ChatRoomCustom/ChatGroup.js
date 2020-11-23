@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { HeaderGroupChat } from './headerChat';
 import GroupAddMember from './GroupAddMember';
-import { Container } from 'native-base';
 import { BodyGroupChat } from './bodyChat';
 import { SocketContext } from 'components/common/context/SocketContext';
 
@@ -20,7 +19,7 @@ const ChatGroup = props => {
   }, [dataUser.id, socket]);
 
   return (
-    <Container>
+    <>
       {isAddMember && <GroupAddMember setAddMember={setAddMember} />}
       {!isAddMember && (
         <>
@@ -32,7 +31,7 @@ const ChatGroup = props => {
           <BodyGroupChat />
         </>
       )}
-    </Container>
+    </>
   );
 };
 
