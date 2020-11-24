@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useContext, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { SocketContext } from 'components/common/context/SocketContext';
@@ -5,12 +7,12 @@ import { SocketContext } from 'components/common/context/SocketContext';
 const useChatSocket = ({ dataUser }) => {
   const { socket } = useContext(SocketContext);
   const {
-    currentGroup: { _id, users, messages: messGroup }
+    currentGroup: { _id, users }
   } = useSelector(state => state.groupSelected);
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    console.log('old chat group');
+    console.log('here');
     const filterUserGroup = users
       .filter(user => user.id !== dataUser.id)
       .map(userGroup => {
@@ -31,11 +33,11 @@ const useChatSocket = ({ dataUser }) => {
       positionUserCurrent: 0 // day la vi tri user dang login laf Truong
     };
     socket.emit('join', info);
-    setMessages(messGroup);
-    return () => {
-      setMessages([]);
-    };
-  }, [_id, dataUser.id, dataUser.name, messGroup, socket, users]);
+    socket.on('load_message', function (msg) {
+      setMessages(msg);
+    });
+    return () => {};
+  }, []);
 
   return { messages, setMessages };
 };

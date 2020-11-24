@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback } from 'react';
+import React, { useState, Fragment, useCallback, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
@@ -25,19 +25,21 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { addMemberGroup } from 'actions/groupActions';
+import { SocketContext } from 'components/common/context/SocketContext';
 
-const GroupAddMember = props => {
-  const { setAddMember } = props;
+// actions
+import { createGroupChat } from 'actions/groupActions';
 
+const CreateGroup = props => {
+  const { onHandleToggleCreate, handleToggleChatRoom } = props;
   const [listChecked, setListChecked] = useState([]);
   const [searchText, setSearchText] = useState(null);
+  const [groupName, setGroupName] = useState('');
+  const { socket, listGroups, setListGroups } = useContext(SocketContext);
   const dispatch = useDispatch();
   const { listFriends } = useSelector(state => state.friends);
-  const { isLoadingAddMember } = useSelector(state => state.groups);
-  const {
-    currentGroup: { users, _id: idGroup }
-  } = useSelector(state => state.groupSelected);
+  const { dataUser } = useSelector(state => state.dataUser);
+  const { isLoadingCreate } = useSelector(state => state.groups);
 
   const handleCheckedItem = item_id => {
     const tempList = [...listChecked];
@@ -54,14 +56,7 @@ const GroupAddMember = props => {
 
   const filterTextSearch = useCallback(() => {
     const tempList = JSON.parse(JSON.stringify(listFriends)); // deep clone
-    for (let i = 0; i < tempList.length; i++) {
-      for (let j = 0; j < users.length; j++) {
-        if (tempList[i].id === users[j].id) {
-          tempList[i].status = true;
-        }
-      }
-    }
-    if (searchText === null) return [...tempList];
+    if (searchText === null) return tempList ? [...tempList] : [];
     const filterName = tempList.filter(
       item => item.name.toUpperCase().search(searchText.toUpperCase()) !== -1
     );
@@ -84,17 +79,27 @@ const GroupAddMember = props => {
     const filterDoubleItem = newList.filter((itemCheck, index) => {
       return newList.findIndex(item => item.id == itemCheck.id) === index;
     });
-
     return filterDoubleItem;
-  }, [listFriends, searchText, users]);
+  }, [listFriends, searchText]);
 
-  const handleAddMember = () => {
-    const valueAdd = {
-      list_user_id: listChecked
+  const handleCreateNewGroup = async () => {
+    const values = {
+      list_user_id: listChecked,
+      name:
+        groupName.split('').length > 0 ? groupName : `${dataUser.name} group`
     };
-    dispatch(addMemberGroup(valueAdd, idGroup)).then(() => {
-      setAddMember(false);
-    });
+    const res = await dispatch(createGroupChat(values));
+    const { error, roomNew } = res;
+    if (!error) {
+      const list_user = listChecked.map(item => {
+        return {
+          id: item
+        };
+      });
+      setListGroups([...listGroups, roomNew]);
+      socket.emit('load_rooms', list_user);
+      handleToggleChatRoom(roomNew);
+    }
   };
 
   return (
@@ -106,15 +111,24 @@ const GroupAddMember = props => {
             : { ...styles.rect, paddingTop: '15%' }
         }
       >
-        <TouchableOpacity onPress={() => setAddMember(false)}>
+        <TouchableOpacity onPress={onHandleToggleCreate}>
           <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
         </TouchableOpacity>
-        <Text style={styles.login}>Add Member</Text>
+        <Text style={styles.login}>Group new</Text>
       </View>
+      <Item style={{ borderBottomWidth: 0, paddingTop: 5, paddingBottom: 5 }}>
+        <Input
+          style={{
+            textAlign: 'center',
+            marginLeft: 20,
+            marginRight: 20
+          }}
+          onChangeText={text => setGroupName(text)}
+          placeholder="Name the new group"
+        />
+      </Item>
       <Item
         style={{
-          marginTop: 15,
-          marginBottom: 10,
           backgroundColor: '#f5f5f5',
           marginLeft: 20,
           marginRight: 20,
@@ -139,10 +153,7 @@ const GroupAddMember = props => {
           {filterTextSearch()?.map((friend, index) => {
             return (
               <Fragment key={index}>
-                <TouchableOpacity
-                  disabled={friend.status}
-                  onPress={() => handleCheckedItem(friend.id)}
-                >
+                <TouchableOpacity onPress={() => handleCheckedItem(friend.id)}>
                   <ListItem
                     style={{
                       paddingTop: 3,
@@ -165,25 +176,19 @@ const GroupAddMember = props => {
                       <Text>{friend.name}</Text>
                     </Body>
                     <Right style={{ borderBottomWidth: 0 }}>
-                      {friend.status && (
-                        <View>
-                          <Text>Already joined</Text>
-                        </View>
+                      {listChecked.includes(friend.id) ? (
+                        <AntDesign
+                          name="checkcircle"
+                          size={24}
+                          color="#2196f3"
+                        />
+                      ) : (
+                        <MaterialIcons
+                          name="radio-button-unchecked"
+                          size={24}
+                          color="black"
+                        />
                       )}
-                      {!friend.status &&
-                        (listChecked.includes(friend.id) ? (
-                          <AntDesign
-                            name="checkcircle"
-                            size={24}
-                            color="#2196f3"
-                          />
-                        ) : (
-                          <MaterialIcons
-                            name="radio-button-unchecked"
-                            size={24}
-                            color="black"
-                          />
-                        ))}
                     </Right>
                   </ListItem>
                 </TouchableOpacity>
@@ -220,10 +225,10 @@ const GroupAddMember = props => {
                 width: 150,
                 height: 60
               }}
-              onPress={handleAddMember}
+              onPress={handleCreateNewGroup}
             >
-              {isLoadingAddMember && <Spinner size="large" color="white" />}
-              {!isLoadingAddMember && (
+              {isLoadingCreate && <Spinner size="large" color="white" />}
+              {!isLoadingCreate && (
                 <View>
                   <Text>
                     <AntDesign name="arrowright" size={35} color="white" />
@@ -238,17 +243,19 @@ const GroupAddMember = props => {
   );
 };
 
-export default GroupAddMember;
+export default CreateGroup;
 
-GroupAddMember.propTypes = {
-  currentGroup: PropTypes.objectOf(PropTypes.any),
-  setAddMember: PropTypes.func,
-  onHandleToggleCreate: PropTypes.func
+CreateGroup.propTypes = {
+  onHandleToggleCreate: PropTypes.func,
+  handleToggleChatRoom: PropTypes.func,
+  listGroups: PropTypes.array,
+  setListGroups: PropTypes.func
 };
-GroupAddMember.defaultProps = {
-  currentGroup: {},
-  setAddMember: () => {},
-  onHandleToggleCreate: () => {}
+CreateGroup.defaultProps = {
+  onHandleToggleCreate: () => {},
+  handleToggleChatRoom: () => {},
+  listGroups: [],
+  setListGroups: () => {}
 };
 
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { StyleSheet, Platform } from 'react-native';
@@ -8,12 +8,15 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import ModalOptionGroup from 'components/common/ComponentsCommon/Modal/modalOptionGroup';
 import ModalUpdateRoomName from 'components/common/ComponentsCommon/Modal/modalUpdateRoomName';
 import { updateRoomName, exitRoom } from 'actions/groupActions';
+import { SocketContext } from 'components/common/context/SocketContext';
 
 const HeaderChat = props => {
   const modalRef = useRef(null);
   const modalRefName = useRef(null);
+  const { socket, listGroups, setListGroups } = useContext(SocketContext);
   const dispatch = useDispatch();
   const { setChatOpen, setFooter, setAddMember } = props;
+  const { dataUser } = useSelector(state => state.dataUser);
   const { currentGroup } = useSelector(state => state.groupSelected);
 
   const handleChatClose = () => {
@@ -21,16 +24,38 @@ const HeaderChat = props => {
     setFooter(true);
   };
 
+  const filterUserEmit = users => {
+    return users
+      .filter(userFill => userFill.id !== dataUser.id)
+      .map(item => {
+        return {
+          id: item.id
+        };
+      });
+  };
+
   const onHandleSubmitAdd = value => {
+    const list_user = currentGroup.users.map(item => {
+      return {
+        id: item.id
+      };
+    });
     dispatch(updateRoomName(value, currentGroup._id)).then(() => {
       modalRefName.current.toggleModal();
+      socket.emit('load_rooms', list_user);
     });
   };
 
   const handleExitRoom = () => {
+    const list_user = filterUserEmit(currentGroup.users);
     currentGroup &&
       dispatch(exitRoom(currentGroup._id)).then(() => {
+        const tempGroup = listGroups.filter(
+          group => group._id !== currentGroup._id
+        );
+        setListGroups(tempGroup);
         handleChatClose();
+        socket.emit('load_rooms', list_user);
       });
   };
 

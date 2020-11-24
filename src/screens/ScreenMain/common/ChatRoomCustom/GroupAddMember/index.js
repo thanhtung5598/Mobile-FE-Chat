@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback } from 'react';
+import React, { useState, Fragment, useCallback, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
@@ -26,13 +26,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
 import { addMemberGroup } from 'actions/groupActions';
+import { SocketContext } from 'components/common/context/SocketContext';
 
 const GroupAddMember = props => {
   const { setAddMember } = props;
-
+  const { socket } = useContext(SocketContext);
   const [listChecked, setListChecked] = useState([]);
   const [searchText, setSearchText] = useState(null);
   const dispatch = useDispatch();
+  const { dataUser } = useSelector(state => state.dataUser);
   const { listFriends } = useSelector(state => state.friends);
   const { isLoadingAddMember } = useSelector(state => state.groups);
   const {
@@ -92,8 +94,17 @@ const GroupAddMember = props => {
     const valueAdd = {
       list_user_id: listChecked
     };
+    const list_user = listChecked.map(item => {
+      return {
+        id: item
+      };
+    });
+    list_user.push({
+      id: dataUser.id
+    });
     dispatch(addMemberGroup(valueAdd, idGroup)).then(() => {
       setAddMember(false);
+      socket.emit('load_rooms', list_user);
     });
   };
 

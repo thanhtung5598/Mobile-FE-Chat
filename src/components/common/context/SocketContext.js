@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useSocket from 'use-socket.io-client';
 import { useSelector } from 'react-redux';
-import { createSingleRoom } from 'actions/groupActions';
+import jwt_decode from 'jwt-decode';
 
 const SocketContext = React.createContext();
 const SocketConsumer = SocketContext.Consumer;
@@ -10,6 +12,8 @@ const SocketConsumer = SocketContext.Consumer;
 const SocketProvider = props => {
   // const [room, setRoom] = useState(null);
   const { auth_token } = useSelector(state => state.authen);
+  const [listGroups, setListGroups] = useState([]);
+
   const ENDPOINT = `https://api-chat.ga?token=${auth_token}`;
   const [socket] = useSocket(ENDPOINT, {
     serveClient: false,
@@ -20,17 +24,28 @@ const SocketProvider = props => {
     pingTimeout: 5000,
     cookie: false
   });
+
   useEffect(() => {
-    try {
-      createSingleRoom(1, {
-        name: 'C'
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const {
+      data: { id }
+    } = jwt_decode(auth_token);
+    socket.emit('load_rooms', [
+      {
+        id
+      }
+    ]);
+    socket.on('load_rooms', function (data) {
+      if (data.id === id) {
+        setListGroups(
+          data.rooms.reverse().filter(group => group.group !== false)
+        );
+      }
+    });
+    return () => {};
   }, []);
+
   return (
-    <SocketContext.Provider value={{ socket }}>
+    <SocketContext.Provider value={{ socket, listGroups, setListGroups }}>
       {props.children}
     </SocketContext.Provider>
   );

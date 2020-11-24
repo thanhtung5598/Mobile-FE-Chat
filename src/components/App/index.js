@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { View, Platform, Image } from 'react-native';
+import { View, Platform, Image, LogBox } from 'react-native';
 import { Container } from 'native-base';
 import SceenRoot from 'screens/SceenRoot';
 import ScreenMain from 'screens/ScreenMain/Drawer';
 import { isTokenExpired } from 'actions/authenActions';
 import { NavigationContainer } from '@react-navigation/native';
 import * as Font from 'expo-font';
+
+LogBox.ignoreAllLogs();
 
 const App = () => {
   const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Keyboard, Image, FlatList } from 'react-native';
 import {
@@ -21,7 +21,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 // Component
 import HeaderSearch from './../common/header';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
-import GroupCreate from 'screens/ScreenMain/common/ChatRoom/GroupCreate';
+import GroupCreate from 'screens/ScreenMain/common/ChatRoomCustom/GroupCreate';
 import { ChatGroup } from 'screens/ScreenMain/common/ChatRoomCustom';
 import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
 import EmptyList from 'screens/ScreenMain/common/EmptyList';
@@ -33,7 +33,7 @@ import {
   addFriend
 } from 'actions/userActions';
 import { updateCurrentGroup } from 'actions/groupActions';
-import useFetchAllGroups from 'components/common/hook/useFetchAllGroups';
+import { SocketContext } from 'components/common/context/SocketContext';
 
 const GroupChat = props => {
   const { footer, setFooter } = props;
@@ -41,7 +41,7 @@ const GroupChat = props => {
   const [isLoading, setLoading] = useState(false);
   const [numInit, setNumInit] = useState(8);
   const { dataUser } = useSelector(state => state.dataUser);
-  const { listGroups } = useFetchAllGroups({ dataUser });
+  const { listGroups } = useContext(SocketContext);
 
   const [userQuery, setUserQuery] = useState('');
   const [find, setFind] = useState(false);

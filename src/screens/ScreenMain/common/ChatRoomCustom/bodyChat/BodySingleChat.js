@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { KeyboardAvoidingView } from 'react-native';
+import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Container } from 'native-base';
 import { SocketContext } from 'components/common/context/SocketContext';
@@ -18,15 +18,16 @@ const BodySingleChat = () => {
 
   const refactorObjectChat = () => {
     const newObjChat = messages.map(mess => {
-      return {
+      const obj = {
         ...mess,
         text: mess.content,
         user: {
           ...mess.user,
-          _id: mess.user.id,
-          avatar: currentGroup.avatar
+          _id: mess.user.id
         }
       };
+      if (currentGroup.avatar) obj.user.avatar = currentGroup.avatar;
+      return obj;
     });
     return newObjChat;
   };
