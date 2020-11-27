@@ -7,9 +7,10 @@ import useCheckFriend from 'components/common/hook/useCheckFriend';
 // Item Render
 import EmptyList from 'screens/ScreenMain/common/EmptyList';
 import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const FindFriends = props => {
-  const { handleAddFriend } = props;
+  const { handleAddFriend, handleToggleChatRoom } = props;
   const { dataUser } = useSelector(state => state.dataUser);
   const { isLoading, listUsers } = useSelector(state => state.listUsers);
   const { listFriends, listFriendsWait, listRequestFriends } = useSelector(
@@ -41,11 +42,13 @@ const FindFriends = props => {
             .map((item, index) => {
               return (
                 <Fragment key={index}>
-                  <ItemFriends
-                    friend={item}
-                    handleAddFriend={handleAddFriend}
-                    status={true}
-                  />
+                  <TouchableOpacity onPress={() => handleToggleChatRoom(item)}>
+                    <ItemFriends
+                      friend={item}
+                      handleAddFriend={handleAddFriend}
+                      status={true}
+                    />
+                  </TouchableOpacity>
                 </Fragment>
               );
             })}
@@ -60,8 +63,10 @@ const FindFriends = props => {
 export default FindFriends;
 
 FindFriends.propTypes = {
-  handleAddFriend: PropTypes.func
+  handleAddFriend: PropTypes.func,
+  handleToggleChatRoom: PropTypes.func
 };
 FindFriends.defaultProps = {
-  handleAddFriend: () => {}
+  handleAddFriend: () => {},
+  handleToggleChatRoom: () => {}
 };

@@ -137,6 +137,10 @@ const PhoneBook = props => {
     dispatch(updateCurrentGroup(friend));
     setChatOpen(true);
     setFooter(false);
+    setFind(false);
+    setShowFriendsReq(false);
+    setPhonebook(false);
+    setUserQuery('');
   };
 
   const handlePullToRefesh = () => {
@@ -282,12 +286,16 @@ const PhoneBook = props => {
               handleChangeValue={handleChangeValue}
             />
             <Content>
-              <FindFriends handleAddFriend={handleAddFriend} />
+              <FindFriends
+                handleToggleChatRoom={handleToggleChatRoom}
+                handleAddFriend={handleAddFriend}
+              />
             </Content>
           </>
         )}
         {showFriendsReq && (
           <FriendRequest
+            handleToggleChatRoom={handleToggleChatRoom}
             setShowFriendsReq={setShowFriendsReq}
             handleAcceptFriend={handleAcceptFriend}
             handleDeclineFriend={handleDeclineFriend}
@@ -295,6 +303,7 @@ const PhoneBook = props => {
         )}
         {phonebook && (
           <SyncPhonebook
+            handleToggleChatRoom={handleToggleChatRoom}
             setPhonebook={setPhonebook}
             handleAddFriend={handleAddFriend}
           />

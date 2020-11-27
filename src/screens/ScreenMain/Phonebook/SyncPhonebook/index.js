@@ -17,7 +17,7 @@ const SyncPhonebook = props => {
   const { handleAddFriend } = props;
   const { dataUser } = useSelector(state => state.dataUser);
   const { listPhonebookSync, isLoading } = useSelector(state => state.friends);
-  const { setPhonebook } = props;
+  const { setPhonebook, handleToggleChatRoom } = props;
   const { listFriends, listFriendsWait, listRequestFriends } = useSelector(
     state => state.friends
   );
@@ -51,11 +51,13 @@ const SyncPhonebook = props => {
   }, [dataUser, dispatch]);
 
   const renderItemSyncPhone = ({ item: friend }) => (
-    <ItemFriends
-      friend={friend}
-      handleAddFriend={handleAddFriend}
-      status={true}
-    />
+    <TouchableOpacity onPress={() => handleToggleChatRoom(friend)}>
+      <ItemFriends
+        friend={friend}
+        handleAddFriend={handleAddFriend}
+        status={true}
+      />
+    </TouchableOpacity>
   );
 
   const renderEmptyComponent = () => <EmptyList message={'No friends sync'} />;
@@ -110,11 +112,13 @@ export default SyncPhonebook;
 
 SyncPhonebook.propTypes = {
   setPhonebook: PropTypes.func,
-  handleAddFriend: PropTypes.func
+  handleAddFriend: PropTypes.func,
+  handleToggleChatRoom: PropTypes.func
 };
 SyncPhonebook.defaultProps = {
   setPhonebook: () => {},
-  handleAddFriend: () => {}
+  handleAddFriend: () => {},
+  handleToggleChatRoom: () => {}
 };
 
 const styles = StyleSheet.create({

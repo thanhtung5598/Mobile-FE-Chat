@@ -22,7 +22,10 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import HeaderSearch from './../common/header';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import GroupCreate from 'screens/ScreenMain/common/ChatRoomCustom/GroupCreate';
-import { ChatGroup } from 'screens/ScreenMain/common/ChatRoomCustom';
+import {
+  ChatGroup,
+  ChatSingle
+} from 'screens/ScreenMain/common/ChatRoomCustom';
 import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
 import EmptyList from 'screens/ScreenMain/common/EmptyList';
 
@@ -47,6 +50,7 @@ const GroupChat = props => {
   const [find, setFind] = useState(false);
   const [isCreate, setCreate] = useState(false);
   const [isChatOpen, setChatOpen] = useState(false);
+  const [isChatSingleOpen, setChatSingle] = useState(false);
 
   const delayedQuery = useRef(
     _.debounce(q => dispatch(searchUserByPhoneEmailName(q)), 500)
@@ -86,6 +90,14 @@ const GroupChat = props => {
     setChatOpen(true);
     setCreate(false);
     setFooter(false);
+  };
+
+  const handleToggleChatSingle = friend => {
+    dispatch(updateCurrentGroup(friend));
+    setChatSingle(true);
+    setFooter(false);
+    setFind(false);
+    setUserQuery('');
   };
 
   const renderListHeaderGroup = () => {
@@ -194,6 +206,9 @@ const GroupChat = props => {
         {isChatOpen && (
           <ChatGroup setChatOpen={setChatOpen} setFooter={setFooter} />
         )}
+        {isChatSingleOpen && (
+          <ChatSingle setChatOpen={setChatSingle} setFooter={setFooter} />
+        )}
         {find && (
           <>
             <HeaderSearch
@@ -204,7 +219,10 @@ const GroupChat = props => {
               handleChangeValue={handleChangeValue}
             />
             <Content>
-              <FindFriends handleAddFriend={handleAddFriend} />
+              <FindFriends
+                handleAddFriend={handleAddFriend}
+                handleToggleChatRoom={handleToggleChatSingle}
+              />
             </Content>
           </>
         )}
@@ -214,7 +232,7 @@ const GroupChat = props => {
             handleToggleChatRoom={handleToggleChatRoom}
           />
         )}
-        {!find && !isCreate && !isChatOpen && (
+        {!find && !isCreate && !isChatOpen && !isChatSingleOpen && (
           <>
             <HeaderSearch
               handleFind={handleFind}

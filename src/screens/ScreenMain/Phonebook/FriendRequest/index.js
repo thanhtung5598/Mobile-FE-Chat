@@ -12,7 +12,12 @@ import { ItemFriendsRequired } from 'screens/ScreenMain/common/ItemRender';
 const FriendRequest = props => {
   const dispatch = useDispatch();
   const { listRequestFriends, isLoading } = useSelector(state => state.friends);
-  const { setShowFriendsReq, handleAcceptFriend, handleDeclineFriend } = props;
+  const {
+    setShowFriendsReq,
+    handleAcceptFriend,
+    handleDeclineFriend,
+    handleToggleChatRoom
+  } = props;
 
   useEffect(() => {
     dispatch(fetchRequestFriends());
@@ -23,12 +28,14 @@ const FriendRequest = props => {
   );
 
   const renderItemFriendRequired = ({ item: friend }) => (
-    <ItemFriendsRequired
-      styles={styles}
-      friend={friend}
-      handleDeclineFriend={handleDeclineFriend}
-      handleAcceptFriend={handleAcceptFriend}
-    />
+    <TouchableOpacity onPress={() => handleToggleChatRoom(friend)}>
+      <ItemFriendsRequired
+        styles={styles}
+        friend={friend}
+        handleDeclineFriend={handleDeclineFriend}
+        handleAcceptFriend={handleAcceptFriend}
+      />
+    </TouchableOpacity>
   );
 
   const handlePullToRefesh = () => {};
@@ -61,12 +68,14 @@ export default FriendRequest;
 FriendRequest.propTypes = {
   handleDeclineFriend: PropTypes.func,
   handleAcceptFriend: PropTypes.func,
-  setShowFriendsReq: PropTypes.func
+  setShowFriendsReq: PropTypes.func,
+  handleToggleChatRoom: PropTypes.func
 };
 FriendRequest.defaultProps = {
   handleDeclineFriend: () => {},
   handleAcceptFriend: () => {},
-  setShowFriendsReq: () => {}
+  setShowFriendsReq: () => {},
+  handleToggleChatRoom: () => {}
 };
 
 const styles = StyleSheet.create({
