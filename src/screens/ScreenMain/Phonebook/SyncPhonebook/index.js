@@ -11,6 +11,12 @@ import useCheckFriend from 'components/common/hook/useCheckFriend';
 import EmptyList from 'screens/ScreenMain/common/EmptyList';
 // Item Render
 import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
+// action
+import {
+  fetchRequestFriends,
+  fetchListFriends,
+  fetchFriendsWait
+} from 'actions/userActions';
 
 const SyncPhonebook = props => {
   const dispatch = useDispatch();
@@ -76,6 +82,9 @@ const SyncPhonebook = props => {
             listPhoneBook: newData.flat().map(item => item.split(' ').join(''))
           };
           dispatch(syncDataPhonebook(dataSync));
+          dispatch(fetchRequestFriends());
+          dispatch(fetchListFriends());
+          dispatch(fetchFriendsWait());
         }
       }
       if (status === 'denied') {
