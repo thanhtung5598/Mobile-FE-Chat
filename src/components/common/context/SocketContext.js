@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useSocket from 'use-socket.io-client';
@@ -10,11 +8,10 @@ const SocketContext = React.createContext();
 const SocketConsumer = SocketContext.Consumer;
 
 const SocketProvider = props => {
-  // const [room, setRoom] = useState(null);
   const { auth_token } = useSelector(state => state.authen);
   const [listGroups, setListGroups] = useState([]);
+  const ENDPOINT = `https://retech.cf?token=${auth_token}`;
 
-  const ENDPOINT = `https://api-chat.ga?token=${auth_token}`;
   const [socket] = useSocket(ENDPOINT, {
     serveClient: false,
     // below are engine.IO options
@@ -41,8 +38,7 @@ const SocketProvider = props => {
         );
       }
     });
-    return () => {};
-  }, []);
+  }, [auth_token, socket]);
 
   return (
     <SocketContext.Provider value={{ socket, listGroups, setListGroups }}>

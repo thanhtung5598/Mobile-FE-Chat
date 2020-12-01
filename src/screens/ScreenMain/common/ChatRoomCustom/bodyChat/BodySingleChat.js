@@ -32,13 +32,14 @@ const BodySingleChat = () => {
     return newObjChat;
   };
 
+  socket.on('send_and_recive', function (msg) {
+    setMessages([...messages, msg]);
+  });
+
   const onHandleSendMess = textChat => {
     socket.emit('send_and_recive', {
       message: textChat[0].text,
       type: 'String' // type is String, or Image, Video
-    });
-    socket.on('send_and_recive', function (msg) {
-      setMessages([...messages, msg]);
     });
   };
 

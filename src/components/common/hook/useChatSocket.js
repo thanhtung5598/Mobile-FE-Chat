@@ -26,7 +26,6 @@ const useChatSocket = ({ dataUser }) => {
     socket.on('load_message', function (msg) {
       setMessages(msg);
     });
-    return () => {};
   }, []);
 
   return { messages, setMessages };
