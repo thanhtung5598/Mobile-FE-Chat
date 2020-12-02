@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Container } from 'native-base';
@@ -6,8 +6,10 @@ import { SocketContext } from 'components/common/context/SocketContext';
 import useChatSocket from 'components/common/hook/useChatSocket';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import FooterChat from '../footerChat';
 
 const BodySingleChat = () => {
+  const [textChat, setTextChat] = useState('');
   const { socket } = useContext(SocketContext);
   const { showActionSheetWithOptions } = useActionSheet();
   const { currentGroup } = useSelector(state => state.groupSelected);
@@ -29,18 +31,20 @@ const BodySingleChat = () => {
       if (currentGroup.avatar) obj.user.avatar = currentGroup.avatar;
       return obj;
     });
-    return newObjChat;
+    return newObjChat.reverse();
   };
 
   socket.on('send_and_recive', function (msg) {
     setMessages([...messages, msg]);
   });
 
-  const onHandleSendMess = textChat => {
+  const onHandleSendMess = () => {
+    if (textChat === '') return;
     socket.emit('send_and_recive', {
-      message: textChat[0].text,
+      message: textChat,
       type: 'String' // type is String, or Image, Video
     });
+    setTextChat('');
   };
 
   const onHandleRemoveMess = idMess => {
@@ -66,16 +70,27 @@ const BodySingleChat = () => {
     );
   };
 
+  const renderInputToolbar = () => {
+    return (
+      <FooterChat
+        textChat={textChat}
+        setTextChat={setTextChat}
+        onHandleSendMess={onHandleSendMess}
+      />
+    );
+  };
+
   return (
     <Container>
       <GiftedChat
-        inverted={false}
         messages={refactorObjectChat()}
         onLongPress={handleLongPressMess}
-        onSend={messages => onHandleSendMess(messages)}
+        textInputProps={{}}
+        renderInputToolbar={renderInputToolbar}
         user={{
           _id: dataUser.id
         }}
+        keyboardShouldPersistTaps="never"
       />
       {Platform.OS === 'android' && (
         <KeyboardAvoidingView

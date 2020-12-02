@@ -2,7 +2,7 @@ import axios from 'axios';
 import asyncStorage from './asyncStorage';
 
 const axiosApiInstance = axios.create({
-  baseURL: 'https://api-chat.ga/api/v0/'
+  baseURL: 'https://retech.cf/api/v0/'
 });
 
 // Request interceptor for API calls

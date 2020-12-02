@@ -16,22 +16,11 @@ const HeaderChat = props => {
   const { socket, listGroups, setListGroups } = useContext(SocketContext);
   const dispatch = useDispatch();
   const { setChatOpen, setFooter, setAddMember } = props;
-  const { dataUser } = useSelector(state => state.dataUser);
   const { currentGroup } = useSelector(state => state.groupSelected);
 
   const handleChatClose = () => {
     setChatOpen(false);
     setFooter(true);
-  };
-
-  const filterUserEmit = users => {
-    return users
-      .filter(userFill => userFill.id !== dataUser.id)
-      .map(item => {
-        return {
-          id: item.id
-        };
-      });
   };
 
   const onHandleSubmitAdd = value => {
@@ -47,7 +36,6 @@ const HeaderChat = props => {
   };
 
   const handleExitRoom = () => {
-    const list_user = filterUserEmit(currentGroup.users);
     currentGroup &&
       dispatch(exitRoom(currentGroup._id)).then(() => {
         const tempGroup = listGroups.filter(
@@ -55,7 +43,6 @@ const HeaderChat = props => {
         );
         setListGroups(tempGroup);
         handleChatClose();
-        socket.emit('load_rooms', list_user);
       });
   };
 

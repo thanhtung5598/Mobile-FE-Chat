@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Container } from 'native-base';
@@ -6,8 +6,10 @@ import { SocketContext } from 'components/common/context/SocketContext';
 import useChatGroupSocket from 'components/common/hook/useChatGroupSocket';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { useActionSheet } from '@expo/react-native-action-sheet';
+import FooterChat from '../footerChat';
 
 const BodyGroupChat = () => {
+  const [textChat, setTextChat] = useState('');
   const { socket } = useContext(SocketContext);
   const { showActionSheetWithOptions } = useActionSheet();
   const { currentGroup } = useSelector(state => state.groupSelected);
@@ -62,18 +64,30 @@ const BodyGroupChat = () => {
     setMessages([...messages, msg]);
   });
 
-  const onHandleSendMess = textChat => {
+  const onHandleSendMess = () => {
+    if (textChat === '') return;
     socket.emit('send_and_recive', {
-      message: textChat[0].text,
+      message: textChat,
       type: 'String' // type is String, or Image, Video
     });
+    setTextChat('');
+  };
+
+  const renderInputToolbar = () => {
+    return (
+      <FooterChat
+        textChat={textChat}
+        setTextChat={setTextChat}
+        onHandleSendMess={onHandleSendMess}
+      />
+    );
   };
 
   return (
     <Container>
       <GiftedChat
         renderUsernameOnMessage={true}
-        inverted={false}
+        renderInputToolbar={renderInputToolbar}
         messages={refactorObjectChat()}
         onLongPress={handleLongPressMess}
         onSend={messages => onHandleSendMess(messages)}
