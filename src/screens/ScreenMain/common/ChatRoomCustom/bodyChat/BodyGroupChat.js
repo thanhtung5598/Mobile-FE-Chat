@@ -20,21 +20,25 @@ const BodyGroupChat = () => {
 
   const refactorObjectChat = () => {
     const newObjChat = messages?.map(mess => {
+      const type = mess.type;
       const filterAvatar = currentGroup?.users?.filter(
         user => user.id === mess.user.id
       )[0].avatar;
+
       const obj = {
         ...mess,
-        text: mess.content,
+        text: type === 'Video' || type === 'Image' ? '' : mess.content,
         user: {
           ...mess.user,
           _id: mess.user.id
-        }
+        },
+        video: type === 'Video' && mess.content,
+        image: type === 'Image' && mess.content
       };
       if (filterAvatar) obj.user.avatar = filterAvatar;
       return obj;
     });
-    return newObjChat;
+    return newObjChat.reverse();
   };
 
   const onHandleRemoveMess = idMess => {

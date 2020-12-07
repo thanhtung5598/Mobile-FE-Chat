@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Container } from 'native-base';
+import { Container, View } from 'native-base';
 import { SocketContext } from 'components/common/context/SocketContext';
 import useChatSocket from 'components/common/hook/useChatSocket';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { Video } from 'expo-av';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import FooterChat from '../footerChat';
 
@@ -20,13 +21,16 @@ const BodySingleChat = () => {
 
   const refactorObjectChat = () => {
     const newObjChat = messages.map(mess => {
+      const type = mess.type;
       const obj = {
         ...mess,
-        text: mess.content,
+        text: type === 'Video' || type === 'Image' ? '' : mess.content,
         user: {
           ...mess.user,
           _id: mess.user.id
-        }
+        },
+        video: type === 'Video' && mess.content,
+        image: type === 'Image' && mess.content
       };
       if (currentGroup.avatar) obj.user.avatar = currentGroup.avatar;
       return obj;
@@ -80,12 +84,28 @@ const BodySingleChat = () => {
     );
   };
 
+  const renderMessageVideo = props => {
+    const { currentMessage } = props;
+    return (
+      <View style={{ padding: 5 }}>
+        <Video
+          resizeMode="contain"
+          useNativeControls
+          shouldPlay={false}
+          source={{ uri: currentMessage.video }}
+          style={{ width: 100, height: 100 }}
+        />
+      </View>
+    );
+  };
+
   return (
     <Container>
       <GiftedChat
         messages={refactorObjectChat()}
         onLongPress={handleLongPressMess}
         textInputProps={{}}
+        renderMessageVideo={renderMessageVideo}
         renderInputToolbar={renderInputToolbar}
         user={{
           _id: dataUser.id

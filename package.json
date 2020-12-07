@@ -21,6 +21,7 @@
     "babel-plugin-module-resolver": "^4.0.0",
     "babel-preset-expo": "^8.3.0",
     "expo": "~39.0.2",
+    "expo-av": "^8.6.0",
     "expo-blur": "^8.2.0",
     "expo-contacts": "~8.5.0",
     "expo-font": "~8.3.0",

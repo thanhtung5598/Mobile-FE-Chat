@@ -10,7 +10,7 @@ const SocketConsumer = SocketContext.Consumer;
 const SocketProvider = props => {
   const { auth_token } = useSelector(state => state.authen);
   const [listGroups, setListGroups] = useState([]);
-  const ENDPOINT = `https://retech.cf?token=${auth_token}`;
+  const ENDPOINT = `https://api-chat.ga?token=${auth_token}`;
 
   const [socket] = useSocket(ENDPOINT, {
     serveClient: false,
