@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import useSocket from 'use-socket.io-client';
@@ -10,7 +11,8 @@ const SocketConsumer = SocketContext.Consumer;
 const SocketProvider = props => {
   const { auth_token } = useSelector(state => state.authen);
   const [listGroups, setListGroups] = useState([]);
-  const ENDPOINT = `https://api-chat.ga?token=${auth_token}`;
+  const [listMessRoom, setlistMessRoom] = useState([]);
+  const ENDPOINT = `https://api-chat.ga`;
 
   const [socket] = useSocket(ENDPOINT, {
     serveClient: false,
@@ -33,15 +35,16 @@ const SocketProvider = props => {
     ]);
     socket.on('load_rooms', function (data) {
       if (data.id === id) {
-        setListGroups(
-          data.rooms.reverse().filter(group => group.group !== false)
-        );
+        setListGroups(data.rooms.filter(group => group.group !== false));
+        setlistMessRoom(data.rooms);
       }
     });
-  }, [auth_token, socket]);
+  }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, listGroups, setListGroups }}>
+    <SocketContext.Provider
+      value={{ socket, listGroups, setListGroups, listMessRoom }}
+    >
       {props.children}
     </SocketContext.Provider>
   );

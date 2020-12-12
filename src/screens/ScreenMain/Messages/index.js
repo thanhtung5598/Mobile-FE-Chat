@@ -1,378 +1,83 @@
-import React from 'react';
-import {
-  Container,
-  Content,
-  List,
-  ListItem,
-  Thumbnail,
-  Text,
-  Left,
-  Body,
-  Right,
-  View,
-  Badge
-} from 'native-base';
-import { AntDesign } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
+import React, { useState, useContext } from 'react';
+import { Container, Content } from 'native-base';
+import { FlatList } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 
 // Component
+import PropTypes from 'prop-types';
 import HeaderSearch from './../common/header';
+import { SocketContext } from 'components/common/context/SocketContext';
+import EmptyList from 'screens/ScreenMain/common/EmptyList';
+import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
+import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
+import { ChatGroup } from 'screens/ScreenMain/common/ChatRoomCustom';
+import { updateCurrentGroup } from 'actions/groupActions';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ListMessage = () => {
+const ListMessage = props => {
+  const { setFooter } = props;
+  const dispatch = useDispatch();
+  const { listMessRoom } = useContext(SocketContext);
+  const { dataUser } = useSelector(state => state.dataUser);
+  const [isChatGroup, setChatGroup] = useState(false);
+
+  const renderComponentEmpty = () => <EmptyList message={'Empty groups'} />;
+
+  const handleToggleChatGroup = group => {
+    dispatch(updateCurrentGroup(group));
+    setChatGroup(true);
+    setFooter(false);
+  };
+
+  const renderItemGroup = ({ item: group }) => {
+    const isGroup = group?.group;
+    if (isGroup) {
+      return (
+        <TouchableOpacity onPress={() => handleToggleChatGroup(group)}>
+          <ItemGroups group={group} />
+        </TouchableOpacity>
+      );
+    }
+    if (!isGroup) {
+      const userFil = group.users.filter(user => user.id !== dataUser?.id)[0];
+      return (
+        <TouchableOpacity onPress={() => handleToggleChatGroup(group)}>
+          <ItemFriends friend={userFil} />
+        </TouchableOpacity>
+      );
+    }
+  };
+
   return (
     <Container>
-      <HeaderSearch />
-      <Content>
-        <ScrollView
-          horizontal={true}
-          style={{
-            paddingLeft: 15,
-            paddingRight: 15,
-            paddingBottom: 10
-          }}
-          showsHorizontalScrollIndicator={false}
-        >
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail style={{ backgroundColor: '#DDD' }} />
-              <AntDesign
-                style={{ position: 'absolute', right: 0, bottom: 0 }}
-                name="pluscircle"
-                size={18}
-                color="#2962ff"
-              />
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Create Group
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-          <View style={{ alignItems: 'center', marginRight: 15 }}>
-            <View>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-              <Badge
-                style={{
-                  width: 13,
-                  height: 13,
-                  backgroundColor: '#31A252',
-                  position: 'absolute',
-                  right: 3,
-                  bottom: 0
-                }}
-              ></Badge>
-            </View>
-            <Text style={{ marginTop: 5, fontSize: 13, color: '#222' }}>
-              Ngọc Nga
-            </Text>
-          </View>
-        </ScrollView>
-        <List scrollEnabled>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Text note>3:43 pm</Text>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-          <ListItem thumbnail>
-            <Left>
-              <Thumbnail rounded source={require('assets/chibi.png')} />
-            </Left>
-            <Body>
-              <Text>Sankhadeep</Text>
-              <Text note numberOfLines={1}>
-                Its time to build a difference . .
-              </Text>
-            </Body>
-            <Right>
-              <Right>
-                <Text note>3:43 pm</Text>
-              </Right>
-            </Right>
-          </ListItem>
-        </List>
-      </Content>
+      {isChatGroup && (
+        <ChatGroup
+          setChatOpen={setChatGroup}
+          setFooter={setFooter}
+          isSingle={true}
+        />
+      )}
+      {!isChatGroup && (
+        <>
+          <HeaderSearch />
+          <Content>
+            <FlatList
+              data={listMessRoom}
+              ListEmptyComponent={renderComponentEmpty}
+              renderItem={renderItemGroup}
+              keyExtractor={item => `${item._id}`}
+            />
+          </Content>
+        </>
+      )}
     </Container>
   );
 };
 export default ListMessage;
+
+ListMessage.propTypes = {
+  setFooter: PropTypes.func
+};
+ListMessage.defaultProps = {
+  setFooter: () => {}
+};

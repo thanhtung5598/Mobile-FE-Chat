@@ -55,6 +55,7 @@ const MainTab = ({ navigation }) => {
                   focused && (
                     <Text style={{ color, fontSize: 12 }}>Messages</Text>
                   ),
+                tabBarVisible: footer,
                 tabBarIcon: ({ color }) => (
                   <AntDesign name="message1" size={24} color={color} />
                 )
