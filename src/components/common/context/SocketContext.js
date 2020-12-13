@@ -12,7 +12,7 @@ const SocketProvider = props => {
   const { auth_token } = useSelector(state => state.authen);
   const [listGroups, setListGroups] = useState([]);
   const [listMessRoom, setlistMessRoom] = useState([]);
-  const ENDPOINT = `https://api-chat.ga`;
+  const ENDPOINT = `https://socket.api-chat.ga`;
 
   const [socket] = useSocket(ENDPOINT, {
     serveClient: false,

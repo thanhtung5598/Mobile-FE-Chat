@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Header = props => {
-  const { onHandleTurnBack, step } = props;
+  const { onHandleTurnBack, step, isBadge } = props;
 
   return (
     <>
@@ -27,21 +27,23 @@ const Header = props => {
             {step === 2 && 'Please input your name'}
             {step === 3 && 'Please input your password to completed'}
           </Text>
-          <Badge
-            style={{
-              backgroundColor: 'white',
-              alignSelf: 'center',
-              position: 'absolute',
-              right: 15,
-              marginTop: 15
-            }}
-          >
-            <Text
-              style={{ color: '#2962ff', fontWeight: 'bold', fontSize: 16 }}
+          {isBadge && (
+            <Badge
+              style={{
+                backgroundColor: 'white',
+                alignSelf: 'center',
+                position: 'absolute',
+                right: 15,
+                marginTop: 15
+              }}
             >
-              {step + 1} / 4
-            </Text>
-          </Badge>
+              <Text
+                style={{ color: '#2962ff', fontWeight: 'bold', fontSize: 16 }}
+              >
+                {step + 1} / 4
+              </Text>
+            </Badge>
+          )}
         </View>
       )}
     </>
@@ -52,10 +54,12 @@ export default Header;
 
 Header.propTypes = {
   step: PropTypes.number,
+  isBadge: PropTypes.bool,
   onHandleTurnBack: PropTypes.func
 };
 Header.defaultProps = {
   step: 0,
+  isBadge: false,
   onHandleTurnBack: {}
 };
 

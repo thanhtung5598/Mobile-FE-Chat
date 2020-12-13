@@ -190,7 +190,11 @@ const Register = ({ navigation }) => {
   return (
     <Container>
       <Content>
-        <Header onHandleTurnBack={onHandleTurnBack} step={step} />
+        <Header
+          onHandleTurnBack={onHandleTurnBack}
+          step={step}
+          isBadge={true}
+        />
         <View style={styles.container}>
           {step !== 1 && (
             <FormRegister

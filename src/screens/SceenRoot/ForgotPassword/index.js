@@ -147,7 +147,11 @@ const Forgot = ({ navigation }) => {
     <Container>
       <Content>
         <View style={styles.container}>
-          <Header onHandleTurnBack={onHandleTurnBack} />
+          <Header
+            onHandleTurnBack={onHandleTurnBack}
+            step={step}
+            isBadge={true}
+          />
           {step !== 1 && (
             <ForgotForm
               initialValues={initialValues}
