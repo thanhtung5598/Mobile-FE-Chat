@@ -2,10 +2,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Alert } from 'react-native';
-import { Container, Content, Text, Icon, View } from 'native-base';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Container, Content, View } from 'native-base';
 import FormRegister from './FormRegister';
 import { AuthenContext } from 'components/common/context/AuthenContext';
 import FormVerify from 'components/common/ComponentsCommon/FormVerify';
@@ -17,6 +15,8 @@ import {
   refreshError,
   accountRegister
 } from 'actions/authenActions';
+
+import { Header } from 'screens/SceenRoot/common';
 
 const initialValues = {
   email: '',
@@ -190,17 +190,8 @@ const Register = ({ navigation }) => {
   return (
     <Container>
       <Content>
+        <Header onHandleTurnBack={onHandleTurnBack} step={step} />
         <View style={styles.container}>
-          <LinearGradient
-            start={{ x: -1, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#2962ff', '#0cb3ff']}
-          >
-            <TouchableOpacity style={styles.rect} onPress={onHandleTurnBack}>
-              <Icon name="arrow-back" style={styles.icon}></Icon>
-              <Text style={styles.login}>Register</Text>
-            </TouchableOpacity>
-          </LinearGradient>
           {step !== 1 && (
             <FormRegister
               setTypeRegister={setTypeRegister}

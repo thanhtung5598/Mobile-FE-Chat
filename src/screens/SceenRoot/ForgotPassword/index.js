@@ -18,6 +18,8 @@ import {
   refreshError
 } from 'actions/authenActions';
 
+import { Header } from 'screens/SceenRoot/common';
+
 const initialValues = {
   email: '',
   phone: ''
@@ -34,10 +36,10 @@ const defaultSchemaValid = {
 
 const Forgot = ({ navigation }) => {
   const dispatch = useDispatch();
+  const [step, setStep] = useState(0);
   const [typeForgot, setTypeForgot] = useState('Phone');
   const { userData, setUserData } = useContext(AuthenContext);
   const [defaultSchema, setDefaultSchema] = useState(defaultSchemaValid);
-  const [step, setStep] = useState(0);
 
   useEffect(() => {
     step === 0 &&
@@ -145,19 +147,7 @@ const Forgot = ({ navigation }) => {
     <Container>
       <Content>
         <View style={styles.container}>
-          <LinearGradient
-            start={{ x: -1, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#2962ff', '#0cb3ff']}
-          >
-            <TouchableOpacity
-              style={styles.rect}
-              onPress={() => navigation.navigate('Welcome')}
-            >
-              <Icon name="arrow-back" style={styles.icon}></Icon>
-              <Text style={styles.login}>Forgot Password</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+          <Header onHandleTurnBack={onHandleTurnBack} />
           {step !== 1 && (
             <ForgotForm
               initialValues={initialValues}

@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { Text, View, Spinner, Badge, Tab, Tabs } from 'native-base';
+import { Text, View, Spinner, Tab, Tabs } from 'native-base';
 import * as Yup from 'yup';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native';
@@ -35,26 +35,6 @@ const FormRegister = props => {
 
   return (
     <SafeAreaView>
-      <View style={styles.rect3}>
-        <Text style={styles.loremIpsum}>
-          {step === 0 && 'Please input your required field'}
-          {step === 2 && 'Please input your name'}
-          {step === 3 && 'Please input your password to completed'}
-        </Text>
-        <Badge
-          style={{
-            backgroundColor: 'white',
-            alignSelf: 'center',
-            position: 'absolute',
-            right: 15,
-            marginTop: 15
-          }}
-        >
-          <Text style={{ color: '#2962ff', fontWeight: 'bold', fontSize: 16 }}>
-            {step + 1} / 4
-          </Text>
-        </Badge>
-      </View>
       <Formik
         initialValues={initialValues}
         validationSchema={Yup.object(defaultSchema)}

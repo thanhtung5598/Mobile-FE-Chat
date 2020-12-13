@@ -10,7 +10,6 @@ import {
   Container,
   Content,
   Text,
-  Icon,
   View,
   Spinner,
   Tabs,
@@ -21,6 +20,8 @@ import ErrorInput from 'components/common/ComponentsCommon/ErrorInput';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { accountLogin, refreshError } from 'actions/authenActions';
 import { MaterialIcons } from '@expo/vector-icons';
+
+import { Header } from 'screens/SceenRoot/common';
 
 // Component
 import FormPhone from './FormPhone';
@@ -87,21 +88,7 @@ const Login = ({ navigation }) => {
     <Container>
       <Content>
         <View style={styles.container}>
-          <LinearGradient
-            start={{ x: -1, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#2962ff', '#0cb3ff']}
-          >
-            <TouchableOpacity style={styles.rect} onPress={onHandleTurnBack}>
-              <Icon name="arrow-back" style={styles.icon}></Icon>
-              <Text style={styles.login}>Login</Text>
-            </TouchableOpacity>
-          </LinearGradient>
-          <View style={styles.rect3}>
-            <Text style={styles.loremIpsum}>
-              Please enter your phone and password tologin
-            </Text>
-          </View>
+          <Header onHandleTurnBack={onHandleTurnBack} />
           <Formik
             initialValues={{ phone: '', password: '' }}
             validationSchema={Yup.object(defaultSchema)}

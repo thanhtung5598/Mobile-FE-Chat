@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Text, View, Badge, Tabs, Tab, Spinner } from 'native-base';
+import { Text, View, Tabs, Tab, Spinner } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -33,132 +33,111 @@ const ForgotForm = props => {
   };
 
   return (
-    <>
-      <View style={styles.rect3}>
-        <Text style={styles.loremIpsum}>
-          {step === 0 && 'Please input your required field'}
-          {step === 2 && 'Please input your new password'}
-        </Text>
-        <Badge
-          style={{
-            backgroundColor: 'white',
-            alignSelf: 'center',
-            position: 'absolute',
-            right: 15,
-            marginTop: 15
-          }}
-        >
-          <Text style={{ color: '#2962ff', fontWeight: 'bold', fontSize: 16 }}>
-            {step + 1} / 3
-          </Text>
-        </Badge>
-      </View>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={Yup.object(defaultSchema)}
-        onSubmit={onHandleSubmited}
-      >
-        {({ touched, errors, ...formikProps }) => (
-          <>
-            {step === 0 && (
-              <Tabs
-                onChangeTab={e => handleChangeType(e, formikProps)}
-                tabBarUnderlineStyle={{
-                  backgroundColor: '#2196f3',
-                  height: 1
-                }}
+    <Formik
+      initialValues={initialValues}
+      validationSchema={Yup.object(defaultSchema)}
+      onSubmit={onHandleSubmited}
+    >
+      {({ touched, errors, ...formikProps }) => (
+        <>
+          {step === 0 && (
+            <Tabs
+              onChangeTab={e => handleChangeType(e, formikProps)}
+              tabBarUnderlineStyle={{
+                backgroundColor: '#2196f3',
+                height: 1
+              }}
+            >
+              <Tab
+                tabStyle={{ backgroundColor: '#F8F8F8' }}
+                textStyle={{ color: '#AAA' }}
+                activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                heading="Phone"
+                name="Phone"
               >
-                <Tab
-                  tabStyle={{ backgroundColor: '#F8F8F8' }}
-                  textStyle={{ color: '#AAA' }}
-                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
-                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
-                  heading="Phone"
-                  name="Phone"
-                >
-                  {error && (
-                    <View style={styles.errorBE}>
-                      <MaterialIcons
-                        style={styles.errorBEIcon}
-                        name="error"
-                        size={20}
-                        color="red"
-                      />
-                      <Text style={styles.errorBEText}>{message.msg}</Text>
-                    </View>
-                  )}
-                  <FormPhone
-                    styles={styles}
-                    touched={touched}
-                    errors={errors}
-                    formikProps={formikProps}
-                  />
-                </Tab>
-                <Tab
-                  tabStyle={{ backgroundColor: '#F8F8F8' }}
-                  textStyle={{ color: '#AAA' }}
-                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
-                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
-                  heading="Email"
-                  name="Email"
-                >
-                  {error && (
-                    <View style={styles.errorBE}>
-                      <MaterialIcons
-                        style={styles.errorBEIcon}
-                        name="error"
-                        size={20}
-                        color="red"
-                      />
-                      <Text style={styles.errorBEText}>{message.msg}</Text>
-                    </View>
-                  )}
-                  <FormEmail
-                    styles={styles}
-                    touched={touched}
-                    errors={errors}
-                    formikProps={formikProps}
-                  />
-                </Tab>
-              </Tabs>
-            )}
-            {step === 2 && (
-              <FormPassword
-                styles={styles}
-                touched={touched}
-                errors={errors}
-                formikProps={formikProps}
-              />
-            )}
-            <TouchableOpacity onPress={formikProps.handleSubmit}>
-              <LinearGradient
-                style={styles.rect7}
-                colors={['#0cb3ff', '#0068ff']}
+                {error && (
+                  <View style={styles.errorBE}>
+                    <MaterialIcons
+                      style={styles.errorBEIcon}
+                      name="error"
+                      size={20}
+                      color="red"
+                    />
+                    <Text style={styles.errorBEText}>{message.msg}</Text>
+                  </View>
+                )}
+                <FormPhone
+                  styles={styles}
+                  touched={touched}
+                  errors={errors}
+                  formikProps={formikProps}
+                />
+              </Tab>
+              <Tab
+                tabStyle={{ backgroundColor: '#F8F8F8' }}
+                textStyle={{ color: '#AAA' }}
+                activeTabStyle={{ backgroundColor: '#F8F8F8' }}
+                activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
+                heading="Email"
+                name="Email"
               >
-                <Text style={styles.loginButton}>
-                  {step !== 2 ? 'Next' : 'Completed'}
-                </Text>
-                {isLoadingChangePass && step === 2 && (
-                  <Spinner
-                    style={{ position: 'absolute' }}
-                    size="large"
-                    color="white"
-                  />
+                {error && (
+                  <View style={styles.errorBE}>
+                    <MaterialIcons
+                      style={styles.errorBEIcon}
+                      name="error"
+                      size={20}
+                      color="red"
+                    />
+                    <Text style={styles.errorBEText}>{message.msg}</Text>
+                  </View>
                 )}
-                {step !== 2 && (
-                  <MaterialIcons
-                    style={styles.iconNext}
-                    name="navigate-next"
-                    size={28}
-                    color="white"
-                  />
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
-          </>
-        )}
-      </Formik>
-    </>
+                <FormEmail
+                  styles={styles}
+                  touched={touched}
+                  errors={errors}
+                  formikProps={formikProps}
+                />
+              </Tab>
+            </Tabs>
+          )}
+          {step === 2 && (
+            <FormPassword
+              styles={styles}
+              touched={touched}
+              errors={errors}
+              formikProps={formikProps}
+            />
+          )}
+          <TouchableOpacity onPress={formikProps.handleSubmit}>
+            <LinearGradient
+              style={styles.rect7}
+              colors={['#0cb3ff', '#0068ff']}
+            >
+              <Text style={styles.loginButton}>
+                {step !== 2 ? 'Next' : 'Completed'}
+              </Text>
+              {isLoadingChangePass && step === 2 && (
+                <Spinner
+                  style={{ position: 'absolute' }}
+                  size="large"
+                  color="white"
+                />
+              )}
+              {step !== 2 && (
+                <MaterialIcons
+                  style={styles.iconNext}
+                  name="navigate-next"
+                  size={28}
+                  color="white"
+                />
+              )}
+            </LinearGradient>
+          </TouchableOpacity>
+        </>
+      )}
+    </Formik>
   );
 };
 
