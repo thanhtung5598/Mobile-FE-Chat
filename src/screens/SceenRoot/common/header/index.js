@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Header = props => {
-  const { onHandleTurnBack, step, isBadge } = props;
+  const { onHandleTurnBack, step, isBadge, title } = props;
 
   return (
     <>
@@ -17,7 +17,7 @@ const Header = props => {
       >
         <TouchableOpacity style={styles.headerRect} onPress={onHandleTurnBack}>
           <Icon name="arrow-back" style={styles.icon}></Icon>
-          <Text style={styles.textHeader}>Register</Text>
+          <Text style={styles.textHeader}>{title}</Text>
         </TouchableOpacity>
       </LinearGradient>
       {step !== 1 && (
@@ -53,11 +53,13 @@ const Header = props => {
 export default Header;
 
 Header.propTypes = {
+  title: PropTypes.string,
   step: PropTypes.number,
   isBadge: PropTypes.bool,
   onHandleTurnBack: PropTypes.func
 };
 Header.defaultProps = {
+  title: '',
   step: 0,
   isBadge: false,
   onHandleTurnBack: {}

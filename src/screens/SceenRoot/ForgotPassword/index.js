@@ -151,6 +151,7 @@ const Forgot = ({ navigation }) => {
             onHandleTurnBack={onHandleTurnBack}
             step={step}
             isBadge={true}
+            title="Forgot Password"
           />
           {step !== 1 && (
             <ForgotForm

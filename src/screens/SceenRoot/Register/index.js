@@ -194,6 +194,7 @@ const Register = ({ navigation }) => {
           onHandleTurnBack={onHandleTurnBack}
           step={step}
           isBadge={true}
+          title="Register"
         />
         <View style={styles.container}>
           {step !== 1 && (

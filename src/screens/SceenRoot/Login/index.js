@@ -88,7 +88,7 @@ const Login = ({ navigation }) => {
     <Container>
       <Content>
         <View style={styles.container}>
-          <Header onHandleTurnBack={onHandleTurnBack} />
+          <Header onHandleTurnBack={onHandleTurnBack} title="Login" />
           <Formik
             initialValues={{ phone: '', password: '' }}
             validationSchema={Yup.object(defaultSchema)}
