@@ -19,7 +19,7 @@ const InputTextCustom = props => {
           formikProps={formikProps}
           formikKey={type.key}
           placeholder={type.placeholder}
-          value={formikProps.values.email}
+          value={formikProps.values[type.key]}
         />
       </View>
       {touched[type.key] && errors[type.key] ? (
