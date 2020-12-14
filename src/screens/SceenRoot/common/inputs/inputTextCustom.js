@@ -7,9 +7,9 @@ import PropTypes from 'prop-types';
 import { View } from 'native-base';
 import { refreshError } from 'actions/authenActions';
 
-const InputPhone = props => {
+const InputTextCustom = props => {
   const dispatch = useDispatch();
-  const { formikProps, touched, errors } = props;
+  const { formikProps, touched, errors, type } = props;
 
   return (
     <>
@@ -17,29 +17,30 @@ const InputPhone = props => {
         <StyledInput
           onFocus={() => dispatch(refreshError())}
           formikProps={formikProps}
-          formikKey="phone"
-          placeholder="Your phone..."
-          value={formikProps.values.phone}
-          keyboardType="numeric"
+          formikKey={type.key}
+          placeholder={type.placeholder}
+          value={formikProps.values.email}
         />
       </View>
-      {touched.phone && errors.phone ? (
-        <ErrorInput text={errors.phone} />
+      {touched[type.key] && errors[type.key] ? (
+        <ErrorInput text={errors[type.key]} />
       ) : null}
     </>
   );
 };
 
-export default InputPhone;
+export default InputTextCustom;
 
-InputPhone.propTypes = {
+InputTextCustom.propTypes = {
   formikProps: PropTypes.objectOf(PropTypes.any),
+  type: PropTypes.objectOf(PropTypes.any),
   styles: PropTypes.objectOf(PropTypes.any),
   touched: PropTypes.objectOf(PropTypes.any),
   errors: PropTypes.objectOf(PropTypes.any)
 };
-InputPhone.defaultProps = {
+InputTextCustom.defaultProps = {
   formikProps: {},
+  type: {},
   styles: {},
   touched: {},
   errors: {}

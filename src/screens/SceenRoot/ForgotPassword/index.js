@@ -36,7 +36,7 @@ const defaultSchemaValid = {
 
 const Forgot = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(2);
   const [typeForgot, setTypeForgot] = useState('Phone');
   const { userData, setUserData } = useContext(AuthenContext);
   const [defaultSchema, setDefaultSchema] = useState(defaultSchemaValid);
@@ -152,6 +152,7 @@ const Forgot = ({ navigation }) => {
             step={step}
             isBadge={true}
             title="Forgot Password"
+            allStep={3}
           />
           {step !== 1 && (
             <ForgotForm

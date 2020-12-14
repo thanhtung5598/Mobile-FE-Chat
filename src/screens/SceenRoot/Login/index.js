@@ -11,12 +11,11 @@ import { accountLogin, refreshError } from 'actions/authenActions';
 // Component
 import {
   Header,
-  InputEmail,
-  InputPhone,
-  InputPassword,
-  InputTabs,
+  InputTextCustom,
+  InputSecureCustom,
   ButtonStyle
 } from 'screens/SceenRoot/common';
+import InputTabs from 'screens/SceenRoot/common/tabs/inputTabs';
 
 const defaultSchemaValid = {
   phone: Yup.string()
@@ -28,13 +27,13 @@ const defaultSchemaValid = {
 };
 
 const Login = ({ navigation }) => {
-  const [typeRegister, setTypeRegister] = useState('Phone');
+  const [typeTab, setTypeTab] = useState('Phone');
   const { isLoading, error, message } = useSelector(state => state.authen);
   const [defaultSchema, setDefaultSchema] = useState(defaultSchemaValid);
 
   useEffect(() => {
-    typeRegister === 'Phone' && setDefaultSchema({ ...defaultSchemaValid });
-    typeRegister === 'Email' &&
+    typeTab === 'Phone' && setDefaultSchema({ ...defaultSchemaValid });
+    typeTab === 'Email' &&
       setDefaultSchema({
         email: Yup.string()
           .trim()
@@ -43,19 +42,19 @@ const Login = ({ navigation }) => {
           })
           .required('Email is required')
       });
-  }, [typeRegister]);
+  }, [typeTab]);
 
   const dispatch = useDispatch();
 
   const onHandleLogin = values => {
     let dataLogin = {};
-    if (typeRegister === 'Phone') {
+    if (typeTab === 'Phone') {
       dataLogin = {
         phone: values.phone.trim(),
         password: values.password
       };
     }
-    if (typeRegister === 'Email') {
+    if (typeTab === 'Email') {
       dataLogin = {
         email: values.email.trim(),
         password: values.password
@@ -84,27 +83,30 @@ const Login = ({ navigation }) => {
                 <InputTabs
                   error={error} // error from redux
                   formikProps={formikProps} // support change tab
-                  setTypeRegister={setTypeRegister} // support change tab
+                  setTypeTab={setTypeTab} // support change tab
                   message={message}
                   tabPhone={
-                    <InputPhone
+                    <InputTextCustom
                       touched={touched}
                       errors={errors}
                       formikProps={formikProps}
+                      type={{ key: 'phone', placeholder: 'Your phone...' }}
                     />
                   }
                   tabEmail={
-                    <InputEmail
+                    <InputTextCustom
                       touched={touched}
                       errors={errors}
                       formikProps={formikProps}
+                      type={{ key: 'email', placeholder: 'Your email...' }}
                     />
                   }
                 />
-                <InputPassword
+                <InputSecureCustom
                   touched={touched}
                   errors={errors}
                   formikProps={formikProps}
+                  type={{ key: 'password', placeholder: 'Password...' }}
                 />
                 <ButtonStyle
                   isLoading={isLoading}

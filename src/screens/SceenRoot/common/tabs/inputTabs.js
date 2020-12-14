@@ -7,19 +7,12 @@ import { Tabs, Tab } from 'native-base';
 import { InputError } from 'screens/SceenRoot/common';
 
 const InputTabs = props => {
-  const {
-    tabPhone,
-    tabEmail,
-    error,
-    formikProps,
-    setTypeRegister,
-    message
-  } = props;
+  const { tabPhone, tabEmail, error, formikProps, setTypeTab, message } = props;
 
   const handleChangeType = (e, _formikProp) => {
     const type = e.ref.props.name;
     _formikProp.setErrors({});
-    setTypeRegister(type);
+    setTypeTab(type);
   };
 
   return (
@@ -58,7 +51,7 @@ const InputTabs = props => {
 export default InputTabs;
 
 InputTabs.propTypes = {
-  setTypeRegister: PropTypes.func,
+  setTypeTab: PropTypes.func,
   tabPhone: PropTypes.objectOf(PropTypes.any),
   message: PropTypes.objectOf(PropTypes.any),
   tabEmail: PropTypes.objectOf(PropTypes.any),
@@ -66,7 +59,7 @@ InputTabs.propTypes = {
   formikProps: PropTypes.objectOf(PropTypes.any)
 };
 InputTabs.defaultProps = {
-  setTypeRegister: () => {},
+  setTypeTab: () => {},
   tabPhone: {},
   message: {},
   tabEmail: {},

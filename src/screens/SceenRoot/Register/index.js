@@ -17,14 +17,7 @@ import {
 } from 'actions/authenActions';
 
 // Component
-import {
-  Header,
-  InputEmail,
-  InputPhone,
-  InputPassword,
-  InputTabs,
-  ButtonStyle
-} from 'screens/SceenRoot/common';
+import { Header } from 'screens/SceenRoot/common';
 
 const initialValues = {
   email: '',
@@ -46,16 +39,16 @@ const defaultSchemaValid = {
 const Register = ({ navigation }) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState(0);
-  const [typeRegister, setTypeRegister] = useState('Phone');
+  const [typeTab, setTypeTab] = useState('Phone');
   const { userData, setUserData } = useContext(AuthenContext);
   const [defaultSchema, setDefaultSchema] = useState(defaultSchemaValid);
 
   useEffect(() => {
     step === 0 &&
-      typeRegister === 'Phone' &&
+      typeTab === 'Phone' &&
       setDefaultSchema({ ...defaultSchemaValid });
     step === 0 &&
-      typeRegister === 'Email' &&
+      typeTab === 'Email' &&
       setDefaultSchema({
         email: Yup.string()
           .trim()
@@ -82,7 +75,7 @@ const Register = ({ navigation }) => {
           .oneOf([Yup.ref('password'), null], 'Passwords must match')
           .required('Confirm is required')
       });
-  }, [step, typeRegister]);
+  }, [step, typeTab]);
 
   useEffect(() => {
     dispatch(refreshError());
@@ -96,7 +89,7 @@ const Register = ({ navigation }) => {
         phone: phone.trim(),
         email: email.trim()
       });
-      if (typeRegister === 'Phone') {
+      if (typeTab === 'Phone') {
         dispatch(accountSendOTPSignUp('phone', phone.trim())).then(res => {
           const { error } = res;
           if (!error) {
@@ -104,7 +97,7 @@ const Register = ({ navigation }) => {
           }
         });
       }
-      if (typeRegister === 'Email') {
+      if (typeTab === 'Email') {
         dispatch(accountSendOTPSignUp('email', email.trim())).then(res => {
           const { error } = res;
           if (!error) {
@@ -125,13 +118,13 @@ const Register = ({ navigation }) => {
         password,
         passwordConfirm
       };
-      if (typeRegister === 'Phone') {
+      if (typeTab === 'Phone') {
         dataRegister = {
           ...dataRegister,
           phone: userData.phone
         };
       }
-      if (typeRegister === 'Email') {
+      if (typeTab === 'Email') {
         dataRegister = {
           ...dataRegister,
           email: userData.email
@@ -157,13 +150,13 @@ const Register = ({ navigation }) => {
 
   const onHandleVerifyCodeSignUp = code => {
     let values = null;
-    if (typeRegister === 'Phone') {
+    if (typeTab === 'Phone') {
       values = {
         phone: userData.phone,
         code
       };
     }
-    if (typeRegister === 'Email') {
+    if (typeTab === 'Email') {
       values = {
         email: userData.email,
         code
@@ -182,10 +175,10 @@ const Register = ({ navigation }) => {
   };
 
   const onHandleResendCode = () => {
-    if (typeRegister === 'Phone') {
+    if (typeTab === 'Phone') {
       dispatch(accountSendOTPSignUp('phone', userData.phone));
     }
-    if (typeRegister === 'Email') {
+    if (typeTab === 'Email') {
       dispatch(accountSendOTPSignUp('email', userData.email));
     }
   };
@@ -203,22 +196,22 @@ const Register = ({ navigation }) => {
           step={step}
           isBadge={true}
           title="Register"
+          allStep={4}
         />
         <View style={styles.container}>
           {step !== 1 && (
             <FormRegister
-              setTypeRegister={setTypeRegister}
+              setTypeTab={setTypeTab}
               initialValues={initialValues}
               defaultSchema={defaultSchema}
               navigation={navigation}
               onHandleSubmitted={onHandleSubmitted}
-              styles={styles}
               step={step}
             />
           )}
           {step === 1 && (
             <FormVerify
-              typeRegister={typeRegister}
+              setTypeTab={setTypeTab}
               userData={userData}
               onHandleVerifyCode={onHandleVerifyCodeSignUp}
               onHandleResendCode={onHandleResendCode}
@@ -243,125 +236,5 @@ Register.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-  rect: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  icon: {
-    color: 'rgba(255,255,255,1)',
-    fontSize: 25,
-    width: 34,
-    height: 37,
-    marginTop: 13,
-    marginLeft: 10
-  },
-  login: {
-    color: 'rgba(255,255,255,1)',
-    fontSize: 20,
-    fontWeight: '700'
-  },
-  rect3: {
-    width: '100%',
-    height: 42,
-    backgroundColor: '#E6E6E6',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  loremIpsum: {
-    color: '#121212',
-    width: '100%',
-    fontSize: 15,
-    marginLeft: 15
-  },
-  rect5: {
-    width: '85%',
-    height: 50,
-    backgroundColor: 'rgba(255,255,255,1)',
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: '#2196f3',
-    marginTop: 18,
-    paddingLeft: 15,
-    alignSelf: 'center',
-    flexDirection: 'row'
-  },
-  userName: {
-    color: '#121212',
-    width: 142,
-    height: 17,
-    marginTop: 15
-  },
-  rect6: {
-    width: '85%',
-    height: 50,
-    backgroundColor: 'rgba(255,255,255,1)',
-    borderRadius: 100,
-    borderWidth: 1,
-    borderColor: '#2196f3',
-    marginTop: 24,
-    paddingLeft: 15,
-    alignSelf: 'center'
-  },
-  password: {
-    color: '#121212',
-    width: 154,
-    height: 23,
-    marginTop: 16
-  },
-  rect7: {
-    width: '85%',
-    height: 50,
-    backgroundColor: 'rgba(33,150,243,1)',
-    borderRadius: 25,
-    marginTop: 23,
-    alignSelf: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  loginButton: {
-    color: 'rgba(255,255,255,1)',
-    fontSize: 22,
-    textAlign: 'center'
-  },
-  iconNext: {
-    marginTop: 2
-  },
-  loremIpsum2: {
-    color: 'rgba(113,111,111,1)',
-    marginTop: 16
-  },
-  signUp: {
-    color: 'rgba(173,20,87,1)'
-  },
-  bottomHint: {
-    flexDirection: 'row',
-    alignSelf: 'center',
-    marginTop: 16
-  },
-  bottomHintSig: { color: '#ff9800', fontWeight: 'bold', marginLeft: 3 },
-  eyeSlash: {
-    alignSelf: 'center',
-    marginRight: 15,
-    fontSize: 20,
-    color: '#616161'
-  },
-  formVerify: {
-    flexDirection: 'row',
-    width: '50%',
-    alignSelf: 'center'
-  },
-  errorBE: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 10
-  },
-  errorBEIcon: {
-    marginRight: 3
-  },
-  errorBEText: {
-    color: 'red'
   }
 });

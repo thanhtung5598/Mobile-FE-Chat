@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const Header = props => {
-  const { onHandleTurnBack, step, isBadge, title } = props;
+  const { onHandleTurnBack, step, isBadge, title, allStep } = props;
 
   return (
     <>
@@ -24,23 +24,16 @@ const Header = props => {
         <View style={styles.referText}>
           <Text style={styles.loremIpsum}>
             {step === 0 && 'Please input your required field'}
-            {step === 2 && 'Please input your name'}
-            {step === 3 && 'Please input your password to completed'}
+            {allStep === 3 && step === 2 && 'Please enter your new password'}
+            {allStep === 4 && step === 2 && 'Please input your name'}
+            {allStep === 4 &&
+              step === 3 &&
+              'Please input your password to completed'}
           </Text>
           {isBadge && (
-            <Badge
-              style={{
-                backgroundColor: 'white',
-                alignSelf: 'center',
-                position: 'absolute',
-                right: 15,
-                marginTop: 15
-              }}
-            >
-              <Text
-                style={{ color: '#2962ff', fontWeight: 'bold', fontSize: 16 }}
-              >
-                {step + 1} / 4
+            <Badge style={styles.badge}>
+              <Text style={styles.badgeText}>
+                {step + 1} / {allStep}
               </Text>
             </Badge>
           )}
@@ -55,12 +48,14 @@ export default Header;
 Header.propTypes = {
   title: PropTypes.string,
   step: PropTypes.number,
+  allStep: PropTypes.number,
   isBadge: PropTypes.bool,
   onHandleTurnBack: PropTypes.func
 };
 Header.defaultProps = {
   title: '',
   step: 0,
+  allStep: 0,
   isBadge: false,
   onHandleTurnBack: {}
 };
@@ -69,6 +64,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  badge: {
+    backgroundColor: 'white',
+    alignSelf: 'center',
+    position: 'absolute',
+    right: 15,
+    marginTop: 15
+  },
+  badgeText: { color: '#2962ff', fontWeight: 'bold', fontSize: 16 },
   headerRect: {
     flexDirection: 'row',
     alignItems: 'center'

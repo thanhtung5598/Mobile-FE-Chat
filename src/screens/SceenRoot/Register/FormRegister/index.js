@@ -2,36 +2,27 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
-import { Text, View, Spinner, Tab, Tabs } from 'native-base';
 import * as Yup from 'yup';
-import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { MaterialIcons } from '@expo/vector-icons';
 
 // Component
-import FormPhone from '../FormPhone';
-import FormMail from '../FormMail';
-import FormName from '../FormName';
-import FormPassword from '../FormPassword';
+import {
+  InputTextCustom,
+  InputSecureCustom,
+  ButtonStep
+} from 'screens/SceenRoot/common';
+import InputTabs from 'screens/SceenRoot/common/tabs/inputTabs';
 
 const FormRegister = props => {
   const { isLoading, error, message } = useSelector(state => state.authen);
   const {
     initialValues,
-    setTypeRegister,
+    setTypeTab,
     defaultSchema,
-    onHandleSubmitted,
-    styles,
     navigation,
+    onHandleSubmitted,
     step
   } = props;
-
-  const handleChangeType = (e, formikProps) => {
-    const type = e.ref.props.name;
-    formikProps.setErrors({});
-    setTypeRegister(type);
-  };
 
   return (
     <SafeAreaView>
@@ -41,120 +32,70 @@ const FormRegister = props => {
         onSubmit={onHandleSubmitted}
       >
         {({ touched, errors, ...formikProps }) => (
-          <React.Fragment>
+          <>
             {step === 0 && (
-              <Tabs
-                onChangeTab={e => handleChangeType(e, formikProps)}
-                tabBarUnderlineStyle={{ backgroundColor: '#2196f3', height: 1 }}
-              >
-                <Tab
-                  tabStyle={{ backgroundColor: '#F8F8F8' }}
-                  textStyle={{ color: '#AAA' }}
-                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
-                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
-                  heading="Phone"
-                  name="Phone"
-                >
-                  {error && (
-                    <View style={styles.errorBE}>
-                      <MaterialIcons
-                        style={styles.errorBEIcon}
-                        name="error"
-                        size={20}
-                        color="red"
-                      />
-                      <Text style={styles.errorBEText}>{message.msg}</Text>
-                    </View>
-                  )}
-                  <FormPhone
-                    styles={styles}
+              <InputTabs
+                error={error} // error from redux
+                formikProps={formikProps} // support change tab
+                setTypeTab={setTypeTab} // support change tab
+                message={message}
+                tabPhone={
+                  <InputTextCustom
                     touched={touched}
                     errors={errors}
                     formikProps={formikProps}
+                    type={{ key: 'phone', placeholder: 'Your phone...' }}
                   />
-                </Tab>
-                <Tab
-                  tabStyle={{ backgroundColor: '#F8F8F8' }}
-                  textStyle={{ color: '#AAA' }}
-                  activeTabStyle={{ backgroundColor: '#F8F8F8' }}
-                  activeTextStyle={{ color: '#2196f3', fontWeight: '700' }}
-                  heading="Email"
-                  name="Email"
-                >
-                  {error && (
-                    <View style={styles.errorBE}>
-                      <MaterialIcons
-                        style={styles.errorBEIcon}
-                        name="error"
-                        size={20}
-                        color="red"
-                      />
-                      <Text style={styles.errorBEText}>{message.msg}</Text>
-                    </View>
-                  )}
-                  <FormMail
-                    styles={styles}
+                }
+                tabEmail={
+                  <InputTextCustom
                     touched={touched}
                     errors={errors}
                     formikProps={formikProps}
+                    type={{ key: 'email', placeholder: 'Your email...' }}
                   />
-                </Tab>
-              </Tabs>
+                }
+              />
             )}
             {step === 2 && (
-              <FormName
-                styles={styles}
+              <InputTextCustom
                 touched={touched}
                 errors={errors}
                 formikProps={formikProps}
+                type={{ key: 'name', placeholder: 'Your name...' }}
               />
             )}
             {step === 3 && (
-              <FormPassword
-                styles={styles}
-                touched={touched}
-                errors={errors}
-                formikProps={formikProps}
-              />
+              <>
+                <InputSecureCustom
+                  touched={touched}
+                  errors={errors}
+                  formikProps={formikProps}
+                  type={{ key: 'password', placeholder: 'Password...' }}
+                />
+                <InputSecureCustom
+                  touched={touched}
+                  errors={errors}
+                  formikProps={formikProps}
+                  type={{
+                    key: 'passwordConfirm',
+                    placeholder: 'Confirm password'
+                  }}
+                />
+              </>
             )}
-            <TouchableOpacity
-              disabled={isLoading}
-              onPress={formikProps.handleSubmit}
-            >
-              <LinearGradient
-                style={styles.rect7}
-                colors={['#0cb3ff', '#0068ff']}
-              >
-                <Text style={styles.loginButton}>
-                  {step !== 3 ? 'Next' : 'Completed'}
-                </Text>
-                {isLoading && step !== 2 && (
-                  <Spinner
-                    style={{ position: 'absolute' }}
-                    size="large"
-                    color="white"
-                  />
-                )}
-                {step !== 3 && (
-                  <MaterialIcons
-                    style={styles.iconNext}
-                    name="navigate-next"
-                    size={28}
-                    color="white"
-                  />
-                )}
-              </LinearGradient>
-            </TouchableOpacity>
-            <View style={styles.bottomHint}>
-              <Text>Already have an account?</Text>
-              <Text
-                style={styles.bottomHintSig}
-                onPress={() => navigation.navigate('Login')}
-              >
-                Sign in
-              </Text>
-            </View>
-          </React.Fragment>
+            <ButtonStep
+              isLoading={isLoading}
+              handleSubmit={formikProps.handleSubmit}
+              navigation={navigation}
+              hint={{
+                text: 'Already have an account?',
+                navigateTo: 'Login',
+                typeText: 'Sign in'
+              }}
+              isNext={3}
+            />
+          </>
         )}
       </Formik>
     </SafeAreaView>
@@ -165,7 +106,7 @@ export default FormRegister;
 
 FormRegister.propTypes = {
   step: PropTypes.number,
-  setTypeRegister: PropTypes.func,
+  setTypeTab: PropTypes.func,
   initialValues: PropTypes.objectOf(PropTypes.any),
   defaultSchema: PropTypes.objectOf(PropTypes.any),
   navigation: PropTypes.objectOf(PropTypes.any),
@@ -174,7 +115,7 @@ FormRegister.propTypes = {
 };
 FormRegister.defaultProps = {
   step: 0,
-  setTypeRegister: () => {},
+  setTypeTab: () => {},
   initialValues: {},
   defaultSchema: {},
   navigation: {},
