@@ -16,7 +16,15 @@ import {
   accountRegister
 } from 'actions/authenActions';
 
-import { Header } from 'screens/SceenRoot/common';
+// Component
+import {
+  Header,
+  InputEmail,
+  InputPhone,
+  InputPassword,
+  InputTabs,
+  ButtonStyle
+} from 'screens/SceenRoot/common';
 
 const initialValues = {
   email: '',
