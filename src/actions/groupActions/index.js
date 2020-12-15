@@ -3,26 +3,6 @@ import { GROUP_TYPE } from 'constTypes';
 
 const prefix = 'rooms/';
 
-export const fetchAllGroupsForChecked = () => dispatch => {
-  return axiosServices
-    .get(`https://api-chat.ga/api/v0/rooms?currentPage=1&perPage=1000`)
-    .then(res => {
-      const {
-        data: { itemsList }
-      } = res.data;
-      const singleGroups = itemsList.filter(item => item.group === false);
-      dispatch({
-        type: GROUP_TYPE.FETCH_ALL_GROUP_CHECKED_REQUEST,
-        payload: singleGroups
-      });
-      return { itemsList };
-    })
-    .catch(err => {
-      const { error, data } = err.response?.data;
-      return { error, data };
-    });
-};
-
 export const createSingleRoom = (friend_id, data) => {
   return axiosServices
     .post(`${prefix}single?friend_id=${friend_id}`, data)
