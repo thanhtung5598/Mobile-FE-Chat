@@ -22,10 +22,10 @@ const source = {
 
 const AnimatedVerify = ({
   onHandleVerifyCode,
-  typeRegister,
+  typeTab,
   userData: { phone, email }
 }) => {
-  const CELL_COUNT = typeRegister === 'Email' ? 6 : 4;
+  const CELL_COUNT = 6;
   const { isLoadingVerify } = useSelector(state => state.authVerify);
   const { error } = useSelector(state => state.authen);
   const [value, setValue] = useState('');
@@ -36,13 +36,8 @@ const AnimatedVerify = ({
   });
 
   useEffect(() => {
-    typeRegister === 'Phone' &&
-      value.split('').length === 4 &&
-      onHandleVerifyCode(value);
-    typeRegister === 'Email' &&
-      value.split('').length === 6 &&
-      onHandleVerifyCode(value);
-  }, [onHandleVerifyCode, typeRegister, value]);
+    value.split('').length === 6 && onHandleVerifyCode(value);
+  }, [onHandleVerifyCode, value]);
 
   const renderCell = ({ index, symbol, isFocused }) => {
     return (
@@ -61,12 +56,12 @@ const AnimatedVerify = ({
       <Text style={styles.title}>Verification</Text>
       <Image style={styles.icon} source={source} />
       <Text style={styles.subTitle1}>
-        {typeRegister === 'Phone' && `we sent to (+84) ${phone && phone}`}
-        {typeRegister === 'Email' && `we sent to ${email && email}`}
+        {typeTab === 'phone' && `we sent to (+84) ${phone && phone}`}
+        {typeTab === 'email' && `we sent to ${email && email}`}
       </Text>
       <Text style={styles.subTitle2}>
-        {typeRegister === 'Phone' && `Please check SMS \n`}
-        {typeRegister === 'Email' && `Please check your mail \n`}
+        {typeTab === 'phone' && `Please check SMS \n`}
+        {typeTab === 'email' && `Please check your mail \n`}
         and fill in the confirmation code below
       </Text>
       <View style={{ alignItems: 'center' }}>
@@ -102,11 +97,11 @@ export default AnimatedVerify;
 
 AnimatedVerify.propTypes = {
   userData: PropTypes.objectOf(PropTypes.any),
-  typeRegister: PropTypes.string,
+  typeTab: PropTypes.string,
   onHandleVerifyCode: PropTypes.func
 };
 AnimatedVerify.defaultProps = {
   userData: {},
-  typeRegister: 'Phone',
+  typeTab: 'Phone',
   onHandleVerifyCode: () => {}
 };

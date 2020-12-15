@@ -39,29 +39,32 @@ export const accountRegister = (data, token) => dispatch => {
     type: AUTHENTICATION_TYPE.REGISTER_REQUEST
   });
   axiosServices.defaults.headers.post['x-access-token'] = token.accessToken;
-  return axiosServices.post(`${prefix}signup`, data).then(res => {
-    const { error, data } = res.data;
-    if (!error) {
-      asyncStorage.setToken(data);
-      dispatch({
-        type: AUTHENTICATION_TYPE.REGISTER_SUCCESS,
-        payload: {
-          error,
-          data
-        }
-      });
-    }
-    if (error) {
+  return axiosServices
+    .post(`${prefix}signup`, data)
+    .then(res => {
+      const { error, data } = res.data;
+      if (!error) {
+        asyncStorage.setToken(data);
+        dispatch({
+          type: AUTHENTICATION_TYPE.REGISTER_SUCCESS,
+          payload: {
+            error,
+            data
+          }
+        });
+      }
+    })
+    .catch(err => {
+      const { error, message } = err.response?.data;
       dispatch({
         type: AUTHENTICATION_TYPE.REGISTER_FAILURE,
         payload: {
           error,
-          data
+          message
         }
       });
-    }
-    return { error, data };
-  });
+      return { error, message };
+    });
 };
 
 export const accountChangePassword = (data, token) => dispatch => {
@@ -74,7 +77,6 @@ export const accountChangePassword = (data, token) => dispatch => {
     .then(res => {
       const { error } = res.data;
       if (!error) {
-        asyncStorage.setToken(token);
         setTimeout(() => {
           dispatch({
             type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS,
@@ -86,7 +88,7 @@ export const accountChangePassword = (data, token) => dispatch => {
       }
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const { error, message } = err.response?.data;
       if (error) {
         dispatch({
           type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE,
@@ -95,7 +97,7 @@ export const accountChangePassword = (data, token) => dispatch => {
           }
         });
       }
-      return { error, data };
+      return { error, message };
     });
 };
 

@@ -27,7 +27,7 @@ const InputTabs = props => {
           activeTabStyle={styles.tabBackground}
           activeTextStyle={styles.tabActiveText}
           heading="Phone"
-          name="Phone"
+          name="phone"
         >
           {error && <InputError message={message} />}
           {tabPhone}
@@ -38,7 +38,7 @@ const InputTabs = props => {
           activeTabStyle={styles.tabBackground}
           activeTextStyle={styles.tabActiveText}
           heading="Email"
-          name="Email"
+          name="email"
         >
           {error && <InputError message={message} />}
           {tabEmail}

@@ -89,14 +89,14 @@ const AuthenReducer = (state = initialState, action) => {
         error: null,
         message: null,
         isAuthenticated: true,
-        auth_token: action.payload.accessToken
+        auth_token: action.payload.data.accessToken
       };
     case AUTHENTICATION_TYPE.REGISTER_FAILURE:
       return {
         ...state,
         isLoading: false,
         error: action.payload.error,
-        message: action.payload.data[0]
+        message: action.payload.message
       };
     case AUTHENTICATION_TYPE.CHANGE_PASSWORD_REQUEST:
       return {

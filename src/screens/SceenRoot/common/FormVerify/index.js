@@ -1,13 +1,13 @@
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import AnimateVerify from './../AnumateVerify';
+import AnimateVerify from '../AnumateVerify';
 import { Container, Content, Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useCountDown from 'components/common/hook/useCountDown';
 
 const FormVerify = ({
-  typeRegister,
+  typeTab,
   onHandleVerifyCode,
   onHandleResendCode,
   userData
@@ -29,7 +29,7 @@ const FormVerify = ({
           </Text>
         </View>
         <AnimateVerify
-          typeRegister={typeRegister}
+          typeTab={typeTab}
           userData={userData}
           onHandleVerifyCode={onHandleVerifyCode}
         />
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
 });
 
 FormVerify.propTypes = {
-  typeRegister: PropTypes.string,
+  typeTab: PropTypes.string,
   userData: PropTypes.objectOf(PropTypes.any),
   countDown: PropTypes.number,
   onHandleVerifyCode: PropTypes.func,
@@ -103,7 +103,7 @@ FormVerify.propTypes = {
   navigation: PropTypes.objectOf(PropTypes.any)
 };
 FormVerify.defaultProps = {
-  typeRegister: '',
+  typeTab: '',
   userData: {},
   countDown: 0,
   onHandleVerifyCode: () => {},
