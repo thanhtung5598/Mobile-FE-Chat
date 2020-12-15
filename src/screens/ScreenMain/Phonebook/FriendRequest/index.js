@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
@@ -27,18 +27,26 @@ const FriendRequest = props => {
     <EmptyList message={' No friends requested'} />
   );
 
-  const renderItemFriendRequired = ({ item: friend }) => (
-    <TouchableOpacity onPress={() => handleToggleChatRoom(friend)}>
-      <ItemFriendsRequired
-        styles={styles}
-        friend={friend}
-        handleDeclineFriend={handleDeclineFriend}
-        handleAcceptFriend={handleAcceptFriend}
-      />
-    </TouchableOpacity>
+  const renderItemFriendRequired = useCallback(
+    ({ item: friend }) => {
+      return (
+        <TouchableOpacity onPress={() => handleToggleChatRoom(friend)}>
+          <ItemFriendsRequired
+            styles={styles}
+            friend={friend}
+            handleDeclineFriend={handleDeclineFriend}
+            handleAcceptFriend={handleAcceptFriend}
+          />
+        </TouchableOpacity>
+      );
+    },
+    [handleAcceptFriend, handleDeclineFriend, handleToggleChatRoom]
   );
 
-  const handlePullToRefesh = () => {};
+  const handlePullToRefesh = () => {
+    dispatch(fetchRequestFriends());
+  };
+
   return (
     <>
       <Container>

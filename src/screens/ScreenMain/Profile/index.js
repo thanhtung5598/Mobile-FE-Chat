@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, ImageBackground, Platform, FlatList } from 'react-native';
 import moment from 'moment';
@@ -76,6 +76,43 @@ const Profile = ({ navigation }) => {
     dispatch(getProfileUser());
   };
 
+  const renderListInfo = useMemo(() => {
+    return (
+      <List style={styles.ContainList}>
+        <ListItem>
+          <Text style={styles.titleInfo}>Zola name</Text>
+          <Text style={styles.valueInfo}>{dataUser?.name || '...'}</Text>
+        </ListItem>
+        <ListItem>
+          <Text style={styles.titleInfo}>Phone</Text>
+          <Text style={styles.valueInfo}>{dataUser?.phone || '...'}</Text>
+        </ListItem>
+        <ListItem>
+          <Text style={styles.titleInfo}>Email</Text>
+          <Text style={styles.valueInfo}>{dataUser?.email || '....'}</Text>
+        </ListItem>
+        <ListItem>
+          <Text style={styles.titleInfo}>Create At</Text>
+          <Text style={styles.valueInfo}>
+            {moment(dataUser?.createAt).format('YYYY/MM/DD')}
+          </Text>
+        </ListItem>
+        <ListItem>
+          <Text style={styles.titleInfo}>Update At</Text>
+          <Text style={styles.valueInfo}>
+            {moment(dataUser?.updateAt).format('YYYY/MM/DD')}
+          </Text>
+        </ListItem>
+      </List>
+    );
+  }, [
+    dataUser?.createAt,
+    dataUser?.email,
+    dataUser?.name,
+    dataUser?.phone,
+    dataUser?.updateAt
+  ]);
+
   return (
     <Container>
       <ModalUpdatedName onSubmit={onHandleSubmitAdd} ref={modalRef} />
@@ -125,38 +162,7 @@ const Profile = ({ navigation }) => {
                   </TouchableOpacity>
                 </View>
               </ImageBackground>
-              <List style={styles.ContainList}>
-                <ListItem>
-                  <Text style={styles.titleInfo}>Zola name</Text>
-                  <Text style={styles.valueInfo}>
-                    {dataUser?.name || '...'}
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text style={styles.titleInfo}>Phone</Text>
-                  <Text style={styles.valueInfo}>
-                    {dataUser?.phone || '...'}
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text style={styles.titleInfo}>Email</Text>
-                  <Text style={styles.valueInfo}>
-                    {dataUser?.email || '....'}
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text style={styles.titleInfo}>Create At</Text>
-                  <Text style={styles.valueInfo}>
-                    {moment(dataUser?.createAt).format('YYYY/MM/DD')}
-                  </Text>
-                </ListItem>
-                <ListItem>
-                  <Text style={styles.titleInfo}>Update At</Text>
-                  <Text style={styles.valueInfo}>
-                    {moment(dataUser?.updateAt).format('YYYY/MM/DD')}
-                  </Text>
-                </ListItem>
-              </List>
+              {renderListInfo}
             </>
           )}
           refreshing={isLoading}

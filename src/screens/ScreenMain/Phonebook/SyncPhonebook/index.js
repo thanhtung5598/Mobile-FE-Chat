@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
@@ -56,19 +56,24 @@ const SyncPhonebook = props => {
     })();
   }, [dataUser, dispatch]);
 
-  const renderItemSyncPhone = ({ item: friend }) => (
-    <TouchableOpacity onPress={() => handleToggleChatRoom(friend)}>
-      <ItemFriends
-        friend={friend}
-        handleAddFriend={handleAddFriend}
-        status={true}
-      />
-    </TouchableOpacity>
+  const renderItemSyncPhone = useCallback(
+    ({ item: friend }) => {
+      return (
+        <TouchableOpacity onPress={() => handleToggleChatRoom(friend)}>
+          <ItemFriends
+            friend={friend}
+            handleAddFriend={handleAddFriend}
+            status={true}
+          />
+        </TouchableOpacity>
+      );
+    },
+    [handleAddFriend, handleToggleChatRoom]
   );
 
   const renderEmptyComponent = () => <EmptyList message={'No friends sync'} />;
 
-  const handlePullToRefesh = () => {
+  const handlePullToRefesh = useCallback(() => {
     (async () => {
       const { status } = await Contacts.requestPermissionsAsync();
       if (status === 'granted') {
@@ -91,7 +96,7 @@ const SyncPhonebook = props => {
         //doing somthing
       }
     })();
-  };
+  }, [dataUser.id, dispatch]);
 
   return (
     <>

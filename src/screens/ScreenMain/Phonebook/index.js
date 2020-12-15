@@ -1,6 +1,13 @@
-import React, { useState, useRef, Fragment, useEffect } from 'react';
+import React, {
+  useMemo,
+  useCallback,
+  useState,
+  useRef,
+  Fragment,
+  useEffect
+} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Keyboard, FlatList } from 'react-native';
+import { Keyboard, FlatList, StyleSheet } from 'react-native';
 import {
   Container,
   Content,
@@ -66,6 +73,7 @@ const PhoneBook = props => {
   const handleToggleModal = _position => {
     setPosition(_position);
   };
+
   const handleToggleModalInfo = _position => {
     setPositionInfo(_position);
     setPosition(null);
@@ -99,114 +107,108 @@ const PhoneBook = props => {
     delayedQuery(value);
   };
 
-  const handleAddFriend = id_friend_req => {
-    const value = {
-      user_id: dataUser.id,
-      user_request_id: id_friend_req
-    };
-    dispatch(addFriend(value));
-  };
+  const handleAddFriend = useCallback(
+    id_friend_req => {
+      const value = {
+        user_id: dataUser.id,
+        user_request_id: id_friend_req
+      };
+      dispatch(addFriend(value));
+    },
+    [dataUser.id, dispatch]
+  );
 
-  const handleDeletedFriend = id_fri_del => {
-    const value = {
-      user_id: `${dataUser.id}`,
-      user_id_want_delete: `${id_fri_del}`
-    };
-    dispatch(deleteFriend(value)).then(() => {
-      setPosition(null);
-    });
-  };
+  const handleDeletedFriend = useCallback(
+    id_fri_del => {
+      const value = {
+        user_id: `${dataUser.id}`,
+        user_id_want_delete: `${id_fri_del}`
+      };
+      dispatch(deleteFriend(value)).then(() => {
+        setPosition(null);
+      });
+    },
+    [dataUser.id, dispatch]
+  );
 
-  const handleAcceptFriend = id_friend_accept => {
-    const value = {
-      user_id: dataUser.id,
-      user_id_want_accept: id_friend_accept
-    };
-    dispatch(acceptFriend(value));
-  };
+  const handleAcceptFriend = useCallback(
+    id_friend_accept => {
+      const value = {
+        user_id: dataUser.id,
+        user_id_want_accept: id_friend_accept
+      };
+      dispatch(acceptFriend(value));
+    },
+    [dataUser.id, dispatch]
+  );
 
-  const handleDeclineFriend = id_friend_decline => {
-    const value = {
-      user_id: dataUser.id,
-      user_id_want_decline: id_friend_decline
-    };
-    dispatch(declineFriend(value));
-  };
+  const handleDeclineFriend = useCallback(
+    id_friend_decline => {
+      const value = {
+        user_id: dataUser.id,
+        user_id_want_decline: id_friend_decline
+      };
+      dispatch(declineFriend(value));
+    },
+    [dataUser.id, dispatch]
+  );
 
-  const handleToggleChatRoom = friend => {
-    dispatch(updateCurrentGroup(friend));
-    setChatOpen(true);
-    setFooter(false);
-    setFind(false);
-    setShowFriendsReq(false);
-    setPhonebook(false);
-    setUserQuery('');
-  };
+  const handleToggleChatRoom = useCallback(
+    friend => {
+      dispatch(updateCurrentGroup(friend));
+      setChatOpen(true);
+      setFooter(false);
+      setFind(false);
+      setShowFriendsReq(false);
+      setPhonebook(false);
+      setUserQuery('');
+    },
+    [dispatch, setFooter]
+  );
 
-  const handlePullToRefesh = () => {
+  const handlePullToRefesh = useCallback(() => {
     dispatch(fetchRequestFriends());
     dispatch(fetchListFriends());
-  };
+  }, [dispatch]);
 
-  const renderHeaderPhonebook = () => {
+  const renderHeaderReq = useMemo(() => {
+    return (
+      <ListItem thumbnail onPress={handleOpenFriendReq}>
+        <Left style={styles.friendReq}>
+          <Fontisto name="heart" size={24} color="white" />
+          {listRequestFriends?.length > 0 && (
+            <View style={styles.badged}>
+              <Text style={{ fontSize: 15, color: 'white' }}>
+                {listRequestFriends?.length}
+              </Text>
+            </View>
+          )}
+        </Left>
+        <Body style={styles.borderHide}>
+          <Text>Friends Requested</Text>
+        </Body>
+      </ListItem>
+    );
+  }, [listRequestFriends?.length]);
+
+  const renderHeaderSync = useMemo(() => {
+    return (
+      <TouchableOpacity onPress={handleOpenFriendPhonebook}>
+        <ListItem thumbnail>
+          <Left style={styles.iconStyle}>
+            <FontAwesome name="address-book" size={24} color="white" />
+          </Left>
+          <Body style={styles.borderHide}>
+            <Text>Sync Phonebook</Text>
+          </Body>
+        </ListItem>
+      </TouchableOpacity>
+    );
+  }, []);
+
+  const renderDivide = useMemo(() => {
     return (
       <>
-        <TouchableOpacity onPress={handleOpenFriendReq}>
-          <ListItem thumbnail>
-            <Left
-              style={{
-                backgroundColor: '#ffa726',
-                width: 45,
-                height: 45,
-                borderRadius: 45,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <Fontisto name="heart" size={24} color="white" />
-              {listRequestFriends?.length > 0 && (
-                <View
-                  style={{
-                    position: 'absolute',
-                    right: -10,
-                    bottom: 0,
-                    backgroundColor: 'red',
-                    width: 20,
-                    height: 20,
-                    borderRadius: 20,
-                    alignItems: 'center'
-                  }}
-                >
-                  <Text style={{ fontSize: 15, color: 'white' }}>
-                    {listRequestFriends?.length}
-                  </Text>
-                </View>
-              )}
-            </Left>
-            <Body style={{ borderBottomColor: 'white' }}>
-              <Text>Friends Requested</Text>
-            </Body>
-          </ListItem>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleOpenFriendPhonebook}>
-          <ListItem thumbnail>
-            <Left
-              style={{
-                backgroundColor: '#42a5f5',
-                width: 45,
-                height: 45,
-                borderRadius: 45,
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}
-            >
-              <FontAwesome name="address-book" size={24} color="white" />
-            </Left>
-            <Body style={{ borderBottomColor: 'white' }}>
-              <Text>Sync Phonebook</Text>
-            </Body>
-          </ListItem>
-        </TouchableOpacity>
         <ListItem
           itemDivider
           style={{ backgroundColor: 'white', paddingBottom: 0 }}
@@ -234,41 +236,54 @@ const PhoneBook = props => {
         </ListItem>
       </>
     );
+  }, []);
+
+  const renderHeaderPhonebook = () => {
+    return (
+      <>
+        {renderHeaderReq}
+        {renderHeaderSync}
+        {renderDivide}
+      </>
+    );
   };
 
   const renderComponentEmpty = () => <EmptyList message={'Empty friends'} />;
 
-  const renderItemPhonebook = ({ item: friend, index }) => {
-    return (
-      <Fragment key={index}>
-        <TouchableOpacity
-          onPress={() => handleToggleChatRoom(friend)}
-          onLongPress={() => handleToggleModal(index)}
-        >
-          <ItemFriends friend={friend} />
-        </TouchableOpacity>
-        {position === index && (
-          <ModalCustom
-            info={friend}
-            visible={!!(position === index)}
-            setVisible={setPosition}
-            handleDeletedFriend={handleDeletedFriend}
-            handleToggleModalInfo={handleToggleModalInfo}
-            positionModal={index}
-          />
-        )}
-        {positionInfo === index && (
-          <ModalInfoUser
-            info={friend}
-            visible={!!(positionInfo === index)}
-            setVisible={setPositionInfo}
-            setVisibleModalAction={setPosition}
-            positionModal={index}
-          />
-        )}
-      </Fragment>
-    );
-  };
+  const renderItemPhonebook = useCallback(
+    ({ item: friend, index }) => {
+      return (
+        <Fragment key={index}>
+          <TouchableOpacity
+            onPress={() => handleToggleChatRoom(friend)}
+            onLongPress={() => handleToggleModal(index)}
+          >
+            <ItemFriends friend={friend} />
+          </TouchableOpacity>
+          {position === index && (
+            <ModalCustom
+              info={friend}
+              visible={!!(position === index)}
+              setVisible={setPosition}
+              handleDeletedFriend={handleDeletedFriend}
+              handleToggleModalInfo={handleToggleModalInfo}
+              positionModal={index}
+            />
+          )}
+          {positionInfo === index && (
+            <ModalInfoUser
+              info={friend}
+              visible={!!(positionInfo === index)}
+              setVisible={setPositionInfo}
+              setVisibleModalAction={setPosition}
+              positionModal={index}
+            />
+          )}
+        </Fragment>
+      );
+    },
+    [handleDeletedFriend, handleToggleChatRoom, position, positionInfo]
+  );
 
   return (
     <>
@@ -312,10 +327,8 @@ const PhoneBook = props => {
           <View style={{ height: '100%' }}>
             <HeaderSearch
               find={find}
-              userQuery={userQuery}
               handleFind={handleFind}
               handleTurnBack={handleTurnBack}
-              handleChangeValue={handleChangeValue}
             />
             <FlatList
               data={listFriends}
@@ -340,3 +353,32 @@ PhoneBook.propTypes = {
 PhoneBook.defaultProps = {
   setFooter: () => {}
 };
+const styles = StyleSheet.create({
+  friendReq: {
+    backgroundColor: '#ffa726',
+    width: 45,
+    height: 45,
+    borderRadius: 45,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  badged: {
+    position: 'absolute',
+    right: -10,
+    bottom: 0,
+    backgroundColor: 'red',
+    width: 20,
+    height: 20,
+    borderRadius: 20,
+    alignItems: 'center'
+  },
+  iconStyle: {
+    backgroundColor: '#42a5f5',
+    width: 45,
+    height: 45,
+    borderRadius: 45,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  borderHide: { borderBottomColor: 'white' }
+});
