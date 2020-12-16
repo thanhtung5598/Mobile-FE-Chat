@@ -10,6 +10,7 @@ import EmptyList from 'screens/ScreenMain/common/EmptyList';
 import { ItemFriendsRequired } from 'screens/ScreenMain/common/ItemRender';
 
 const FriendRequest = props => {
+  console.log('friend req');
   const dispatch = useDispatch();
   const { listRequestFriends, isLoading } = useSelector(state => state.friends);
   const {

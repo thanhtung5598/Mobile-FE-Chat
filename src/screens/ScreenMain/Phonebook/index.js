@@ -51,6 +51,7 @@ import {
 import { updateCurrentGroup } from 'actions/groupActions';
 
 const PhoneBook = props => {
+  console.log('phonebook run');
   const { setFooter } = props;
   const dispatch = useDispatch();
   const { dataUser } = useSelector(state => state.dataUser);
@@ -92,20 +93,23 @@ const PhoneBook = props => {
     setPhonebook(true);
   };
 
-  const handleTurnBack = () => {
+  const handleTurnBack = useCallback(() => {
     setUserQuery('');
     setFind(false);
     dispatch(clearSearch());
     Keyboard.dismiss();
-  };
+  }, [dispatch]);
 
   const handleFind = () => {
     setFind(true);
   };
-  const handleChangeValue = value => {
-    setUserQuery(value);
-    delayedQuery(value);
-  };
+  const handleChangeValue = useCallback(
+    value => {
+      setUserQuery(value);
+      delayedQuery(value);
+    },
+    [delayedQuery]
+  );
 
   const handleAddFriend = useCallback(
     id_friend_req => {
@@ -238,7 +242,7 @@ const PhoneBook = props => {
     );
   }, []);
 
-  const renderHeaderPhonebook = () => {
+  const renderHeaderPhonebook = useCallback(() => {
     return (
       <>
         {renderHeaderReq}
@@ -246,7 +250,7 @@ const PhoneBook = props => {
         {renderDivide}
       </>
     );
-  };
+  }, [renderDivide, renderHeaderReq, renderHeaderSync]);
 
   const renderComponentEmpty = () => <EmptyList message={'Empty friends'} />;
 
@@ -285,62 +289,99 @@ const PhoneBook = props => {
     [handleDeletedFriend, handleToggleChatRoom, position, positionInfo]
   );
 
+  const renderChatSingle = useMemo(() => {
+    return <ChatSingle setChatOpen={setChatOpen} setFooter={setFooter} />;
+  }, [setFooter]);
+
+  const renderFindFriend = useMemo(() => {
+    return (
+      <>
+        <HeaderSearch
+          find={find}
+          userQuery={userQuery}
+          handleFind={handleFind}
+          handleTurnBack={handleTurnBack}
+          handleChangeValue={handleChangeValue}
+        />
+        <Content>
+          <FindFriends
+            handleToggleChatRoom={handleToggleChatRoom}
+            handleAddFriend={handleAddFriend}
+          />
+        </Content>
+      </>
+    );
+  }, [
+    find,
+    handleAddFriend,
+    handleChangeValue,
+    handleToggleChatRoom,
+    handleTurnBack,
+    userQuery
+  ]);
+
+  const renderFriendReq = useMemo(() => {
+    return (
+      <FriendRequest
+        handleToggleChatRoom={handleToggleChatRoom}
+        setShowFriendsReq={setShowFriendsReq}
+        handleAcceptFriend={handleAcceptFriend}
+        handleDeclineFriend={handleDeclineFriend}
+      />
+    );
+  }, [handleAcceptFriend, handleDeclineFriend, handleToggleChatRoom]);
+
+  const renderPhoneSync = useMemo(() => {
+    return (
+      <SyncPhonebook
+        handleToggleChatRoom={handleToggleChatRoom}
+        setPhonebook={setPhonebook}
+        handleAddFriend={handleAddFriend}
+      />
+    );
+  }, [handleAddFriend, handleToggleChatRoom]);
+
+  const renderAllPhonebook = useMemo(() => {
+    return (
+      <View style={{ height: '100%' }}>
+        <HeaderSearch
+          find={find}
+          handleFind={handleFind}
+          handleTurnBack={handleTurnBack}
+        />
+        <FlatList
+          data={listFriends}
+          ListHeaderComponent={renderHeaderPhonebook}
+          ListEmptyComponent={renderComponentEmpty}
+          renderItem={renderItemPhonebook}
+          keyExtractor={item => `${item.id}`}
+          refreshing={isLoading}
+          onRefresh={handlePullToRefesh}
+        />
+      </View>
+    );
+  }, [
+    find,
+    handlePullToRefesh,
+    handleTurnBack,
+    isLoading,
+    listFriends,
+    renderHeaderPhonebook,
+    renderItemPhonebook
+  ]);
+
   return (
     <>
       <Container>
-        {isChatOpen && (
-          <ChatSingle setChatOpen={setChatOpen} setFooter={setFooter} />
-        )}
-        {find && (
-          <>
-            <HeaderSearch
-              find={find}
-              userQuery={userQuery}
-              handleFind={handleFind}
-              handleTurnBack={handleTurnBack}
-              handleChangeValue={handleChangeValue}
-            />
-            <Content>
-              <FindFriends
-                handleToggleChatRoom={handleToggleChatRoom}
-                handleAddFriend={handleAddFriend}
-              />
-            </Content>
-          </>
-        )}
-        {showFriendsReq && (
-          <FriendRequest
-            handleToggleChatRoom={handleToggleChatRoom}
-            setShowFriendsReq={setShowFriendsReq}
-            handleAcceptFriend={handleAcceptFriend}
-            handleDeclineFriend={handleDeclineFriend}
-          />
-        )}
-        {phonebook && (
-          <SyncPhonebook
-            handleToggleChatRoom={handleToggleChatRoom}
-            setPhonebook={setPhonebook}
-            handleAddFriend={handleAddFriend}
-          />
-        )}
-        {!find && !showFriendsReq && !phonebook && !isChatOpen && (
-          <View style={{ height: '100%' }}>
-            <HeaderSearch
-              find={find}
-              handleFind={handleFind}
-              handleTurnBack={handleTurnBack}
-            />
-            <FlatList
-              data={listFriends}
-              ListHeaderComponent={renderHeaderPhonebook}
-              ListEmptyComponent={renderComponentEmpty}
-              renderItem={renderItemPhonebook}
-              keyExtractor={item => `${item.id}`}
-              refreshing={isLoading}
-              onRefresh={handlePullToRefesh}
-            />
-          </View>
-        )}
+        {isChatOpen && renderChatSingle}
+        {find && renderFindFriend}
+        {showFriendsReq && renderFriendReq}
+        {phonebook && renderPhoneSync}
+        {!find &&
+          !showFriendsReq &&
+          !phonebook &&
+          !isChatOpen &&
+          renderAllPhonebook}
       </Container>
     </>
   );

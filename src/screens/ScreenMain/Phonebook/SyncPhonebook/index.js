@@ -19,6 +19,7 @@ import {
 } from 'actions/userActions';
 
 const SyncPhonebook = props => {
+  console.log('phone sync');
   const dispatch = useDispatch();
   const { handleAddFriend } = props;
   const { dataUser } = useSelector(state => state.dataUser);

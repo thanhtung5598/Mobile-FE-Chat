@@ -9,11 +9,17 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const HeaderChat = props => {
   const { setChatOpen, setFooter } = props;
   const { currentGroup } = useSelector(state => state.groupSelected);
-  const { name } = currentGroup;
+  const { dataUser } = useSelector(state => state.dataUser);
+  const { name, users } = currentGroup;
 
   const handleChatClose = () => {
     setChatOpen(false);
     setFooter(true);
+  };
+
+  const filterName = () => {
+    const user = users.filter(item => item.id !== dataUser.id);
+    return user[0].name;
   };
 
   return (
@@ -30,7 +36,7 @@ const HeaderChat = props => {
             <Ionicons name="md-arrow-back" size={24} style={styles.icon} />
           </TouchableOpacity>
           <View>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.name}>{name ? name : filterName()}</Text>
             <Text style={styles.time}>Vừa mới truy cập</Text>
           </View>
         </View>

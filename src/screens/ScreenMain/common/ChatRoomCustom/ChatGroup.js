@@ -5,6 +5,7 @@ import GroupAddMember from './GroupAddMember';
 import { BodyGroupChat } from './bodyChat';
 
 const ChatGroup = props => {
+  console.log('Chat group');
   const [isAddMember, setAddMember] = useState(false);
   const { setChatOpen, setFooter, isSingle } = props;
 

@@ -5,6 +5,8 @@ import { BodySingleChat } from './bodyChat';
 import { Container } from 'native-base';
 
 const ChatSingle = props => {
+  console.log('Chat single');
+
   const { setChatOpen, setFooter } = props;
 
   return (
