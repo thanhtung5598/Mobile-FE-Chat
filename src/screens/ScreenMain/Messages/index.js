@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, useContext } from 'react';
-import { Container, Content } from 'native-base';
+import { Container, View } from 'native-base';
 import { FlatList } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -58,15 +58,15 @@ const ListMessage = props => {
   const renderAllGroup = useMemo(() => {
     return (
       <>
-        <HeaderSearch />
-        <Content>
+        <View style={{ height: '100%' }}>
+          <HeaderSearch />
           <FlatList
             data={listMessRoom}
             ListEmptyComponent={renderComponentEmpty}
             renderItem={renderItemGroup}
             keyExtractor={item => `${item._id}`}
           />
-        </Content>
+        </View>
       </>
     );
   }, [listMessRoom, renderItemGroup]);

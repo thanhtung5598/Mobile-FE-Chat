@@ -1,11 +1,4 @@
-import React, {
-  useMemo,
-  useCallback,
-  useState,
-  useRef,
-  Fragment,
-  useEffect
-} from 'react';
+import React, { useMemo, useCallback, useState, useRef, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Keyboard, FlatList, StyleSheet } from 'react-native';
 import {
@@ -79,11 +72,6 @@ const PhoneBook = props => {
     setPositionInfo(_position);
     setPosition(null);
   };
-
-  useEffect(() => {
-    dispatch(fetchRequestFriends());
-    dispatch(fetchListFriends());
-  }, [dispatch]);
 
   const handleOpenFriendReq = () => {
     setShowFriendsReq(true);

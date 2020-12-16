@@ -1,4 +1,5 @@
-import React, { useState, useContext } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useContext, useEffect } from 'react';
 import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Container } from 'native-base';
@@ -64,9 +65,11 @@ const BodyGroupChat = () => {
     );
   };
 
-  socket.on('send_and_recive', function (msg) {
-    setMessages([...messages, msg]);
-  });
+  useEffect(() => {
+    socket.on('send_and_recive', function (msg) {
+      setMessages(preMess => [...preMess, msg]);
+    });
+  }, []);
 
   const onHandleSendMess = () => {
     if (textChat === '') return;

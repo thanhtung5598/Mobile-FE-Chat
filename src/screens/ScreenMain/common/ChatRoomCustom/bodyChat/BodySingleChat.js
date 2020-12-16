@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useState, useEffect } from 'react';
 import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Container, View } from 'native-base';
 import { SocketContext } from 'components/common/context/SocketContext';
-import useChatSocket from 'components/common/hook/useChatSocket';
+import useChatGroupSocket from 'components/common/hook/useChatGroupSocket';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { Video } from 'expo-av';
 import { useActionSheet } from '@expo/react-native-action-sheet';
@@ -15,7 +16,7 @@ const BodySingleChat = () => {
   const { showActionSheetWithOptions } = useActionSheet();
   const { currentGroup } = useSelector(state => state.groupSelected);
   const { dataUser } = useSelector(state => state.dataUser);
-  const { messages, setMessages } = useChatSocket({
+  const { messages, setMessages } = useChatGroupSocket({
     dataUser
   });
 
@@ -38,9 +39,11 @@ const BodySingleChat = () => {
     return newObjChat.reverse();
   };
 
-  socket.on('send_and_recive', function (msg) {
-    setMessages([...messages, msg]);
-  });
+  useEffect(() => {
+    socket.on('send_and_recive', function (msg) {
+      setMessages(preMess => [...preMess, msg]);
+    });
+  }, []);
 
   const onHandleSendMess = () => {
     if (textChat === '') return;
