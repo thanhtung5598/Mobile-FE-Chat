@@ -24,7 +24,7 @@ import FriendRequest from './FriendRequest';
 import SyncPhonebook from './SyncPhonebook';
 import FindFriends from 'screens/ScreenMain/common/FindFriends';
 import ModalInfoUser from 'components/common/ComponentsCommon/Modal/modalInfo';
-import { ChatSingle } from 'screens/ScreenMain/common/ChatRoomCustom';
+import { ChatGroup } from 'screens/ScreenMain/common/ChatRoomCustom';
 
 // Item Render
 import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
@@ -277,8 +277,8 @@ const PhoneBook = props => {
     [handleDeletedFriend, handleToggleChatRoom, position, positionInfo]
   );
 
-  const renderChatSingle = useMemo(() => {
-    return <ChatSingle setChatOpen={setChatOpen} setFooter={setFooter} />;
+  const renderChat = useMemo(() => {
+    return <ChatGroup setChatOpen={setChatOpen} setFooter={setFooter} />;
   }, [setFooter]);
 
   const renderFindFriend = useMemo(() => {
@@ -361,7 +361,7 @@ const PhoneBook = props => {
   return (
     <>
       <Container>
-        {isChatOpen && renderChatSingle}
+        {isChatOpen && renderChat}
         {find && renderFindFriend}
         {showFriendsReq && renderFriendReq}
         {phonebook && renderPhoneSync}

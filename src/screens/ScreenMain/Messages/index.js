@@ -71,19 +71,13 @@ const ListMessage = props => {
     );
   }, [listMessRoom, renderItemGroup]);
 
-  const renderChatGroup = useMemo(() => {
-    return (
-      <ChatGroup
-        setChatOpen={setChatGroup}
-        setFooter={setFooter}
-        isSingle={true}
-      />
-    );
+  const renderChat = useMemo(() => {
+    return <ChatGroup setChatOpen={setChatGroup} setFooter={setFooter} />;
   }, [setFooter]);
 
   return (
     <Container>
-      {isChatGroup && renderChatGroup}
+      {isChatGroup && renderChat}
       {!isChatGroup && renderAllGroup}
     </Container>
   );

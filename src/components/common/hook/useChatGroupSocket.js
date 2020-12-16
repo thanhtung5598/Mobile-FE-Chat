@@ -9,24 +9,18 @@ const useChatSocket = ({ dataUser }) => {
   const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    let info = null;
-    // group single
-    if (currentGroup.id) {
-      info = {
-        list_user: [dataUser, currentGroup],
-        positionUserCurrent: 0 // day la vi tri user dang login laf Truong
-      };
-    }
-    // group multiple
-    if (!currentGroup.id) {
-      const { _id, users } = currentGroup;
-      const filterUserGroup = users.filter(user => user.id !== dataUser.id);
-      info = {
-        list_user: [dataUser, ...filterUserGroup],
-        roomId: _id, // if roomId khong ton tai se tu tao 1 room moi, if 2 user da co room single thi se tu dong tao group co 2 ng
-        positionUserCurrent: 0 // day la vi tri user dang login laf Truong
-      };
-    }
+    const { _id, users } = currentGroup;
+
+    const filterUserGroup = users
+      ? users.filter(user => user.id !== dataUser.id)
+      : [currentGroup];
+
+    const info = {
+      list_user: [dataUser, ...filterUserGroup],
+      roomId: _id, // if roomId khong ton tai se tu tao 1 room moi, if 2 user da co room single thi se tu dong tao group co 2 ng
+      positionUserCurrent: 0 // day la vi tri user dang login laf Truong
+    };
+
     socket.emit('join', info);
     socket.on('load_message', function (msg) {
       setMessages(msg);
