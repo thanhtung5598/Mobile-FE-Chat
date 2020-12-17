@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { StyleSheet, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
@@ -19,10 +19,6 @@ const FriendRequest = props => {
     handleDeclineFriend,
     handleToggleChatRoom
   } = props;
-
-  useEffect(() => {
-    dispatch(fetchRequestFriends());
-  }, [dispatch]);
 
   const renderEmptyComponent = () => (
     <EmptyList message={' No friends requested'} />

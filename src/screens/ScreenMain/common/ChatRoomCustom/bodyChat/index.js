@@ -2,15 +2,18 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { KeyboardAvoidingView, Keyboard } from 'react-native';
 import { useSelector } from 'react-redux';
-import { Container } from 'native-base';
+import { Container, View } from 'native-base';
 import { SocketContext } from 'components/common/context/SocketContext';
 import useChatGroupSocket from 'components/common/hook/useChatGroupSocket';
 import { GiftedChat } from 'react-native-gifted-chat';
+import { Video } from 'expo-av';
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import FooterChat from '../footerChat';
 
 const BodyGroupChat = () => {
   const [textChat, setTextChat] = useState('');
+  const [numMess, setNumMess] = useState(15);
+  const [isEndReached, setEndReached] = useState(false);
   const { socket } = useContext(SocketContext);
   const { showActionSheetWithOptions } = useActionSheet();
   const { currentGroup } = useSelector(state => state.groupSelected);
@@ -39,7 +42,7 @@ const BodyGroupChat = () => {
       if (filterAvatar) obj.user.avatar = filterAvatar;
       return obj;
     });
-    return newObjChat.reverse();
+    return newObjChat.reverse().slice(0, numMess);
   };
 
   const onHandleRemoveMess = idMess => {
@@ -90,6 +93,29 @@ const BodyGroupChat = () => {
     );
   };
 
+  const onEndReached = () => {
+    setEndReached(true);
+    setTimeout(() => {
+      setNumMess(numMess + 5);
+      setEndReached(false);
+    }, 2000);
+  };
+
+  const renderMessageVideo = props => {
+    const { currentMessage } = props;
+    return (
+      <View style={{ padding: 5 }}>
+        <Video
+          resizeMode="contain"
+          useNativeControls
+          shouldPlay={false}
+          source={{ uri: currentMessage.video }}
+          style={{ width: 100, height: 100 }}
+        />
+      </View>
+    );
+  };
+
   return (
     <Container>
       <GiftedChat
@@ -98,9 +124,17 @@ const BodyGroupChat = () => {
         messages={refactorObjectChat()}
         onLongPress={handleLongPressMess}
         onSend={messages => onHandleSendMess(messages)}
+        renderMessageVideo={renderMessageVideo}
         user={{
           _id: dataUser.id
         }}
+        listViewProps={{
+          onEndReached: onEndReached,
+          onEndReachedThreshold: 200
+        }}
+        infiniteScroll={true}
+        loadEarlier={true}
+        isLoadingEarlier={isEndReached}
       />
       {Platform.OS === 'android' && (
         <KeyboardAvoidingView

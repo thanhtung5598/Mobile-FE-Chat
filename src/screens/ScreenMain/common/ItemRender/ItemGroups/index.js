@@ -60,13 +60,13 @@ const ItemGroups = ({ group }) => {
           </View>
         </View>
       </Left>
-      <Body>
+      <Body style={{ borderBottomWidth: 0 }}>
         <Text>{group.name}</Text>
         <Text note numberOfLines={1}>
           Take your time to start . .
         </Text>
       </Body>
-      <Right style={{ marginRight: 10 }}>
+      <Right style={{ borderBottomWidth: 0, marginRight: 10 }}>
         <MaterialCommunityIcons name="qqchat" size={30} color="#CCC" />
       </Right>
     </ListItem>

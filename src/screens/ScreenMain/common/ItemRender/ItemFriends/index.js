@@ -21,7 +21,7 @@ const ItemFriends = ({ friend, status = null, handleAddFriend }) => {
           }
         />
       </Left>
-      <Body style={{ borderBottomColor: 'white' }}>
+      <Body style={{ borderBottomWidth: 0 }}>
         <Text>{friend.name}</Text>
       </Body>
       <Right style={{ borderBottomWidth: 0 }}>
