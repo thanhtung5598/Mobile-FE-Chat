@@ -20,9 +20,10 @@ const HeaderChat = props => {
   const { dataUser } = useSelector(state => state.dataUser);
 
   // chat group had more option than chat single
-  const { users, group } = currentGroup;
+  const { _id, users, group } = currentGroup;
 
   const handleChatClose = () => {
+    if (_id) socket.emit('leave', _id);
     setChatOpen(false);
     setFooter(true);
   };

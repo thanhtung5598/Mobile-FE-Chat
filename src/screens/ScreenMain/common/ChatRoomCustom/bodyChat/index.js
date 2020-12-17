@@ -23,23 +23,28 @@ const BodyGroupChat = () => {
   });
 
   const refactorObjectChat = () => {
+    const { users } = currentGroup;
     const newObjChat = messages?.map(mess => {
       const type = mess.type;
-      const filterAvatar = currentGroup?.users?.filter(
-        user => user.id === mess.user.id
-      )[0].avatar;
+      const ortherUser = users
+        ? users.filter(user => user.id === mess.user.id)
+        : [currentGroup];
+
+      const userFix = ortherUser.map(user => {
+        return { id: user.id, name: user.name };
+      })[0];
 
       const obj = {
         ...mess,
         text: type === 'Video' || type === 'Image' ? '' : mess.content,
         user: {
-          ...mess.user,
+          ...userFix,
           _id: mess.user.id
         },
         video: type === 'Video' && mess.content,
         image: type === 'Image' && mess.content
       };
-      if (filterAvatar) obj.user.avatar = filterAvatar;
+      if (ortherUser[0].avatar) obj.user.avatar = ortherUser[0].avatar;
       return obj;
     });
     return newObjChat.reverse().slice(0, numMess);

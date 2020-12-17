@@ -16,7 +16,6 @@ import { Circle } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Profile = ({ navigation }) => {
-  console.log('profile');
   const modalRef = useRef(null);
   const dispatch = useDispatch();
   const { dataUser, isLoadingAvatar, isLoading } = useSelector(

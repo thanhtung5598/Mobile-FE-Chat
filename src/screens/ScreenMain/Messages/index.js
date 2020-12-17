@@ -15,7 +15,6 @@ import { updateCurrentGroup } from 'actions/groupActions';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const ListMessage = props => {
-  console.log('message');
   const { setFooter } = props;
   const dispatch = useDispatch();
   const { listMessRoom } = useContext(SocketContext);
