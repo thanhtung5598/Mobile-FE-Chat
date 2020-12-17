@@ -133,3 +133,25 @@ export const exitRoom = idRoom => dispatch => {
       return { error, data };
     });
 };
+
+export const deleteRoom = idRoom => dispatch => {
+  dispatch({
+    type: GROUP_TYPE.DELETE_GROUP_REQUEST
+  });
+  return axiosServices
+    .delete(`${prefix}?id=${idRoom}`)
+    .then(res => {
+      const { data } = res;
+      dispatch({
+        type: GROUP_TYPE.DELETE_GROUP_SUCCESS
+      });
+      return { data };
+    })
+    .catch(err => {
+      const { data } = err.response?.data;
+      dispatch({
+        type: GROUP_TYPE.DELETE_GROUP_FAILURE
+      });
+      return { data };
+    });
+};

@@ -11,8 +11,11 @@ import EmptyList from 'screens/ScreenMain/common/EmptyList';
 import ItemGroups from 'screens/ScreenMain/common/ItemRender/ItemGroups';
 import { ItemFriends } from 'screens/ScreenMain/common/ItemRender';
 import { ChatGroup } from 'screens/ScreenMain/common/ChatRoomCustom';
-import { updateCurrentGroup } from 'actions/groupActions';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useActionSheet } from '@expo/react-native-action-sheet';
+
+// Action
+import { updateCurrentGroup, deleteRoom } from 'actions/groupActions';
 
 const ListMessage = props => {
   const { setFooter } = props;
@@ -20,6 +23,7 @@ const ListMessage = props => {
   const { listMessRoom } = useContext(SocketContext);
   const { dataUser } = useSelector(state => state.dataUser);
   const [isChatGroup, setChatGroup] = useState(false);
+  const { showActionSheetWithOptions } = useActionSheet();
 
   const renderComponentEmpty = () => <EmptyList message={'Empty groups'} />;
 
@@ -32,12 +36,33 @@ const ListMessage = props => {
     [dispatch, setFooter]
   );
 
+  const handleLongPressGroup = useCallback(
+    idGroup => {
+      showActionSheetWithOptions(
+        {
+          options: ['Remove', 'Cancel'],
+          cancelButtonIndex: 1,
+          tintColor: '#f0ff'
+        },
+        buttonIndex => {
+          if (buttonIndex === 0) {
+            dispatch(deleteRoom(idGroup));
+          }
+        }
+      );
+    },
+    [dispatch, showActionSheetWithOptions]
+  );
+
   const renderItemGroup = useCallback(
     ({ item: group }) => {
       const isGroup = group?.group;
       if (isGroup) {
         return (
-          <TouchableOpacity onPress={() => handleToggleChatGroup(group)}>
+          <TouchableOpacity
+            onLongPress={() => handleLongPressGroup(group._id)}
+            onPress={() => handleToggleChatGroup(group)}
+          >
             <ItemGroups group={group} />
           </TouchableOpacity>
         );
@@ -45,13 +70,16 @@ const ListMessage = props => {
       if (!isGroup) {
         const userFil = group.users.filter(user => user.id !== dataUser?.id)[0];
         return (
-          <TouchableOpacity onPress={() => handleToggleChatGroup(group)}>
+          <TouchableOpacity
+            onLongPress={() => handleLongPressGroup(group._id)}
+            onPress={() => handleToggleChatGroup(group)}
+          >
             <ItemFriends friend={userFil} />
           </TouchableOpacity>
         );
       }
     },
-    [dataUser?.id, handleToggleChatGroup]
+    [dataUser?.id, handleLongPressGroup, handleToggleChatGroup]
   );
 
   const renderAllGroup = useMemo(() => {
