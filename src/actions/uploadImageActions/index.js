@@ -1,7 +1,7 @@
 import axiosServices from 'services/axiosServices';
 import { PROFILE_TYPE } from 'constTypes';
 
-export const uploadImgSingle = formData => dispatch => {
+export const uploadFiles = formData => dispatch => {
   dispatch({
     type: PROFILE_TYPE.UPDATE_AVATAR_REQUEST
   });

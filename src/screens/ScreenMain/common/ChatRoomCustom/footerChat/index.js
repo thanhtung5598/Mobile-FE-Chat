@@ -4,11 +4,12 @@ import PropTypes from 'prop-types';
 import { Image, KeyboardAvoidingView, Platform } from 'react-native';
 import { Input, Item } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { SocketContext } from 'components/common/context/SocketContext';
-import { Entypo } from '@expo/vector-icons';
-import { uploadImgSingle } from 'actions/uploadImageActions';
+import { Entypo, AntDesign } from '@expo/vector-icons';
+import { uploadFiles } from 'actions/uploadImageActions';
 
 const FooterChat = props => {
   const { textChat, setTextChat, onHandleSendMess } = props;
@@ -37,7 +38,7 @@ const FooterChat = props => {
           });
           const type = filename.split('.')[1];
 
-          dispatch(uploadImgSingle(formData)).then(res => {
+          dispatch(uploadFiles(formData)).then(res => {
             const { data } = res;
             if (data) {
               if (type === 'mov' || type === 'mp4') {
@@ -71,6 +72,28 @@ const FooterChat = props => {
     }
   };
 
+  const handleUploadFile = async () => {
+    let result = await DocumentPicker.getDocumentAsync();
+    let localUri = result.uri;
+    let filename = localUri.split('/').pop();
+
+    const formData = new FormData();
+    formData.append('files', {
+      uri: localUri,
+      name: filename,
+      type: 'file'
+    });
+    dispatch(uploadFiles(formData)).then(res => {
+      const { data } = res;
+      socket.emit('send_and_recive', {
+        message: data[0],
+        type: 'File', // type is String, or Image, Video, File
+        fileName: result.name,
+        fileSize: result.size
+      });
+    });
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
@@ -86,6 +109,14 @@ const FooterChat = props => {
           value={textChat}
           onChangeText={text => setTextChat(text)}
         />
+        <TouchableOpacity onPress={handleUploadFile}>
+          <AntDesign
+            name="addfile"
+            size={24}
+            color="black"
+            style={{ marginRight: 15 }}
+          />
+        </TouchableOpacity>
         <TouchableOpacity onPress={handleUploadImage}>
           <Entypo
             name="camera"

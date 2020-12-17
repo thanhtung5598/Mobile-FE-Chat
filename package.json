@@ -24,6 +24,7 @@
     "expo-av": "^8.6.0",
     "expo-blur": "^8.2.0",
     "expo-contacts": "~8.5.0",
+    "expo-document-picker": "^8.4.1",
     "expo-font": "~8.3.0",
     "expo-image-picker": "^9.1.1",
     "expo-linear-gradient": "~8.3.0",
