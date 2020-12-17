@@ -133,7 +133,7 @@ const BodyGroupChat = () => {
           onEndReachedThreshold: 200
         }}
         infiniteScroll={true}
-        loadEarlier={true}
+        loadEarlier={isEndReached}
         isLoadingEarlier={isEndReached}
       />
       {Platform.OS === 'android' && (
