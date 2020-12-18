@@ -6,7 +6,6 @@ import { StatusBar, Platform } from 'react-native';
 import { Container, Text } from 'native-base';
 import { AntDesign } from '@expo/vector-icons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { SocketProvider } from 'components/common/context/SocketContext';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 
 import Messages from './Messages';
@@ -112,21 +111,19 @@ const MainTab = ({ navigation }) => {
 
   return (
     <Container>
-      <SocketProvider>
-        <ActionSheetProvider>
-          <Navigator
-            tabBarPosition="bottom"
-            tabBarOptions={{
-              activeTintColor: '#2196f3'
-            }}
-          >
-            {renderScreenMess}
-            {renderScreenGroup}
-            {renderScreenPhonebook}
-            {renderScreenProfile}
-          </Navigator>
-        </ActionSheetProvider>
-      </SocketProvider>
+      <ActionSheetProvider>
+        <Navigator
+          tabBarPosition="bottom"
+          tabBarOptions={{
+            activeTintColor: '#2196f3'
+          }}
+        >
+          {renderScreenMess}
+          {renderScreenGroup}
+          {renderScreenPhonebook}
+          {renderScreenProfile}
+        </Navigator>
+      </ActionSheetProvider>
     </Container>
   );
 };

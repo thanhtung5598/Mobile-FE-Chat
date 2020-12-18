@@ -34,6 +34,7 @@ const SocketProvider = props => {
         id
       }
     ]);
+    socket.emit('is-online', id);
     socket.on('load_rooms', function (data) {
       if (data.id === id) {
         setListGroups(data.rooms.filter(group => group.group !== false));
