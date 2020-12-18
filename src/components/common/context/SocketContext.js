@@ -13,6 +13,7 @@ const SocketProvider = props => {
   const [listGroups, setListGroups] = useState([]);
   const [listMessRoom, setlistMessRoom] = useState([]);
   const ENDPOINT = `https://socket.api-chat.ga`;
+  const [listOnline, setListOnline] = useState([]);
 
   const [socket] = useSocket(ENDPOINT, {
     serveClient: false,
@@ -41,9 +42,20 @@ const SocketProvider = props => {
     });
   }, []);
 
+  useEffect(() => {
+    socket.on('is-online', userId => {
+      setListOnline(userId);
+    });
+    return () => {};
+  }, []);
+
+  const isOnline = friendId =>
+    listOnline.findIndex(idOnline => parseInt(idOnline, 10) === friendId) !==
+    -1;
+
   return (
     <SocketContext.Provider
-      value={{ socket, listGroups, setListGroups, listMessRoom }}
+      value={{ socket, listGroups, setListGroups, listMessRoom, isOnline }}
     >
       {props.children}
     </SocketContext.Provider>

@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
-import { ListItem, Thumbnail, Text, Left, Body, Right } from 'native-base';
+import {
+  ListItem,
+  Thumbnail,
+  Text,
+  Left,
+  Body,
+  Right,
+  Badge
+} from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SocketContext } from 'components/common/context/SocketContext';
 
 const ItemFriends = ({ friend, status = null, handleAddFriend }) => {
+  const { isOnline } = useContext(SocketContext);
+
   return (
     <ListItem thumbnail style={{ paddingBottom: 12 }}>
       <Left>
@@ -20,6 +31,7 @@ const ItemFriends = ({ friend, status = null, handleAddFriend }) => {
               : require('assets/avatarDefault.png')
           }
         />
+        {isOnline(friend.id) && <Badge style={styles.badgeIsOnline}></Badge>}
       </Left>
       <Body style={{ borderBottomWidth: 0 }}>
         <Text>{friend.name}</Text>
@@ -126,5 +138,13 @@ const styles = StyleSheet.create({
   login: {
     fontSize: 18,
     fontWeight: '500'
+  },
+  badgeIsOnline: {
+    width: 13,
+    height: 13,
+    backgroundColor: '#31A252',
+    position: 'absolute',
+    right: 3,
+    bottom: 0
   }
 });
