@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { ListItem, Thumbnail, Text, Left, Body, Right } from 'native-base';
+import { StyleSheet } from 'react-native';
+import {
+  ListItem,
+  Thumbnail,
+  Text,
+  Left,
+  Body,
+  Right,
+  Badge
+} from 'native-base';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { SocketContext } from 'components/common/context/SocketContext';
 
 const ItemFriendRequired = ({
-  styles,
   friend,
   handleDeclineFriend,
   handleAcceptFriend
 }) => {
+  const { isOnline } = useContext(SocketContext);
+
   return (
     <ListItem thumbnail style={{ paddingBottom: 12 }}>
       <Left>
@@ -23,6 +34,7 @@ const ItemFriendRequired = ({
               : require('assets/avatarDefault.png')
           }
         />
+        {isOnline(friend.id) && <Badge style={styles.badgeIsOnline}></Badge>}
       </Left>
       <Body style={{ borderBottomColor: 'white' }}>
         <Text>{friend.name}</Text>
@@ -74,3 +86,37 @@ ItemFriendRequired.defaultProps = {
   friend: {},
   styles: {}
 };
+const styles = StyleSheet.create({
+  LinearGradientLeft: {
+    borderRadius: 18,
+    alignSelf: 'center',
+    marginTop: 10,
+    paddingRight: 10,
+    paddingLeft: 10,
+    marginRight: 5
+  },
+  LinearGradientRight: {
+    borderRadius: 18,
+    alignSelf: 'center',
+    marginTop: 10,
+    paddingRight: 10,
+    paddingLeft: 10
+  },
+  UpdatedProfileText: {
+    color: 'white'
+  },
+  UpdateProfile: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 35
+  },
+  badgeIsOnline: {
+    width: 13,
+    height: 13,
+    backgroundColor: '#31A252',
+    position: 'absolute',
+    right: 3,
+    bottom: 0
+  }
+});

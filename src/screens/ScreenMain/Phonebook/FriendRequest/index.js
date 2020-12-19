@@ -28,7 +28,6 @@ const FriendRequest = props => {
       return (
         <TouchableOpacity onPress={() => handleToggleChatRoom(friend)}>
           <ItemFriendsRequired
-            styles={styles}
             friend={friend}
             handleDeclineFriend={handleDeclineFriend}
             handleAcceptFriend={handleAcceptFriend}
@@ -91,30 +90,6 @@ FriendRequest.defaultProps = {
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-  LinearGradientLeft: {
-    borderRadius: 18,
-    alignSelf: 'center',
-    marginTop: 10,
-    paddingRight: 10,
-    paddingLeft: 10,
-    marginRight: 5
-  },
-  LinearGradientRight: {
-    borderRadius: 18,
-    alignSelf: 'center',
-    marginTop: 10,
-    paddingRight: 10,
-    paddingLeft: 10
-  },
-  UpdatedProfileText: {
-    color: 'white'
-  },
-  UpdateProfile: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 35
   },
   rect: {
     paddingLeft: 20,

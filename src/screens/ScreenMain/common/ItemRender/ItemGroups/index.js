@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useContext, Fragment } from 'react';
 import {
   ListItem,
   Thumbnail,
@@ -11,8 +11,11 @@ import {
 } from 'native-base';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { SocketContext } from 'components/common/context/SocketContext';
 
 const ItemGroups = ({ group }) => {
+  const { isOnlineGroup } = useContext(SocketContext);
+
   return (
     <ListItem thumbnail>
       <Left>
@@ -67,7 +70,11 @@ const ItemGroups = ({ group }) => {
         </Text>
       </Body>
       <Right style={{ borderBottomWidth: 0, marginRight: 10 }}>
-        <MaterialCommunityIcons name="qqchat" size={30} color="#CCC" />
+        <MaterialCommunityIcons
+          name="qqchat"
+          size={30}
+          color={isOnlineGroup(group.users) ? '#31A252' : '#CCC'}
+        />
       </Right>
     </ListItem>
   );

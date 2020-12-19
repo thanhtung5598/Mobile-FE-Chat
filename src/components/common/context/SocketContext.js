@@ -45,6 +45,7 @@ const SocketProvider = props => {
 
   useEffect(() => {
     socket.on('is-online', userId => {
+      console.log('userId', userId);
       setListOnline(userId);
     });
     return () => {};
@@ -54,9 +55,30 @@ const SocketProvider = props => {
     listOnline.findIndex(idOnline => parseInt(idOnline, 10) === friendId) !==
     -1;
 
+  const isOnlineGroup = users => {
+    const {
+      data: { id }
+    } = jwt_decode(auth_token);
+    const listOnFix = listOnline.filter(
+      item => parseInt(item) !== parseInt(id)
+    ); // except the author login
+    const listOnGroup = listOnFix.filter(idOn =>
+      users.filter(user => parseInt(user.id) === parseInt(idOn))
+    ); // filter user online with user group
+    if (listOnGroup.length > 0) return true;
+    return false;
+  };
+
   return (
     <SocketContext.Provider
-      value={{ socket, listGroups, setListGroups, listMessRoom, isOnline }}
+      value={{
+        socket,
+        listGroups,
+        setListGroups,
+        listMessRoom,
+        isOnline,
+        isOnlineGroup
+      }}
     >
       {props.children}
     </SocketContext.Provider>

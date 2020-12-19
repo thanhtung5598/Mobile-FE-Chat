@@ -36,7 +36,7 @@ const ItemFriends = ({ friend, status = null, handleAddFriend }) => {
       <Body style={{ borderBottomWidth: 0 }}>
         <Text>{friend.name}</Text>
       </Body>
-      <Right style={{ borderBottomWidth: 0 }}>
+      <Right style={{ borderBottomWidth: 0, marginRight: 10 }}>
         {!status && (
           <MaterialCommunityIcons name="chat" size={24} color="#CCC" />
         )}
