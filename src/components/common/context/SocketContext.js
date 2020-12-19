@@ -25,6 +25,8 @@ const SocketProvider = props => {
     cookie: false
   });
 
+  console.log(socket.connected);
+
   useEffect(() => {
     const {
       data: { id }
