@@ -32,24 +32,23 @@ Phone: 0336363110
 Password: 123123
 ```
 
-* **Home Screen** 
+## **Home Screen** 
 
 <img src="https://i.imgur.com/3uXRM6D.png" width="200" height="400" />
 
-* **Chat 1 with 1 | Group chat**.
-<img src="https://i.imgur.com/BGliNmy.png" width="200" height="400" />
-<img src="https://i.imgur.com/Cxrzrj8.png" width="200" height="400" />
-
-
-* **SignIn-SignUp-Forgot**.
+## **SignIn-SignUp-Forgot**.
 <img src="https://i.imgur.com/YVxoTdu.png" width="200" height="400" />
 <img src="https://i.imgur.com/RZGvJ3X.png" width="200" height="400" />
 <img src="https://i.imgur.com/S6GTmSp.png" width="200" height="400" />
 
-* **Profile**.
+## **Chat 1 with 1 | Group chat**.
+<img src="https://i.imgur.com/BGliNmy.png" width="200" height="400" />
+<img src="https://i.imgur.com/Cxrzrj8.png" width="200" height="400" />
+
+## **Profile**.
 <img src="https://i.imgur.com/8DHgt3E.png" width="200" height="400" />
 
-* **Contacts sync | Find friends | View information of friends**.
+## **Contacts sync | Find friends | View information of friends**.
 
 <img src="https://i.imgur.com/AlH2Wfb.png" width="200" height="400" />
 <img src="https://i.imgur.com/Gv0C0PZ.png" width="200" height="400" />
