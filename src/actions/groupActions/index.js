@@ -18,7 +18,7 @@ export const createSingleRoom = (friend_id, data) => {
 
 export const findRoomDetail = idRoom => {
   return axiosServices
-    .get(`${prefix}detail?id=${idRoom}`)
+    .get(`${prefix}${idRoom}`)
     .then(res => {
       const { data } = res;
       return { data };
@@ -29,7 +29,7 @@ export const findRoomDetail = idRoom => {
     });
 };
 
-export const createGroupChat = data => dispatch => {
+export const createGroupChat = data => async dispatch => {
   dispatch({
     type: GROUP_TYPE.CREATE_GROUP_REQUEST
   });
@@ -43,14 +43,15 @@ export const createGroupChat = data => dispatch => {
       dispatch({
         type: GROUP_TYPE.CREATE_GROUP_SUCCESS
       });
-      return { roomNew };
+      return { error: false, roomNew };
     })
     .catch(err => {
       const error = err.response?.data;
       dispatch({
-        type: GROUP_TYPE.CREATE_GROUP_FAILURE
+        type: GROUP_TYPE.CREATE_GROUP_FAILURE,
+        payload: error
       });
-      return error;
+      return { error: true };
     });
 };
 
@@ -72,11 +73,11 @@ export const addMemberGroup = (valueAdd, idRoom) => dispatch => {
       return { error, data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: GROUP_TYPE.ADD_MEMBER_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 
@@ -85,7 +86,7 @@ export const updateRoomName = (dataUpdate, idRoom) => dispatch => {
     type: GROUP_TYPE.UPDATE_GROUP_NAME_REQUEST
   });
   return axiosServices
-    .put(`${prefix}?id=${idRoom}`, dataUpdate)
+    .put(`${prefix}${idRoom}`, dataUpdate)
     .then(res => {
       const { data } = res;
       dispatch({
@@ -139,7 +140,7 @@ export const deleteRoom = idRoom => dispatch => {
     type: GROUP_TYPE.DELETE_GROUP_REQUEST
   });
   return axiosServices
-    .delete(`${prefix}?id=${idRoom}`)
+    .delete(`${prefix}${idRoom}`)
     .then(res => {
       const { data } = res;
       dispatch({

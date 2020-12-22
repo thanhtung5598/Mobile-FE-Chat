@@ -1,4 +1,4 @@
-import React, { useState, Fragment, useCallback, useContext } from 'react';
+import React, { useState, Fragment, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { StyleSheet } from 'react-native';
@@ -25,7 +25,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
-import { SocketContext } from 'components/common/context/SocketContext';
 
 // actions
 import { createGroupChat } from 'actions/groupActions';
@@ -35,7 +34,6 @@ const CreateGroup = props => {
   const [listChecked, setListChecked] = useState([]);
   const [searchText, setSearchText] = useState(null);
   const [groupName, setGroupName] = useState('');
-  const { socket, listGroups, setListGroups } = useContext(SocketContext);
   const dispatch = useDispatch();
   const { listFriends } = useSelector(state => state.friends);
   const { dataUser } = useSelector(state => state.dataUser);
@@ -91,13 +89,6 @@ const CreateGroup = props => {
     const res = await dispatch(createGroupChat(values));
     const { error, roomNew } = res;
     if (!error) {
-      const list_user = listChecked.map(item => {
-        return {
-          id: item
-        };
-      });
-      setListGroups([...listGroups, roomNew]);
-      socket.emit('load_rooms', list_user);
       handleToggleChatRoom(roomNew);
     }
   };

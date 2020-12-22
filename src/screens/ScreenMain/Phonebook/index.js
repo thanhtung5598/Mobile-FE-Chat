@@ -112,15 +112,11 @@ const PhoneBook = props => {
 
   const handleDeletedFriend = useCallback(
     id_fri_del => {
-      const value = {
-        user_id: `${dataUser.id}`,
-        user_id_want_delete: `${id_fri_del}`
-      };
-      dispatch(deleteFriend(value)).then(() => {
+      dispatch(deleteFriend(id_fri_del)).then(() => {
         setPosition(null);
       });
     },
-    [dataUser.id, dispatch]
+    [dispatch]
   );
 
   const handleAcceptFriend = useCallback(

@@ -207,7 +207,7 @@ export const deleteFriend = dataDelete => dispatch => {
     type: PROFILE_TYPE.DELETE_FRIEND_REQUEST
   });
   return axiosServices
-    .post(`${prefix}deletePhoneByIdContact`, dataDelete)
+    .delete(`${prefix}contacts/deletePhone?user_id_want_delete=${dataDelete}`)
     .then(res => {
       const { data } = res;
       dispatch({
