@@ -17,7 +17,6 @@ import { SocketContext } from 'components/common/context/SocketContext';
 
 const ItemFriends = ({ friend, status = null, handleAddFriend }) => {
   const { isOnline } = useContext(SocketContext);
-
   return (
     <ListItem thumbnail style={{ paddingBottom: 12 }}>
       <Left>

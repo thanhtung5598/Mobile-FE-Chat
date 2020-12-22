@@ -83,9 +83,9 @@ const Register = ({ navigation }) => {
         passwordConfirm
       };
       dispatch(accountRegister(dataRegister, userData.userToken)).then(res => {
-        const { error, message } = res;
+        const { error } = res;
         if (error) {
-          Alert.alert('Register Failed', message, [
+          Alert.alert('Register Failed', [
             {
               text: 'Login with phone',
               onPress: () => navigation.navigate('Login')

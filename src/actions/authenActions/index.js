@@ -12,25 +12,22 @@ export const accountLogin = data => dispatch => {
   return axiosServices
     .post(`${prefix}signin`, data)
     .then(res => {
-      const { error, data } = res.data;
-      if (!error) {
-        asyncStorage.setToken(data);
-        dispatch({
-          type: AUTHENTICATION_TYPE.LOGIN_SUCCESS,
-          payload: data
-        });
-      }
+      const { data } = res;
+      asyncStorage.setToken(data);
+      dispatch({
+        type: AUTHENTICATION_TYPE.LOGIN_SUCCESS,
+        payload: data
+      });
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: AUTHENTICATION_TYPE.LOGIN_FAILURE,
         payload: {
-          error,
-          data
+          error
         }
       });
-      return { error, data };
+      return { error };
     });
 };
 
@@ -42,28 +39,25 @@ export const accountRegister = (data, token) => dispatch => {
   return axiosServices
     .post(`${prefix}signup`, data)
     .then(res => {
-      const { error, data } = res.data;
-      if (!error) {
-        asyncStorage.setToken(data);
-        dispatch({
-          type: AUTHENTICATION_TYPE.REGISTER_SUCCESS,
-          payload: {
-            error,
-            data
-          }
-        });
-      }
+      const { data } = res;
+      asyncStorage.setToken(data);
+      dispatch({
+        type: AUTHENTICATION_TYPE.REGISTER_SUCCESS,
+        payload: {
+          data
+        }
+      });
+      return { error: false };
     })
     .catch(err => {
-      const { error, message } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: AUTHENTICATION_TYPE.REGISTER_FAILURE,
         payload: {
-          error,
-          message
+          error
         }
       });
-      return { error, message };
+      return { error: true };
     });
 };
 
@@ -75,8 +69,8 @@ export const accountChangePassword = (data, token) => dispatch => {
   return axiosServices
     .put(`${prefix}passwords/change`, data)
     .then(res => {
-      const { error } = res.data;
-      if (!error) {
+      const { data } = res;
+      if (!data) {
         setTimeout(() => {
           dispatch({
             type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_SUCCESS,
@@ -86,18 +80,17 @@ export const accountChangePassword = (data, token) => dispatch => {
           });
         }, 3000);
       }
+      return { error: false, data };
     })
     .catch(err => {
-      const { error, message } = err.response?.data;
-      if (error) {
-        dispatch({
-          type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE,
-          payload: {
-            error
-          }
-        });
-      }
-      return { error, message };
+      const data = err.response?.data;
+      dispatch({
+        type: AUTHENTICATION_TYPE.CHANGE_PASSWORD_FAILURE,
+        payload: {
+          data
+        }
+      });
+      return { error: true, data };
     });
 };
 
@@ -108,22 +101,22 @@ export const accountSendOTPSignUp = (type = 'phone', value) => dispatch => {
   return axiosServices
     .get(`${prefix}active/send?${type}=${value}`)
     .then(res => {
-      const { error, data } = res.data;
-      if (!error) {
-        dispatch({
-          type: AUTHENTICATION_TYPE.SEND_OTP_REGISTER_SUCCESS
-        });
-      }
-      if (error) {
-        dispatch({
-          type: AUTHENTICATION_TYPE.SEND_OTP_REGISTER_FAILURE,
-          payload: {
-            error,
-            data
-          }
-        });
-      }
-      return { error, data };
+      const { data } = res;
+      console.log(data);
+      dispatch({
+        type: AUTHENTICATION_TYPE.SEND_OTP_REGISTER_SUCCESS
+      });
+      return { error: false, data };
+    })
+    .catch(err => {
+      const data = err.response?.data;
+      dispatch({
+        type: AUTHENTICATION_TYPE.SEND_OTP_REGISTER_FAILURE,
+        payload: {
+          data
+        }
+      });
+      return { error: true, data };
     });
 };
 
@@ -134,26 +127,23 @@ export const accountSendForgotPassword = (
   return axiosServices
     .get(`${prefix}passwords/forgot?${type}=${value}`)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       if (!error) {
         dispatch({
           type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_SUCCESS
         });
       }
-      return { error, data };
+      return { error: false, data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
-      if (error) {
-        dispatch({
-          type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_FAILURE,
-          payload: {
-            error,
-            data
-          }
-        });
-      }
-      return { error, data };
+      const { data } = err.response?.data;
+      dispatch({
+        type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_FAILURE,
+        payload: {
+          data
+        }
+      });
+      return { error: true, data };
     });
 };
 
@@ -164,23 +154,23 @@ export const accountVerifyCodeForgot = data => dispatch => {
   return axiosServices
     .post(`${prefix}code/password/verify`, data)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res.data;
       if (!error) {
         dispatch({
           type: AUTHENTICATION_TYPE.VERIFY_FORGOT_SUCCESS
         });
       }
-      return { error, data };
+      return { error: false, data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const data = err.response?.data;
       dispatch({
         type: AUTHENTICATION_TYPE.VERIFY_FORGOT_FAILURE,
         payload: {
-          error
+          data
         }
       });
-      return { error, data };
+      return { error: true, data };
     });
 };
 
@@ -191,24 +181,19 @@ export const accountVerifyCodeSignUp = data => dispatch => {
   return axiosServices
     .post(`${prefix}code/verify`, data)
     .then(res => {
-      const { error, data } = res.data;
-      if (!error) {
-        dispatch({
-          type: AUTHENTICATION_TYPE.VERIFY_SIGUP_SUCCESS
-        });
-      }
-      return { error, data };
+      const { data } = res;
+      dispatch({
+        type: AUTHENTICATION_TYPE.VERIFY_SIGUP_SUCCESS
+      });
+      return { error: false, data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
-      console.log('err');
+      const data = err.response?.data;
       dispatch({
         type: AUTHENTICATION_TYPE.VERIFY_SIGUP_FAILURE,
-        payload: {
-          error
-        }
+        payload: data
       });
-      return { error, data };
+      return { error: true, data };
     });
 };
 

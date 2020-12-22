@@ -7,7 +7,7 @@ import { Container, Text, View, Thumbnail, List, ListItem } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { AntDesign } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { uploadImgSingle } from 'actions/uploadImageActions';
+import { uploadFiles } from 'actions/uploadImageActions';
 import { updateProfile } from 'actions/userActions';
 import { getProfileUser } from 'actions/userActions';
 import ModalUpdatedName from 'components/common/ComponentsCommon/Modal/modalUpdatedName';
@@ -41,7 +41,7 @@ const Profile = ({ navigation }) => {
             name: filename,
             type: 'image/png'
           });
-          dispatch(uploadImgSingle(formData)).then(res => {
+          dispatch(uploadFiles(formData)).then(res => {
             const { data } = res;
             const dataUpdated = {
               name: dataUser.name,

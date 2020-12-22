@@ -30,7 +30,7 @@ const initialValues = {
 
 const Forgot = ({ navigation }) => {
   const dispatch = useDispatch();
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(0);
   const [typeTab, setTypeTab] = useState('phone');
   const { userData, setUserData } = useContext(AuthenContext);
   const [defaultSchema, setDefaultSchema] = useState(phoneVerify);
@@ -69,9 +69,9 @@ const Forgot = ({ navigation }) => {
       };
       dispatch(accountChangePassword(passwordChange, userData.userToken)).then(
         res => {
-          const { error, message } = res;
+          const { error } = res;
           if (error) {
-            Alert.alert('Change Pass Failed', message, [
+            Alert.alert('Change Pass Failed', [
               {
                 text: 'Login with phone',
                 onPress: () => navigation.navigate('Login')

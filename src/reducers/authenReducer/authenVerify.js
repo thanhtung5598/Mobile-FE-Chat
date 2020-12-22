@@ -36,7 +36,7 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoadingVerify: false,
-        error: action.payload.error
+        error: action.payload
       };
     default:
       return state;

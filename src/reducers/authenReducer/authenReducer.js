@@ -29,8 +29,8 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        error: action.payload.error,
-        message: action.payload.data[0]
+        error: true,
+        message: action.payload.error[0]
       };
     case AUTHENTICATION_TYPE.IS_LOGIN_REQUEST:
       return {
@@ -55,7 +55,7 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        error: action.payload.error,
+        error: true,
         message: action.payload.data[0]
       };
     case AUTHENTICATION_TYPE.SEND_OTP_FORGOT_REQUEST:
@@ -95,7 +95,7 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        error: action.payload.error,
+        error: true,
         message: action.payload.message
       };
     case AUTHENTICATION_TYPE.CHANGE_PASSWORD_REQUEST:
@@ -116,7 +116,7 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoadingChangePass: false,
-        error: action.payload.error
+        error: action.payload.data
       };
     case AUTHENTICATION_TYPE.LOGOUT_REQUEST:
       return {

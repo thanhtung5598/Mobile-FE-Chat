@@ -7,12 +7,12 @@ export const createSingleRoom = (friend_id, data) => {
   return axiosServices
     .post(`${prefix}single?friend_id=${friend_id}`, data)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       return { error, data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
-      return { error, data };
+      const error = err.response?.data;
+      return error;
     });
 };
 
@@ -20,12 +20,12 @@ export const findRoomDetail = idRoom => {
   return axiosServices
     .get(`${prefix}detail?id=${idRoom}`)
     .then(res => {
-      const { error, data } = res.data;
-      return { error, data };
+      const { data } = res;
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
-      return { error, data };
+      const error = err.response?.data;
+      return error;
     });
 };
 
@@ -36,21 +36,21 @@ export const createGroupChat = data => dispatch => {
   return axiosServices
     .post(`${prefix}group`, data)
     .then(async res => {
-      const { error, data } = res.data;
+      const { data } = res;
       const { _id: idRoom } = data;
       const resRoomDetails = await findRoomDetail(idRoom);
       const { data: roomNew } = resRoomDetails;
       dispatch({
         type: GROUP_TYPE.CREATE_GROUP_SUCCESS
       });
-      return { error, roomNew };
+      return { roomNew };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: GROUP_TYPE.CREATE_GROUP_FAILURE
       });
-      return { error, data };
+      return error;
     });
 };
 
@@ -61,7 +61,7 @@ export const addMemberGroup = (valueAdd, idRoom) => dispatch => {
   return axiosServices
     .put(`${prefix}members?id=${idRoom}`, valueAdd)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       findRoomDetail(idRoom).then(res => {
         const { data: roomNew } = res;
         dispatch({
@@ -87,19 +87,19 @@ export const updateRoomName = (dataUpdate, idRoom) => dispatch => {
   return axiosServices
     .put(`${prefix}?id=${idRoom}`, dataUpdate)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: GROUP_TYPE.UPDATE_GROUP_NAME_SUCCESS,
         payload: dataUpdate
       });
-      return { error, data };
+      return data;
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: GROUP_TYPE.UPDATE_GROUP_NAME_FAILURE
       });
-      return { error, data };
+      return error;
     });
 };
 
@@ -119,18 +119,18 @@ export const exitRoom = idRoom => dispatch => {
   return axiosServices
     .put(`${prefix}exit?id=${idRoom}`)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: GROUP_TYPE.EXIT_GROUP_SUCCESS
       });
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: GROUP_TYPE.EXIT_GROUP_FAILURE
       });
-      return { error, data };
+      return error;
     });
 };
 

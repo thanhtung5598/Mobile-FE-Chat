@@ -17,21 +17,19 @@ export const getProfileUser = () => async dispatch => {
   return axiosServices
     .get(`${prefix}detail?${type}=${typeValue}`)
     .then(res => {
-      const { error, data } = res.data;
-      if (!error) {
-        dispatch({
-          type: PROFILE_TYPE.FETCH_PROFILE_SUCCESS,
-          payload: data
-        });
-      }
+      const { data } = res;
+      dispatch({
+        type: PROFILE_TYPE.FETCH_PROFILE_SUCCESS,
+        payload: data
+      });
       return { error, data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const { error } = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.FETCH_PROFILE_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 
@@ -43,19 +41,19 @@ export const searchUserByPhoneEmailName = dataSearch => dispatch => {
   return axiosServices
     .get(`${prefix}textSearch?value=${data}`)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.SEARCH_USER_SUCCESS,
         payload: data
       });
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.SEARCH_USER_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 
@@ -65,6 +63,7 @@ export const clearSearch = () => dispatch => {
     payload: null
   });
 };
+
 export const fetchFriendsWait = () => dispatch => {
   dispatch({
     type: PROFILE_TYPE.FETCH_FRIEND_WAIT_REQUEST
@@ -72,19 +71,19 @@ export const fetchFriendsWait = () => dispatch => {
   return axiosServices
     .get(`${prefix}request/sent`)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.FETCH_FRIEND_WAIT_SUCCESS,
         payload: data.length === 0 ? null : data
       });
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.FETCH_FRIEND_WAIT_FAILURE
       });
-      return { error, data };
+      return error;
     });
 };
 
@@ -95,19 +94,19 @@ export const fetchPhonebookSync = () => dispatch => {
   return axiosServices
     .get(`${prefix}getListPhoneBookById`)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_SUCCESS,
         payload: data
       });
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.FETCH_PHONEBOOK_SYNC_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 
@@ -118,19 +117,19 @@ export const syncDataPhonebook = dataSync => dispatch => {
   return axiosServices
     .post(`${prefix}syncPhoneBook`, dataSync)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.SYNC_DATA_PHONEBOOK_SUCCESS
       });
       dispatch(fetchPhonebookSync());
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.SYNC_DATA_PHONEBOOK_FAILURE
       });
-      return { error, data };
+      return error;
     });
 };
 
@@ -141,19 +140,19 @@ export const fetchRequestFriends = () => dispatch => {
   return axiosServices
     .get(`${prefix}getListRequestId`)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_SUCCESS,
         payload: data
       });
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.FETCH_REQUEST_FRIENDS_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 export const fetchListFriends = () => dispatch => {
@@ -163,12 +162,12 @@ export const fetchListFriends = () => dispatch => {
   return axiosServices
     .get(`${prefix}getListContactId`)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.FETCH_LIST_FRIENDS_SUCCESS,
         payload: data
       });
-      return { error, data };
+      return { data };
     })
     .catch(err => {
       const { error, data } = err.response?.data;
@@ -186,21 +185,21 @@ export const addFriend = dataAdd => dispatch => {
   return axiosServices
     .post(`${prefix}addFriend`, dataAdd)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.ADD_FRIEND_SUCCESS,
         payload: data
       });
       dispatch(fetchFriendsWait());
       dispatch(fetchPhonebookSync());
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.ADD_FRIEND_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 export const deleteFriend = dataDelete => dispatch => {
@@ -210,21 +209,21 @@ export const deleteFriend = dataDelete => dispatch => {
   return axiosServices
     .post(`${prefix}deletePhoneByIdContact`, dataDelete)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.DELETE_FRIEND_SUCCESS,
         payload: data
       });
       dispatch(fetchListFriends());
       dispatch(fetchPhonebookSync());
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.DELETE_FRIEND_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 
@@ -235,7 +234,7 @@ export const acceptFriend = dataAccept => dispatch => {
   return axiosServices
     .post(`${prefix}accepFriend`, dataAccept)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.ACCEPT_FRIEND_SUCCESS,
         payload: data
@@ -243,14 +242,14 @@ export const acceptFriend = dataAccept => dispatch => {
       dispatch(fetchListFriends());
       dispatch(fetchRequestFriends());
       dispatch(fetchPhonebookSync());
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.ACCEPT_FRIEND_FAILURE
       });
-      return { error, data };
+      return { error };
     });
 };
 
@@ -261,7 +260,7 @@ export const declineFriend = dataDecline => dispatch => {
   return axiosServices
     .post(`${prefix}declineFriend`, dataDecline)
     .then(res => {
-      const { error, data } = res.data;
+      const { data } = res;
       dispatch({
         type: PROFILE_TYPE.DECLINE_FRIEND_SUCCESS,
         payload: data
@@ -269,14 +268,14 @@ export const declineFriend = dataDecline => dispatch => {
       dispatch(fetchRequestFriends());
       dispatch(fetchListFriends());
       dispatch(fetchPhonebookSync());
-      return { error, data };
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.DECLINE_FRIEND_FAILURE
       });
-      return { error, data };
+      return error;
     });
 };
 
@@ -287,22 +286,20 @@ export const updateProfile = (dataUpdate, type = 1) => dispatch => {
     });
   }
   return axiosServices
-    .put(`${prefix}profile/update`, dataUpdate)
+    .put(`${prefix}profiles`, dataUpdate)
     .then(res => {
-      const { error, data } = res.data;
-      if (!error) {
-        dispatch({
-          type: PROFILE_TYPE.UPDATE_PROFILE_SUCCESS,
-          payload: dataUpdate
-        });
-      }
-      return { error, data };
+      const { data } = res;
+      dispatch({
+        type: PROFILE_TYPE.UPDATE_PROFILE_SUCCESS,
+        payload: dataUpdate
+      });
+      return { data };
     })
     .catch(err => {
-      const { error, data } = err.response?.data;
+      const error = err.response?.data;
       dispatch({
         type: PROFILE_TYPE.UPDATE_PROFILE_FAILURE
       });
-      return { error, data };
+      return error;
     });
 };
