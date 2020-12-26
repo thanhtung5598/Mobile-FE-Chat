@@ -106,7 +106,6 @@ const Forgot = ({ navigation }) => {
 
   const onHandleResendCode = () => {
     dispatch(accountSendForgotPassword(typeTab, userData[typeTab]));
-    dispatch(refreshError());
   };
 
   const onHandleTurnBack = () => {

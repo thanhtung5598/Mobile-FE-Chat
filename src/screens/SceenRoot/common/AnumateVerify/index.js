@@ -28,6 +28,7 @@ const AnimatedVerify = ({
   const CELL_COUNT = 6;
   const { isLoadingVerify } = useSelector(state => state.authVerify);
   const { error } = useSelector(state => state.authen);
+  const { error: err } = useSelector(state => state.authVerify);
   const [value, setValue] = useState('');
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -82,13 +83,14 @@ const AnimatedVerify = ({
           </View>
         )}
       </View>
-      {error && (
-        <View style={styles.errorCode}>
-          <Text style={styles.errorCodeText}>
-            Your code is invalid.{'\n'} Please get your new code
-          </Text>
-        </View>
-      )}
+      {error ||
+        (err && (
+          <View style={styles.errorCode}>
+            <Text style={styles.errorCodeText}>
+              Your code is invalid.{'\n'} Please get your new code
+            </Text>
+          </View>
+        ))}
     </SafeAreaView>
   );
 };

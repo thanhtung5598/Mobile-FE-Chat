@@ -13,9 +13,7 @@ import {
 import InputTabs from 'screens/SceenRoot/common/tabs/inputTabs';
 
 const ForgotForm = props => {
-  const { isLoadingChangePass, error, message } = useSelector(
-    state => state.authen
-  );
+  const { isLoading, error, message } = useSelector(state => state.authen);
   const {
     initialValues,
     navigation,
@@ -77,7 +75,7 @@ const ForgotForm = props => {
             </>
           )}
           <ButtonStep
-            isLoading={isLoadingChangePass}
+            isLoading={isLoading}
             handleSubmit={formikProps.handleSubmit}
             navigation={navigation}
             hint={{

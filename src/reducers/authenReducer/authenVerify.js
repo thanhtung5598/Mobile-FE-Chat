@@ -1,7 +1,8 @@
 import { AUTHENTICATION_TYPE } from 'constTypes';
 
 const initialState = {
-  isLoadingVerify: false
+  isLoadingVerify: false,
+  error: false
 };
 
 const AuthenReducer = (state = initialState, action) => {
@@ -20,7 +21,7 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoadingVerify: false,
-        error: action.payload.error
+        error: true
       };
     case AUTHENTICATION_TYPE.VERIFY_SIGUP_REQUEST:
       return {
@@ -36,7 +37,12 @@ const AuthenReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoadingVerify: false,
-        error: action.payload
+        error: true
+      };
+    case AUTHENTICATION_TYPE.REFRESH_REQUEST:
+      return {
+        ...state,
+        error: false
       };
     default:
       return state;

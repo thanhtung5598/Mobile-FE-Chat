@@ -124,15 +124,16 @@ export const accountSendForgotPassword = (
   type = 'phone',
   value
 ) => dispatch => {
+  dispatch({
+    type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_REQUEST
+  });
   return axiosServices
     .get(`${prefix}passwords/forgot?${type}=${value}`)
     .then(res => {
       const { data } = res;
-      if (!error) {
-        dispatch({
-          type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_SUCCESS
-        });
-      }
+      dispatch({
+        type: AUTHENTICATION_TYPE.SEND_OTP_FORGOT_SUCCESS
+      });
       return { error: false, data };
     })
     .catch(err => {
@@ -154,21 +155,18 @@ export const accountVerifyCodeForgot = data => dispatch => {
   return axiosServices
     .post(`${prefix}code/password/verify`, data)
     .then(res => {
-      const { data } = res.data;
-      if (!error) {
-        dispatch({
-          type: AUTHENTICATION_TYPE.VERIFY_FORGOT_SUCCESS
-        });
-      }
+      console.log('succ', res);
+      const { data } = res;
+      dispatch({
+        type: AUTHENTICATION_TYPE.VERIFY_FORGOT_SUCCESS
+      });
       return { error: false, data };
     })
     .catch(err => {
       const data = err.response?.data;
+      console.log('failed', data);
       dispatch({
-        type: AUTHENTICATION_TYPE.VERIFY_FORGOT_FAILURE,
-        payload: {
-          data
-        }
+        type: AUTHENTICATION_TYPE.VERIFY_FORGOT_FAILURE
       });
       return { error: true, data };
     });
@@ -190,8 +188,7 @@ export const accountVerifyCodeSignUp = data => dispatch => {
     .catch(err => {
       const data = err.response?.data;
       dispatch({
-        type: AUTHENTICATION_TYPE.VERIFY_SIGUP_FAILURE,
-        payload: data
+        type: AUTHENTICATION_TYPE.VERIFY_SIGUP_FAILURE
       });
       return { error: true, data };
     });

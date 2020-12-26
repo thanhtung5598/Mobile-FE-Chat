@@ -127,7 +127,7 @@ const AuthenReducer = (state = initialState, action) => {
     case AUTHENTICATION_TYPE.REFRESH_REQUEST:
       return {
         ...state,
-        error: null,
+        error: false,
         message: null
       };
     default:

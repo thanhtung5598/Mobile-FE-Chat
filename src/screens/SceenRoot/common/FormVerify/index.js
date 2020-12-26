@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import AnimateVerify from '../AnumateVerify';
 import { Container, Content, Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useCountDown from 'components/common/hook/useCountDown';
+import { refreshError } from 'actions/authenActions';
 
 const FormVerify = ({
   typeTab,
@@ -12,12 +14,14 @@ const FormVerify = ({
   onHandleResendCode,
   userData
 }) => {
+  const dispatch = useDispatch();
   const { countDown, setCountDown } = useCountDown();
 
   const onHandleResendAndCountDown = useCallback(() => {
     setCountDown(10);
     onHandleResendCode();
-  }, [onHandleResendCode, setCountDown]);
+    dispatch(refreshError());
+  }, [dispatch, onHandleResendCode, setCountDown]);
 
   return (
     <Container>

@@ -119,7 +119,6 @@ const Register = ({ navigation }) => {
 
   const onHandleResendCode = () => {
     dispatch(accountSendOTPSignUp([typeTab], userData[typeTab]));
-    dispatch(refreshError());
   };
 
   const onHandleTurnBack = () => {
