@@ -10,7 +10,7 @@ const useChatSocket = ({ dataUser }) => {
 
   useEffect(() => {
     const { _id, users } = currentGroup;
-
+    console.log(currentGroup);
     const filterUserGroup = users
       ? users.filter(user => user.id !== dataUser.id)
       : [currentGroup];
@@ -22,8 +22,14 @@ const useChatSocket = ({ dataUser }) => {
     };
 
     socket.emit('join', info);
-    socket.on('load_message', function (msg) {
-      setMessages(msg);
+    socket.on('load_message', function (room) {
+      const { messages, users } = room;
+      const userLogin = users.find(user => user.id === dataUser.id);
+      setMessages(
+        messages.filter(
+          _msg => new Date(_msg.createdAt) > new Date(userLogin.startDate)
+        )
+      );
     });
     return () => {};
   }, []);
